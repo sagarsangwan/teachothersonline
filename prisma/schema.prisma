@@ -44,12 +44,11 @@ model User {
   emailVerified      DateTime?           @map("email_verified")
   image              String?
   isTeacher          Boolean             @default(false)
-  isStudent          Boolean             @default(true)
   accounts           Account[]
   sessions           Session[]
-  teacherApplication TeacherApplication?
   // oneToOneClassesteacher OneToOneClass[]      @relation("OneToOneClassTeacher")
   // oneToOneClassesstudent OneToOneClass[]      @relation("OneToOneClassStudents")
+  TeacherApplication TeacherApplication?
 
   @@map("users")
 }
@@ -73,9 +72,8 @@ model TeacherApplication {
   contact    String
   verified   Boolean
   subittedAt DateTime @updatedAt @map("submitted_at")
-
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @unique @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("teacherapplications")
 }
