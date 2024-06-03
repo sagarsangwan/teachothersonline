@@ -38,18 +38,18 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  isTeacher     Boolean   @default(false)
-  accounts      Account[]
-  sessions      Session[]
-  // add posts and likes relation that can be null or empty
-
-  posts post[]
-  likes like[]
+  id                 String              @id @default(cuid())
+  name               String?
+  email              String?             @unique
+  emailVerified      DateTime?           @map("email_verified")
+  image              String?
+  isTeacher          Boolean             @default(false)
+  isStudent          Boolean             @default(true)
+  accounts           Account[]
+  sessions           Session[]
+  teacherApplication TeacherApplication?
+  // oneToOneClassesteacher OneToOneClass[]      @relation("OneToOneClassTeacher")
+  // oneToOneClassesstudent OneToOneClass[]      @relation("OneToOneClassStudents")
 
   @@map("users")
 }
@@ -63,41 +63,38 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-model category {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  editedAt  DateTime @default(now())
-  posts     post[]
+model TeacherApplication {
+  id         String   @id @default(cuid())
+  name       String?
+  resume     String
+  subjects   String[]
+  education  String
+  experience String
+  contact    String
+  verified   Boolean
+  subittedAt DateTime @updatedAt @map("submitted_at")
 
-  @@map("categories")
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("teacherapplications")
 }
 
-model like {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id")
-  postId    String   @map("post_id")
-  createdAt DateTime @default(now())
+// model OneToOneClass {
+//   id          String   @id @default(cuid())
+//   title       String
+//   description String
+//   startDate   DateTime @map("start_date")
+//   endDate     DateTime @map("end_date")
+//   startTime   String   @map("start_time")
+//   endTime     String   @map("end_time")
+//   days        String[]
+//   price       Float
+//   teacherId   String?  @map("teacher_id")
+//   teacher     User?    @relation("OneToOneClassTeacher", fields: [teacherId], references: [id])
+//   studentId   String?  @map("student_id")
+//   student     User?    @relation("OneToOneClassStudents", fields: [studentId], references: [id])
+//   // add posts and likes relation that can be null or empty
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post post @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@map("likes")
-}
-
-model post {
-  id         String     @id @default(cuid())
-  title      String
-  content    String
-  published  Boolean    @default(false)
-  authorId   String     @map("author_id")
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  categories category[]
-  slug       String     @unique
-  likes      like[]
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@map("posts")
-}
+//   @@map("onetooneclasses")
+// }
