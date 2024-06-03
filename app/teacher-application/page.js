@@ -1,9 +1,9 @@
 import React from 'react'
-
+import TeacherForm from '@/components/teacher/teacher-application-form'
 function teacherapplication() {
     return (
-        <div>
-            <h1>Teacher Application</h1>
+        <div className=''>
+            <TeacherForm onSubmit={"i"} />
         </div>
     )
 }

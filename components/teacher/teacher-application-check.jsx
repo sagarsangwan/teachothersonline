@@ -1,14 +1,12 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
-
+import { Button } from "../ui/button"
 import { auth } from '@/auth'
-
+import Link from "next/link"
 
 async function checkIsTeacherOrNot() {
     const session = await auth()
@@ -23,18 +21,30 @@ async function checkIsTeacherOrNot() {
     else {
 
         return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Card Title</CardTitle>
-                    <CardDescription>Card Description</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p>Card Content</p>
-                </CardContent>
-                <CardFooter>
-                    <p>Card Footer</p>
-                </CardFooter>
-            </Card>
+            <div>
+                <Card>
+
+                    <CardHeader>
+                        Want some extra income by teaching?
+                    </CardHeader>
+
+                    <CardContent >
+                        <p>
+                            Apply to be a teacher and start earning by teaching students.
+
+                        </p>
+
+                    </CardContent>
+                    <CardFooter>
+                        <Button color="primary">
+                            <Link href="/teacher-application">
+                                Apply
+                            </Link>
+                        </Button>
+                    </CardFooter>
+
+                </Card>
+            </div >
 
         )
     }
