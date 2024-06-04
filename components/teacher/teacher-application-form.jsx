@@ -2,21 +2,23 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
-
+import { z } from "zod";
+import Select from "react-tailwindcss-select";
 import { Button } from "@/components/ui/button"
+import { useState } from "react";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+
 import { Input } from "@/components/ui/input"
 
 import { useSession } from "next-auth/react"
+
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Uame must be at least 2 characters.",
@@ -30,16 +32,16 @@ const formSchema = z.object({
         }
         return true
     }),
-    subjects: z.array(z.string()).min(1, {
+    subjects: z.array(z.string()).nonempty({
         message: "Please select at least one subject.",
     }),
-    // experience to select from dropdown
+
     experience: z.string().min(1, {
         message: "Please select your experience.",
     }),
 
-    contact: z.string().refine((value) => {
-        if (!/^\+?([0-9]{2})\)?[-. ]?([0-9]{10})$/.test(value)) {
+    contact_number: z.string().refine((contact) => {
+        if (!/^\d{10}$/.test(contact)) {
             throw new Error("Please enter a valid phone number.")
         }
         return true
@@ -47,9 +49,30 @@ const formSchema = z.object({
 })
 
 
-function TeacherForm({ onSubmit }) {
-    const { data: session, status } = useSession()
+const subjects = [
+    { value: "math", label: "math" }
+]
 
+
+function TeacherForm({ }) {
+    const { data: session, status } = useSession()
+    const onSubmit = async (data) => {
+        preventDefault()
+        try {
+            const response = await fetch("/api/teacher-form-submission", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            const json = await response.json()
+            console.log(json)
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -65,21 +88,25 @@ function TeacherForm({ onSubmit }) {
 
         },
     })
+    const [subject, setSubject] = useState(null);
+
+    const handleChange = value => {
+        console.log("value:", value);
+        setSubject(value);
+    };
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="username"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Username</FormLabel>
                             <FormControl>
                                 <Input placeholder="shadcn" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}
@@ -93,9 +120,7 @@ function TeacherForm({ onSubmit }) {
                             <FormControl>
                                 <Input placeholder="{email}" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your email address.
-                            </FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}
@@ -109,9 +134,7 @@ function TeacherForm({ onSubmit }) {
                             <FormControl>
                                 <Input type="file" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Please upload your resume.
-                            </FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}
@@ -121,14 +144,15 @@ function TeacherForm({ onSubmit }) {
                     control={form.control}
                     name="subjects"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Subjects</FormLabel>
+                        <FormItem className="w-full">
+                            <FormLabel>Choose subjects</FormLabel>
                             <FormControl>
-                                <Input type="checkbox" {...field} />
+                                <Select
+                                    value={subject}
+                                    onChange={handleChange}
+                                    options={subjects}
+                                />
                             </FormControl>
-                            <FormDescription>
-                                Please select the subjects you can teach.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -142,32 +166,13 @@ function TeacherForm({ onSubmit }) {
                             <FormControl>
                                 <Input type="text" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Please enter your contact number.
-                            </FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}
 
                 />
-                <FormField
-                    control={form.control}
-                    name="experience"
 
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Experience</FormLabel>
-                            <FormControl>
-                                <Input type="dropdown" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Please select your experience.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-
-                />
                 <Button type="submit">Submit</Button>
             </form>
         </Form>
