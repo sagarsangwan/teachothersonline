@@ -70,7 +70,7 @@ model TeacherApplication {
   education  String
   experience String
   contact    String
-  verified   Boolean
+  verified   Boolean  @default(false)
   subittedAt DateTime @updatedAt @map("submitted_at")
   userId     String   @unique @map("user_id")
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
