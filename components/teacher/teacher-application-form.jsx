@@ -61,7 +61,7 @@ const subjects = [
 ]
 
 
-function TeacherForm({ }) {
+function TeacherForm() {
     const onSubmit = async (data) => {
         // preventDefault()
         try {
@@ -74,7 +74,25 @@ function TeacherForm({ }) {
             })
             const res = await response.json()
             console.log("res-----------", res)
-            revalidatePath("/teacher-application-form?submitted=true")
+            form.reset(
+                {
+                    education: "",
+                    experience: "",
+                    contact: "",
+                    resume: undefined,
+                    subjects: [],
+                },
+                {
+                    keepValues: false,
+                    keepErrors: false,
+                    keepDirty: false,
+                    keepIsSubmitted: false,
+                }
+            )
+            // clear the form 
+
+
+
         } catch (error) {
             console.error(error)
             // clear the form and show an toast message
@@ -90,7 +108,7 @@ function TeacherForm({ }) {
             education: "",
             experience: "",
             contact: "",
-            resume: null,
+            resume: undefined,
             subjects: [],
 
         },
@@ -169,7 +187,7 @@ function TeacherForm({ }) {
                         <FormItem>
                             <FormLabel>Resume</FormLabel>
                             <FormControl>
-                                <Input type="file" {...field} />
+                                <Input id="resume" type="file" {...field} />
                             </FormControl>
 
                             <FormMessage />
