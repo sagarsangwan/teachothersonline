@@ -1,11 +1,8 @@
-import { auth } from '@/auth'
-import TeacherForm from '@/components/teacher/teacher-application-form'
-import { revalidatePath } from 'next/cache'
+import { auth } from '@/auth';
+import TeacherForm from '@/components/teacher/teacher-application-form';
 async function teacherapplication() {
-    const session = await auth()
-    if (!session) {
-        revalidatePath('/api/auth/login/callback=teacherapplication')
-    }
+    const session = await auth();
+
     return (
         <div className=''>
             <div className='justify-center items-center flex flex-col py-7'>

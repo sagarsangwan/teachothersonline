@@ -46,6 +46,7 @@ model User {
   isTeacher          Boolean             @default(false)
   accounts           Account[]
   sessions           Session[]
+  role               String              @default("USER")
   // oneToOneClassesteacher OneToOneClass[]      @relation("OneToOneClassTeacher")
   // oneToOneClassesstudent OneToOneClass[]      @relation("OneToOneClassStudents")
   TeacherApplication TeacherApplication?
