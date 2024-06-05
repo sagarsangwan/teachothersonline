@@ -15,7 +15,7 @@ export default async function RootLayout({ children }) {
   return (
     <SessionProvider session={session}>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={inter.className} suppressHydrationWarning={true} >
           <diV className="container min-h-screen items-center justify-between">
             <Navbar />
             <NextTopLoader />

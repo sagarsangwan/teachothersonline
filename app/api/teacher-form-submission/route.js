@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server"
-export async function postTeacherFormSubmission(req, res) {
-    const { body } = req
-    const { name, email, subjects, contact, experience } = body
-    console.log(name + email + subjects + contact + experience)
-    return NextResponse.json(name + email + subjects + contact + experience)
+import { auth } from "@/auth"
+export async function POST(req, res) {
+    const session = await auth()
+    if (!session) {
+        return NextResponse.unauthorized("Unauthorized")
+    }
+
+    const body = await req.json()
+
+    const { name } = body
+    // console.log(name , "inside api")
+    return NextResponse.json(name)
     // const teacher = await prisma.teacher.create({
     //     data: {
     //         name,
@@ -18,3 +25,4 @@ export async function postTeacherFormSubmission(req, res) {
 
     // res.json(teacher)
 }
+
