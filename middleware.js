@@ -12,7 +12,7 @@ const adminProtectedRoutes = ["/admin-dashboard"];
 
 export default async function middleware(req) {
     const isAuthenticated = await auth();
-    console.log(isAuthenticated, "----------------------------------------------------------------------------------------------");
+    // console.log(isAuthenticated, "----------------------------------------------------------------------------------------------");
     if (adminProtectedRoutes.includes(req.nextUrl.pathname)) {
         if (!isAuthenticated) {
             const absoluteURL = new URL("/", req.nextUrl.origin);
@@ -29,7 +29,7 @@ export default async function middleware(req) {
 
     if (protectedRoutes.includes(req.nextUrl.pathname)) {
         if (!isAuthenticated) {
-            const absoluteURL = new URL("/", req.nextUrl.origin);
+            const absoluteURL = new URL("/api/auth/signin", req.nextUrl.origin);
             return NextResponse.redirect(absoluteURL.toString());
         }
     }
