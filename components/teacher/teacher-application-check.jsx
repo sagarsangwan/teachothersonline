@@ -3,6 +3,7 @@ import {
     CardContent,
     CardFooter,
     CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
 import { Button } from "../ui/button"
 import { auth } from '@/auth'
@@ -18,12 +19,10 @@ async function checkUserApplication() {
         where: {
             userId: session.user.id
 
-        },
-        include: {
-            application: true
         }
     })
     if (teacherApplication) {
+        console.log(teacherApplication, "----------------------------------------------------------------------------------")
         return teacherApplication
     }
     return null
@@ -31,11 +30,28 @@ async function checkUserApplication() {
 async function checkIsTeacherOrNot() {
     const session = await auth()
 
-    if (checkUserApplication()) {
-        return <div>hhhh</div>
+    const teacherApplication = await checkUserApplication()
+    if (teacherApplication) {
+        return (
+            (<div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>welcome {session.user.name}</CardTitle>
+                        {/* <CardDescription>You have 3 unread messages.</CardDescription> */}
+                    </CardHeader>
+                    <CardContent className="grid gap-4">
+                        <p>
+                            Your application for teaching with subjects <span className=" font-bold"> {teacherApplication.subjects}</span> is pending. We will get back to you soon.
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>)
+
+        )
     }
+
     // Check if the user is a teacher or is there an application pending
-    if (session.user.teacher || session.user.teacherApplication) {
+    if (session.user.teacher) {
         return null
     }
     else {
