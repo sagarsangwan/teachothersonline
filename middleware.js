@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 
-
-
+export { auth as middleware } from "@/auth"
 
 
 const protectedRoutes = ["/teacher-application"];
