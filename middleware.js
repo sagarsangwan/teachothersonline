@@ -24,7 +24,7 @@ export default async function middleware(req) {
     }
 
     if (!isAuthenticated && protectedRoutes.includes(req.nextUrl.pathname)) {
-        const absoluteURL = new URL("/", req.nextUrl.origin);
+        const absoluteURL = new URL("/api/auth/signin", req.nextUrl.origin);
         return NextResponse.redirect(absoluteURL.toString());
     }
 }
