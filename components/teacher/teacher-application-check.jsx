@@ -9,7 +9,7 @@ import { Button } from "../ui/button"
 import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
-
+import { Badge } from "@/components/ui/badge"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
@@ -22,7 +22,6 @@ async function checkUserApplication() {
         }
     })
     if (teacherApplication) {
-        console.log(teacherApplication, "----------------------------------------------------------------------------------")
         return teacherApplication
     }
     return null
@@ -36,7 +35,7 @@ async function checkIsTeacherOrNot() {
             (<div>
                 <Card>
                     <CardHeader>
-                        <CardTitle>welcome {session.user.name}</CardTitle>
+                        <CardTitle>welcome {session.user.name} <Badge variant="green">pending</Badge>  </CardTitle>
                         {/* <CardDescription>You have 3 unread messages.</CardDescription> */}
                     </CardHeader>
                     <CardContent className="grid gap-4">
@@ -51,7 +50,7 @@ async function checkIsTeacherOrNot() {
     }
 
     // Check if the user is a teacher or is there an application pending
-    if (session.user.teacher) {
+    if (session && session.user.teacher) {
         return null
     }
     else {
@@ -61,7 +60,7 @@ async function checkIsTeacherOrNot() {
                 <Card>
 
                     <CardHeader>
-                        {session.user.name || ""} want some extra income by teaching?{session.user.sessions}
+                        Hi {session ? session.user.name : "Guest"} want some extra income by teaching?
                     </CardHeader>
 
                     <CardContent >
