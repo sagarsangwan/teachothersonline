@@ -23,7 +23,7 @@ export default function UserAvatar() {
 
 
                         <Avatar>
-                            <AvatarFallback>{session.user.name.substring(0, 1)}</AvatarFallback>
+                            {/* <AvatarFallback>{session.user.name.substring(0, 1)}</AvatarFallback> */}
                             <AvatarImage src={session.user.image} />
 
 
