@@ -7,15 +7,35 @@ import {
 import { Button } from "../ui/button"
 import { auth } from '@/auth'
 import Link from "next/link"
+import prisma from "@/lib/prisma"
 
-async function checkIsTeacherOrNot() {
+async function checkUserApplication() {
     const session = await auth()
     if (!session) {
-        console.log("You are not logged in")
         return null
     }
-    if (session.user.isTeacher === 'True') {
-        console.log("You are a teacher")
+    const teacherApplication = await prisma.teacherApplication.findUnique({
+        where: {
+            userId: session.user.id
+
+        },
+        include: {
+            application: true
+        }
+    })
+    if (teacherApplication) {
+        return teacherApplication
+    }
+    return null
+}
+async function checkIsTeacherOrNot() {
+    const session = await auth()
+
+    if (checkUserApplication()) {
+        return <div>hhhh</div>
+    }
+    // Check if the user is a teacher or is there an application pending
+    if (session.user.teacher || session.user.teacherApplication) {
         return null
     }
     else {
@@ -25,7 +45,7 @@ async function checkIsTeacherOrNot() {
                 <Card>
 
                     <CardHeader>
-                        Want some extra income by teaching?
+                        {session.user.name || ""} want some extra income by teaching?{session.user.sessions}
                     </CardHeader>
 
                     <CardContent >

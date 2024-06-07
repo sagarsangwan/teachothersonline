@@ -21,7 +21,6 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import validator from "validator";
-import { revalidatePath } from "next/cache";
 
 const ACCEPTED_FILE_TYPES = ["application/pdf"]
 const MAX_FILE_SIZE = 5000000
