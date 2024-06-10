@@ -1,6 +1,7 @@
 "use client";
+import adminButton from "../auth/admin-button";
 import * as React from "react"
-
+import { useSession } from "next-auth/react";
 import UserAvatar from "../auth/user-avatar";
 
 import Link from "next/link"
@@ -44,9 +45,9 @@ export default function Navbar() {
                                 <Link href={item.path}>{item.title}</Link>
                             </li>
                         ))}
-                        <li className="text-gray-400 hover:bg-secondary/80 ">
-                            {/* <ModeToggle /> */}
-                        </li>
+                        {/* <li className="text-gray-400 hover:bg-secondary/80 ">
+                            <adminButton />
+                        </li> */}
                         <li >
                             <UserAvatar />
                         </li>

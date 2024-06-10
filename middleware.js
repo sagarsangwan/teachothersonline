@@ -2,19 +2,20 @@
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 
-export { auth as middleware } from "@/auth"
+// export { auth as middleware } from "@/auth"
 
 
 const protectedRoutes = ["/teacher-application"];
-const adminProtectedRoutes = ["/admin-dashboard"];
+const adminProtectedRoutes = ["/admin-dashboard", "/admin-dashboard/teachers"]
 
 
 export default async function middleware(req) {
+    console.log("helloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
     const isAuthenticated = await auth();
     if (adminProtectedRoutes.includes(req.nextUrl.pathname)) {
-        console.log("admin", "----------------------------------------------------------------------------------------------");
+        console.log("in adminnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
         if (!isAuthenticated) {
-            console.log("not authenticated------------------------------------");
+            console.log("authhhhhhhhhhhhhhh------------------------------------")
             const absoluteURL = new URL("/", req.nextUrl.origin);
             return NextResponse.redirect(absoluteURL.toString());
         } else {
