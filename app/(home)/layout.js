@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { auth } from "@/auth";
 import NextTopLoader from 'nextjs-toploader';
 import Navbar from "@/components/ui/navbar";

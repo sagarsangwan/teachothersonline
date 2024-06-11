@@ -1,8 +1,9 @@
+import { Button } from "@/components/ui/button"
 
 function page() {
     return (
         <div>
-            shshshs
+            shshshs <Button>hello</Button>
         </div>
     )
 }
