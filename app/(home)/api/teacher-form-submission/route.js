@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
-import { date } from "zod"
 export async function POST(req, res) {
     const session = await auth()
     if (!session) {
@@ -37,3 +36,13 @@ export async function POST(req, res) {
     // res.json(teacher)
 }
 
+export async function GET(req, res) {
+    const session = await auth()
+    if (session.user.role !== "admin") {
+        return NextResponse.unauthorized("Unauthorized")
+    }
+    const teachers = await prisma.TeacherApplication.findMany()
+    return NextResponse.json(teachers)
+
+    // res.json(teacher)
+}
