@@ -18,8 +18,9 @@ export default function UserAvatar() {
     console.log(userRole)
     if (status === "authenticated")
         return (
-            <div>
-
+            <div className="">
+                {/* {session.user.role === "admin" ? <Link href="/admin-dashboard">{session.user.role}</Link> : ""}
+                {status} */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
 
@@ -32,15 +33,9 @@ export default function UserAvatar() {
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+
                         <DropdownMenuItem>
-                            <Link href="/profile">Profile</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            {session?.user?.role === 'admin' && (
-                                <Link href="/admin">
-                                    <a className="text-blue-500 mr-4">Admin Panel</a>
-                                </Link>
-                            )}
+                            <Link href="/profile">{session.user.name}</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>

@@ -8,6 +8,7 @@ import Link from "next/link"
 import { IoIosMenu } from "react-icons/io";
 
 export default function Navbar() {
+    const { data: session, status } = useSession()
     const [state, setState] = React.useState(false)
     const menus = [
         // { title: "Home", path: "/your-path" },
@@ -45,9 +46,11 @@ export default function Navbar() {
                                 <Link href={item.path}>{item.title}</Link>
                             </li>
                         ))}
-                        {/* <li className="text-gray-400 hover:bg-secondary/80 ">
-                            <adminButton />
-                        </li> */}
+                        <li >
+                            {/* {status === "authenticated" && session.user.role === "admin" ? <Link href="/admin-dashboard">{session.user.role}</Link> : ""}
+                            {status} */}
+                        </li>
+
                         <li >
                             <UserAvatar />
                         </li>
