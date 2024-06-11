@@ -75,3 +75,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.container-fluid {
+  width: 100%;
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
+}

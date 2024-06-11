@@ -10,12 +10,9 @@ const adminProtectedRoutes = ["/admin-dashboard", "/admin-dashboard/teachers"]
 
 
 export default async function middleware(req) {
-    console.log("helloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
     const isAuthenticated = await auth();
     if (adminProtectedRoutes.includes(req.nextUrl.pathname)) {
-        console.log("in adminnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
         if (!isAuthenticated) {
-            console.log("authhhhhhhhhhhhhhh------------------------------------")
             const absoluteURL = new URL("/", req.nextUrl.origin);
             return NextResponse.redirect(absoluteURL.toString());
         } else {
