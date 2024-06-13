@@ -1,7 +1,8 @@
 "use client"
 import { IoIosMore } from "react-icons/io";
-
-import { Button } from "@/components/ui/button"
+import { LuArrowUpDown } from "react-icons/lu";
+import { FiMoreHorizontal } from "react-icons/fi";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +10,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export const columns = [
     {
@@ -19,12 +21,32 @@ export const columns = [
     },
     {
         accessorKey: "name",
-        Header: "Name",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Email
+                    <LuArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
 
     {
         accessorKey: "subjects",
-        Header: "Subjects",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Subjects
+                    <LuArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "education",
@@ -47,13 +69,17 @@ export const columns = [
         Header: "Submitted At",
     },
     {
-        accessorKey: "userId",
+        accessorKey: "user",
         Header: "User",
+        cell: ({ row }) => {
+            const applicant = row.original
+            { applicant.verified }
+        }
     },
     {
         id: "actions",
         cell: ({ row }) => {
-            const payment = row.original
+            const applicant = row.original
 
             return (
                 <DropdownMenu>
@@ -66,12 +92,15 @@ export const columns = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                            onClick={() => navigator.clipboard.writeText(applicant.id)}
                         >
                             Copy payment ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            {/* check if applicant is verified or nor */}
+                            {applicant.verified === "true" ? <Link href="/">un verify</Link> : <Link href="/"> verify</Link>}
+                        </DropdownMenuItem>
                         <DropdownMenuItem>View payment details</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

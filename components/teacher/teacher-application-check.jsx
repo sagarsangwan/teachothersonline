@@ -18,7 +18,9 @@ async function checkUserApplication() {
     const teacherApplication = await prisma.teacherApplication.findUnique({
         where: {
             userId: session.user.id
-
+        },
+        include: {
+            user: true
         }
     })
     if (teacherApplication) {
@@ -40,7 +42,7 @@ async function checkIsTeacherOrNot() {
                     </CardHeader>
                     <CardContent className="grid gap-4">
                         <p>
-                            Your application for teaching with subjects <span className=" font-bold"> {teacherApplication.subjects}</span> is pending. We will get back to you soon.
+                            Your application for teaching with subjects <span className=" font-bold"> {teacherApplication.subjects} {teacherApplication.user.name}</span> is pending. We will get back to you soon.
                         </p>
                     </CardContent>
                 </Card>
