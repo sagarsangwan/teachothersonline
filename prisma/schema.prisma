@@ -74,7 +74,7 @@ model TeacherApplication {
   experience String
   contact    String
   verified   Boolean  @default(false)
-  subittedAt DateTime @updatedAt @map("submitted_at")
+  subittedAt DateTime @default(now()) @map("submitted_at")
   userId     String   @unique @map("user_id")
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

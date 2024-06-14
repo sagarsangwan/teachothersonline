@@ -1,20 +1,12 @@
 // components/VerifyButton.js
 
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { IoIosMore } from 'react-icons/io';
-import { revalidatePath } from 'next/cache';
+import { useRouter } from 'next/navigation';
 
 const VerifyButton = ({ applicantId, verified }) => {
     const [loading, setLoading] = useState(false);
+    const router = useRouter()
 
     const handleVerify = async () => {
         // "use server"
@@ -31,7 +23,7 @@ const VerifyButton = ({ applicantId, verified }) => {
             })
             if (res.ok) {
                 setLoading(false)
-                console.log(res, "------------------------res in habdle")
+                router.refresh();
                 // revalidatePath("/admin-dashboard/teachers")
             }
         } catch (error) {
