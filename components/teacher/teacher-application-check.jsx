@@ -32,6 +32,18 @@ async function checkIsTeacherOrNot() {
     const session = await auth()
 
     const teacherApplication = await checkUserApplication()
+
+
+    // Check if the user is a teacher or is there an application pending
+    if (session && session.user.isTeacher) {
+        return (
+            <div>hii teacher</div>
+        )
+    }
+
+
+
+
     if (teacherApplication) {
         return (
             (<div>
@@ -49,11 +61,6 @@ async function checkIsTeacherOrNot() {
             </div>)
 
         )
-    }
-
-    // Check if the user is a teacher or is there an application pending
-    if (session && session.user.teacher) {
-        return null
     }
     else {
 

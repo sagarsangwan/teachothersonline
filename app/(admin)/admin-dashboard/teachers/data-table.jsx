@@ -35,7 +35,7 @@ export function DataTable({ columns, data }) {
     })
     return (
         <div>
-            <div className="container rounded">
+            <div className="container rounded border-solid border-2 border-gray-500">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -58,7 +58,7 @@ export function DataTable({ columns, data }) {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} >
+                                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}  >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

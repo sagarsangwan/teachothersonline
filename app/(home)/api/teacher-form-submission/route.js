@@ -36,13 +36,13 @@ export async function POST(req, res) {
     // res.json(teacher)
 }
 
-export async function GET(req, res) {
-    const session = await auth()
-    if (session.user.role !== "admin") {
-        return NextResponse.unauthorized("Unauthorized")
-    }
-    const teachers = await prisma.TeacherApplication.findMany()
-    return NextResponse.json(teachers)
+// export async function GET(req, res) {
+//     const session = await auth()
+//     if (session.user.role !== "admin") {
+//         return NextResponse.unauthorized("Unauthorized")
+//     }
+//     const teachers = await prisma.TeacherApplication.findMany()
+//     return NextResponse.json(teachers)
 
-    // res.json(teacher)
-}
+//     // res.json(teacher)
+// }
