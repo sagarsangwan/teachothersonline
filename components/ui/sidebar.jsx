@@ -25,7 +25,10 @@ export default function Sidebar() {
         <div className="h-full px-3 py-4 overflow-y-auto ">
           <ul className="">
             <li>
-              <Link href="/admin-dashboard/teachers"> <Button> teachers</Button></Link>
+              <Link href="/"> <Button variant="outline"> home</Button></Link>
+            </li>
+            <li>
+              <Link href="/admin-dashboard/teachers"> <Button variant="outline"> teachers</Button></Link>
             </li>
             <li>
               <ModeToggle />
