@@ -1,24 +1,19 @@
 "use client"
-import { IoIosMore } from "react-icons/io";
 import { LuArrowUpDown } from "react-icons/lu";
-import { FiMoreHorizontal } from "react-icons/fi";
+import moment from 'moment'
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import Link from "next/link";
+import VerifyButton from "@/components/VerifyCell";
+
+
 
 export const columns = [
-    {
-        accessorKey: "id",
-        Header: "ID",
+    // {
+    //     accessorKey: "id",
+    //     Header: "ID",
 
-    },
+    // },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -27,11 +22,19 @@ export const columns = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Email
+                    Name
                     <LuArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
+    },
+    {
+        accessorKey: "email",
+        Header: "User",
+        cell: ({ row }) => {
+            const applicant = row.original.user
+            return applicant.email
+        }
     },
 
     {
@@ -64,46 +67,32 @@ export const columns = [
     }, {
         accessorKey: "verified",
         Header: "Verified",
+        cell: ({ row }) => {
+            const verified = row.original.verified;
+            return (
+                <span className={verified ? "text-green-500" : "text-red-500"}>
+                    {verified ? "Verified" : "Not Verified"}
+                </span>
+            )
+        },
     }, {
         accessorKey: "subittedAt",
         Header: "Submitted At",
-    },
-    {
-        accessorKey: "user",
-        Header: "User",
         cell: ({ row }) => {
-            const applicant = row.original
-            { applicant.verified }
+            const date = row.original.subittedAt
+            return (
+                moment(date).fromNow()
+            )
         }
     },
+
     {
         id: "actions",
         cell: ({ row }) => {
             const applicant = row.original
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <IoIosMore className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(applicant.id)}
-                        >
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            {/* check if applicant is verified or nor */}
-                            {applicant.verified === "true" ? <Link href="/">un verify</Link> : <Link href="/"> verify</Link>}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                VerifyButton({ applicantId: applicant.id, verified: applicant.verified })
             )
         },
     },
