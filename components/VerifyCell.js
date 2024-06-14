@@ -23,7 +23,7 @@ const VerifyButton = ({ applicantId, verified }) => {
             })
             if (res.ok) {
                 setLoading(false)
-                // router.refresh();
+                router.refresh();
                 // revalidatePath("/admin-dashboard/teachers")
             }
         } catch (error) {
