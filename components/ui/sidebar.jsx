@@ -5,6 +5,7 @@ import { useState } from "react"
 
 import { IoIosMenu } from "react-icons/io";
 import { Button } from "./button";
+import { ModeToggle } from "./mode-toggle";
 export default function Sidebar() {
   const [state, setState] = useState(false)
   return (
@@ -25,6 +26,9 @@ export default function Sidebar() {
           <ul className="">
             <li>
               <Link href="/admin-dashboard/teachers"> <Button> teachers</Button></Link>
+            </li>
+            <li>
+              <ModeToggle />
             </li>
           </ul>
         </div>

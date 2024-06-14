@@ -6,6 +6,7 @@ import UserAvatar from "../auth/user-avatar";
 
 import Link from "next/link"
 import { IoIosMenu } from "react-icons/io";
+import { ModeToggle } from "./mode-toggle";
 
 export default function Navbar() {
     const { data: session, status } = useSession()
@@ -47,8 +48,7 @@ export default function Navbar() {
                             </li>
                         ))}
                         <li >
-                            {/* {status === "authenticated" && session.user.role === "admin" ? <Link href="/admin-dashboard">{session.user.role}</Link> : ""}
-                            {status} */}
+                            <ModeToggle />
                         </li>
 
                         <li >
