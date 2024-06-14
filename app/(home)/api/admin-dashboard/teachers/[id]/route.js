@@ -30,7 +30,7 @@ export async function POST(request, { params }) {
             const applicantUpdatedUser = await prisma.User.update({
                 where: { id: applicant.user.id },
                 data: {
-                    isTeacher: false
+                    role: "user"
                 }
             })
             revalidatePath("/admin-dashboard/teachers");
@@ -45,13 +45,13 @@ export async function POST(request, { params }) {
         const applicantUpdatedUser = await prisma.User.update({
             where: { id: applicant.user.id },
             data: {
-                isTeacher: true
+                role: "teacher"
             }
         })
 
 
 
-        res.revalidate("/admin-dashboard/teachers");
+        // res.revalidate("/admin-dashboard/teachers");
         return NextResponse.json(updatedApplicant)
     } catch {
 

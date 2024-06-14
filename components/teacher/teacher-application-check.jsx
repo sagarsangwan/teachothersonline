@@ -10,6 +10,7 @@ import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
 import { Badge } from "@/components/ui/badge"
+import { Separator } from "../ui/separator"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
@@ -35,7 +36,7 @@ async function checkIsTeacherOrNot() {
 
 
     // Check if the user is a teacher or is there an application pending
-    if (session && session.user.isTeacher) {
+    if (session && session.user.role === "teacher") {
         return (
             <div>hii teacher</div>
         )
@@ -67,16 +68,36 @@ async function checkIsTeacherOrNot() {
         return (
             <div>
                 <div>
-                    <p>
-                        Hi {session ? session.user.name : "Guest"} want some extra income by teaching?
-                        Apply to be a teacher and start earning by teaching students.
-                        <Button color="primary">
-                            <Link href="/teacher-application">
-                                Apply
-                            </Link>
-                        </Button>
+                    <Card>
+                        <CardHeader>
 
-                    </p>
+                        </CardHeader>
+                        <CardContent className="justify-center text-center content-center">
+                            <p>
+                                Hi <span className=" font-bold"> {session ? session.user.name : "Guest"}</span> want some extra income by teaching?
+                                Apply to be a teacher and start earning by teaching students.
+                            </p>
+
+
+                            <Separator className="my-4" />
+
+
+                            <p>Book a one to one free demo class </p>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                            <Button color="primary">
+                                <Link href="/teacher-application">
+                                    Apply
+                                </Link>
+                            </Button>
+                            <Button color="primary">
+                                <Link href="/teacher-application">
+                                    Book a demo class
+                                </Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+
                 </div>
 
             </div >
