@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { auth } from "@/auth";
+import { useSession } from "next-auth/react";
+
 import Navbar from "@/components/ui/navbar";
 const inter = Inter({ subsets: ["latin"] });
 import { SessionProvider } from "next-auth/react";
@@ -11,10 +12,11 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await auth()
+  // const session = await useSession()
+  // const { data: session, status } = useSession()
   return (
-    <SessionProvider session={session}>
-      <html lang="en">
+    <html lang="en">
+      <SessionProvider >
         <body className={inter.className} suppressHydrationWarning={true} >
           <div className="container min-h-screen items-center justify-between">
 
@@ -24,7 +26,7 @@ export default async function RootLayout({ children }) {
             </Providers>
           </div>
         </body>
-      </html>
-    </SessionProvider>
+      </SessionProvider>
+    </html>
   );
 }

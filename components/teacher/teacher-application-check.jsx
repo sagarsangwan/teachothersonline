@@ -66,28 +66,19 @@ async function checkIsTeacherOrNot() {
 
         return (
             <div>
-                <Card>
-
-                    <CardHeader>
+                <div>
+                    <p>
                         Hi {session ? session.user.name : "Guest"} want some extra income by teaching?
-                    </CardHeader>
-
-                    <CardContent >
-                        <p>
-                            Apply to be a teacher and start earning by teaching students.
-
-                        </p>
-
-                    </CardContent>
-                    <CardFooter>
+                        Apply to be a teacher and start earning by teaching students.
                         <Button color="primary">
                             <Link href="/teacher-application">
                                 Apply
                             </Link>
                         </Button>
-                    </CardFooter>
 
-                </Card>
+                    </p>
+                </div>
+
             </div >
 
         )
