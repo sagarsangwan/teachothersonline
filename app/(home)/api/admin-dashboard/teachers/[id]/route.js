@@ -51,7 +51,7 @@ export async function POST(request, { params }) {
 
 
 
-        revalidatePath("/admin-dashboard/teachers");
+        res.revalidate("/admin-dashboard/teachers");
         return NextResponse.json(updatedApplicant)
     } catch {
 
