@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import spinner from "../ui/spinner";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,18 +10,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react"
-import { signIn } from "next-auth/react"
-import { signOut } from "next-auth/react"
-import AdminButton from "./admin-button"
 export default function UserAvatar() {
-    const { data: session, status } = useSession()
-    const userRole = session?.user.role
-    console.log(userRole)
+    const { data: session, status } = useSession();
+    let userrole;
+    if (status === "authenticated") {
+        userrole = session.user.role
+    }
+    if (status === "loading")
+        return (
+            <spinner />)
     if (status === "authenticated")
         return (
-            <div className="">
-                {/* {session.user.role === "admin" ? <Link href="/admin-dashboard">{session.user.role}</Link> : ""}
-                {status} */}
+            <div className="flex">
+
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
 
@@ -37,7 +40,9 @@ export default function UserAvatar() {
                         <DropdownMenuItem>
                             <Link href="/profile">{session.user.name}</Link>
                         </DropdownMenuItem>
-
+                        <DropdownMenuItem>
+                            {session.user.role === "admin" ? <Link href={"/admin-dashboard"}>Admin</Link> : ""}
+                        </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Link href="/api/auth/signout">Sign out</Link>
                         </DropdownMenuItem>
