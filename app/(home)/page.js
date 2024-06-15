@@ -4,6 +4,7 @@ export default async function Home() {
   const session = await auth()
   return (
     <main className="flex  flex-col">
+
       {session.user.role !== "admin" && (
         initialUserCheck()
       )}

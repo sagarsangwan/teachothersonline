@@ -69,16 +69,19 @@ function Teacherapplication() {
                 body: JSON.stringify(data),
             })
             const res = await response.json()
-            if (res.ok) {
-                setLoading(false)
-                toast.success("Application submitted successfully")
-                router.push('/');
-
-
-
+            if (response.status === 200) {
+                toast.success("Application submitted successfully");
+                form.reset({
+                    education: "",
+                    experience: "",
+                    contact: "",
+                    resume: undefined,
+                    subjects: [],
+                });
+                router.push("/");
+            } else {
+                toast.error(res.message || "Error submitting form. Try again later.");
             }
-            toast.error(res.message)
-            setLoading(false)
 
 
             // clear the form 
@@ -90,21 +93,6 @@ function Teacherapplication() {
             toast.error("error submitting for try after somee time")
         } finally {
 
-            form.reset(
-                {
-                    education: "",
-                    experience: "",
-                    contact: "",
-                    resume: undefined,
-                    subjects: [],
-                },
-                {
-                    keepValues: false,
-                    keepErrors: false,
-                    keepDirty: false,
-                    keepIsSubmitted: false,
-                }
-            )
             setLoading(false)
         }
 

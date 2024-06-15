@@ -94,7 +94,7 @@ async function initialUserCheck() {
                                 </Button> */}
                             </span>
                         </p>
-                        <div className="">
+                        <div className="sm:w-[238px] md:w-[324px]">
                             <DemoClassStudent />
                         </div>
 
@@ -114,7 +114,7 @@ async function initialUserCheck() {
 
                     </div>
                     <div className="w-full sm:w-1/2 sm:my-16 md:my-auto">
-                        <p className="flex flex-col  space-y-4 md:space-y-7 text-center">
+                        <p className="flex flex-col  space-y-4 md:space-y-7 text-center px-6">
                             <span className=" text-3xl md:text-6xl font-medium">Teach when you want and earn</span>
                             <span> Hi <span className=" font-bold"> {session ? session.user.name : "Guest"}</span> want some extra income by teaching?
                                 Apply to be a teacher and start earning by teaching students.</span>
