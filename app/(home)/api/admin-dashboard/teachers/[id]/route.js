@@ -11,7 +11,7 @@ export async function POST(request, { params }) {
         if (session.user.role !== "admin") {
             return NextResponse.unauthorized("Unauthorized")
         }
-        const applicant = await prisma.TeacherApplication.findUnique({
+        const applicant = await prisma.Teacher.findUnique({
             where: { id: applicantId },
             include: { user: true },
         })
@@ -21,7 +21,7 @@ export async function POST(request, { params }) {
 
         // if verified is true then make it false
         if (applicant.verified === true) {
-            const updatedApplicant = await prisma.TeacherApplication.update({
+            const updatedApplicant = await prisma.Teacher.update({
                 where: { id: applicantId },
                 data: {
                     verified: false
@@ -36,7 +36,7 @@ export async function POST(request, { params }) {
             revalidatePath("/admin-dashboard/teachers");
             return NextResponse.json(updatedApplicant)
         }
-        const updatedApplicant = await prisma.TeacherApplication.update({
+        const updatedApplicant = await prisma.Teacher.update({
             where: { id: applicantId },
             data: {
                 verified: true

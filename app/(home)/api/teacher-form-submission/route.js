@@ -6,7 +6,7 @@ export async function POST(req, res) {
     if (!session) {
         return NextResponse.unauthorized("Unauthorized")
     }
-    const existingTeacher = await prisma.TeacherApplication.findUnique({
+    const existingTeacher = await prisma.Teacher.findUnique({
         where: {
             userId: session.user.id
         }
@@ -19,7 +19,7 @@ export async function POST(req, res) {
 
     const { experience, contact, subjects, education } = body
 
-    const teacher = await prisma.TeacherApplication.create({
+    const teacher = await prisma.Teacher.create({
         data: {
             name: name,
             resume: "",
@@ -41,7 +41,7 @@ export async function POST(req, res) {
 //     if (session.user.role !== "admin") {
 //         return NextResponse.unauthorized("Unauthorized")
 //     }
-//     const teachers = await prisma.TeacherApplication.findMany()
+//     const teachers = await prisma.Teacher.findMany()
 //     return NextResponse.json(teachers)
 
 //     // res.json(teacher)
