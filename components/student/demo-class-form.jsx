@@ -66,49 +66,39 @@ export default function DemoClassStudent() {
     const OnSubmit = async (data) => {
         setLoading(true)
         try {
-            // const response = await fetch("/api/teacher-form-submission", {
-            //     method: "POST",
-            //     // headers: {
-            //     //     "Content-Type": "application/json",
-            //     // },
-            //     body: JSON.stringify(data),
-            // })
-            // const res = await response.json()
-            // if (res.ok) {
-            //     setLoading(false)
-            //     toast.success("Application submitted successfully")
-            //     router.push('/');
+            const response = await fetch("/api/student-class-create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            const res = await response.json()
+            console.log(res, "--------------------------")
+            if (res.status === 200) {
+                setLoading(false)
+                toast.success(res.message || "submitted successfully")
+                form.reset({
+                    time_of_class: "",
+                    contact: "",
+                    subjects: [],
+                });
+                // router.push('/');
 
 
 
-            // }
-            // toast.error(res.message)
-            console.log(data)
-            setLoading(false)
+            } else {
+                toast.error(res.message || "Error submitting form. Try again later.");
+            }
 
 
-            // clear the form 
 
 
 
         } catch (error) {
             console.error(error)
-            toast.error("error submitting for try after somee time")
+            toast.error(error || "something went wrong try after somee time")
         } finally {
-
-            // form.reset(
-            //     {
-            //         time: "",
-            //         contact: "",
-            //         subjects: [],
-            //     },
-            //     {
-            //         keepValues: false,
-            //         keepErrors: false,
-            //         keepDirty: false,
-            //         keepIsSubmitted: false,
-            //     }
-            // )
             setLoading(false)
         }
 
