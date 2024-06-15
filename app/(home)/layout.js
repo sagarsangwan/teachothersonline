@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <SessionProvider>
           <Providers>
-            <div className="container min-h-screen items-center justify-between">
+            <div className="container">
               <Navbar />
               {children}
             </div>

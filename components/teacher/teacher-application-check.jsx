@@ -5,18 +5,22 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import Image from "next/image"
 import { Button } from "../ui/button"
 import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "../ui/separator"
+import studentlearn from "../../public/studentlearn.svg"
+import teacher from "../../public/teacher.svg"
+import { Input } from "../ui/input"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
         return null
     }
-    const teacherApplication = await prisma.teacherApplication.findUnique({
+    const teacherApplication = await prisma.Teacher.findUnique({
         where: {
             userId: session.user.id
         },
@@ -66,42 +70,60 @@ async function checkIsTeacherOrNot() {
     else {
 
         return (
-            <div>
-                <div>
-                    <Card>
-                        <CardHeader>
+            <>
+                <div className="flex flex-wrap md:h-screen">
+                    <div className="w-full my-16 sm:w-1/2  md:my-auto">
+                        <p className="flex flex-col space-y-4 md:space-y-7">
+                            <span className=" text-3xl md:text-6xl font-medium">Book a class with us</span>
+                            <span>Request a demo, start learning</span>
+                            <span>
+                                {/* <Input />
+                            <Input />
+                            <Input /> */}
+                                <Button color="primary">
+                                    <Link href="/teacher-application">
+                                        Book a demo class
+                                    </Link>
+                                </Button>
+                            </span>
+                        </p>
 
-                        </CardHeader>
-                        <CardContent className="justify-center text-center content-center">
-                            <p>
-                                Hi <span className=" font-bold"> {session ? session.user.name : "Guest"}</span> want some extra income by teaching?
-                                Apply to be a teacher and start earning by teaching students.
-                            </p>
+                    </div>
+                    <div className="sm:w-1/2 sm:my-auto ">
+
+                        <Image alt="" src={studentlearn} />
+
+                    </div>
 
 
-                            <Separator className="my-4" />
+                </div >
+                <div className="flex flex-wrap md:h-screen">
+                    <div className=" my-16 sm:w-1/2 sm:my-auto ">
+
+                        <Image alt="" src={teacher} />
+
+                    </div>
+                    <div className="w-full sm:w-1/2 sm:my-16 md:my-auto">
+                        <p className="flex flex-col  space-y-4 md:space-y-7 text-center">
+                            <span className=" text-3xl md:text-6xl font-medium">Teach when you want and earn</span>
+                            <span> Hi <span className=" font-bold"> {session ? session.user.name : "Guest"}</span> want some extra income by teaching?
+                                Apply to be a teacher and start earning by teaching students.</span>
+                            <span>
+                                <Button color="primary">
+                                    <Link href="/teacher-application">
+                                        Apply
+                                    </Link>
+                                </Button>
+                            </span>
+                        </p>
+
+                    </div>
 
 
-                            <p>Book a one to one free demo class </p>
-                        </CardContent>
-                        <CardFooter className="flex justify-between">
-                            <Button color="primary">
-                                <Link href="/teacher-application">
-                                    Apply
-                                </Link>
-                            </Button>
-                            <Button color="primary">
-                                <Link href="/teacher-application">
-                                    Book a demo class
-                                </Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
 
-                </div>
+                </div >
 
-            </div >
-
+            </>
         )
     }
 }
