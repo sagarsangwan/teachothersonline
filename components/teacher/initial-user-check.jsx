@@ -15,6 +15,7 @@ import { Separator } from "../ui/separator"
 import studentlearn from "../../public/studentlearn.svg"
 import teacher from "../../public/teacher.svg"
 import { Input } from "../ui/input"
+import DemoClassStudent from "../student/demo-class-form"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
@@ -33,7 +34,7 @@ async function checkUserApplication() {
     }
     return null
 }
-async function checkIsTeacherOrNot() {
+async function initialUserCheck() {
     const session = await auth()
 
     const teacherApplication = await checkUserApplication()
@@ -45,6 +46,12 @@ async function checkIsTeacherOrNot() {
             <div>hii teacher</div>
         )
     }
+    if (session && session.user.role === "student") {
+        return (
+            <div>hii student</div>
+        )
+    }
+
 
 
 
@@ -72,21 +79,24 @@ async function checkIsTeacherOrNot() {
         return (
             <>
                 <div className="flex flex-wrap md:h-screen">
-                    <div className="w-full my-16 sm:w-1/2  md:my-auto">
+                    <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
                         <p className="flex flex-col space-y-4 md:space-y-7">
-                            <span className=" text-3xl md:text-6xl font-medium">Book a class with us</span>
+                            <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
                             <span>Request a demo, start learning</span>
                             <span>
                                 {/* <Input />
                             <Input />
                             <Input /> */}
-                                <Button color="primary">
+                                {/* <Button color="primary">
                                     <Link href="/teacher-application">
                                         Book a demo class
                                     </Link>
-                                </Button>
+                                </Button> */}
                             </span>
                         </p>
+                        <div className="">
+                            <DemoClassStudent />
+                        </div>
 
                     </div>
                     <div className="sm:w-1/2 sm:my-auto ">
@@ -128,4 +138,4 @@ async function checkIsTeacherOrNot() {
     }
 }
 
-export default checkIsTeacherOrNot
+export default initialUserCheck
