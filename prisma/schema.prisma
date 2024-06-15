@@ -9,6 +9,20 @@ datasource db {
   // engineType = "binary"
 }
 
+enum Role {
+  admin
+  user
+  teacher
+  student
+}
+
+enum ClassType {
+  demo
+  monthly
+  weekly
+  daily
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -40,18 +54,18 @@ model Session {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  name               String?
-  email              String?             @unique
-  emailVerified      DateTime?           @map("email_verified")
-  image              String?
-  accounts           Account[]
-  sessions           Session[]
-  role               String              @default("user")
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  role          Role      @default(user)
   // oneToOneClassesteacher OneToOneClass[]      @relation("OneToOneClassTeacher")
   // oneToOneClassesstudent OneToOneClass[]      @relation("OneToOneClassStudents")
-  TeacherApplication TeacherApplication?
-  StudentApplication Student?
+  Teacher       Teacher?
+  Student       Student?
 
   @@map("users")
 }
@@ -65,44 +79,51 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-model TeacherApplication {
-  id         String   @id @default(cuid())
+model Teacher {
+  id         String          @id @default(cuid())
   name       String?
   resume     String
   subjects   String[]
   education  String
   experience String
   contact    String
-  verified   Boolean  @default(false)
-  subittedAt DateTime @default(now()) @map("submitted_at")
-  userId     String   @unique @map("user_id")
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verified   Boolean         @default(false)
+  subittedAt DateTime        @default(now()) @map("submitted_at")
+  userId     String          @unique @map("user_id")
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes    OneToOneClass[]
 
-  @@map("teacherapplications")
+  @@map("teachers")
 }
 
 model Student {
-  id        String   @id @default(cuid())
+  id        String          @id @default(cuid())
   name      String?
   resume    String
   subjects  String[]
   contact   String
-  createdAt DateTime @default(now()) @map("submitted_at")
-  userId    String   @unique @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now()) @map("submitted_at")
+  userId    String          @unique @map("user_id")
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes   OneToOneClass[]
 
   @@map("students")
 }
 
 model OneToOneClass {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   subject      String
-  teachingMode String   @map("teaching_mode")
-  startTime    DateTime @map("start_time")
-  endTime      DateTime @map("end_time")
-  Booked       Boolean  @default(false)
-
-  // add posts and likes relation that can be null or empty
+  teachingMode String    @map("teaching_mode")
+  type         ClassType @default(demo)
+  startTime    DateTime  @map("start_time")
+  endTime      DateTime  @map("end_time")
+  Booked       Boolean   @default(false)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  classlink    String
+  teacherId    String    @map("teacher_id")
+  teacher      Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  studentId    String    @map("student_id")
+  student      Student?  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("onetooneclasses")
 }
