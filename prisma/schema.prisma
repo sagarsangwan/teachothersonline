@@ -99,7 +99,7 @@ model Teacher {
 model Student {
   id        String          @id @default(cuid())
   name      String?
-  resume    String
+  email     String?
   subjects  String[]
   contact   String
   createdAt DateTime        @default(now()) @map("submitted_at")
