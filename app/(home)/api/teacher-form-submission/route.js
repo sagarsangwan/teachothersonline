@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
+import { date } from "zod"
 export async function POST(req, res) {
     const session = await auth()
     if (!session) {
@@ -12,7 +13,7 @@ export async function POST(req, res) {
         }
     })
     if (existingTeacher) {
-        return NextResponse.json({ message: "You have already submitted a teacher application", }, { status: 400 })
+        return NextResponse.json({ message: "You have already submitted a teacher application", data: existingTeacher, status: 400 })
     }
     const { name, email } = await session.user
     const body = await req.json()
@@ -31,7 +32,7 @@ export async function POST(req, res) {
             verified: false
         }
     })
-    return NextResponse.json(teacher)
+    return NextResponse.json({ message: " submitted successfully", data: teacher, status: 200 })
 
     // res.json(teacher)
 }
