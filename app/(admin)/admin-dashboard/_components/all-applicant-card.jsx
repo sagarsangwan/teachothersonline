@@ -17,9 +17,9 @@ async function countTeacherApplicant() {
     let teacherApplicantCount = 0;
     try {
         teacherApplicantCount = await prisma.Teacher.count({
-            where: {
-                verified: false
-            }
+            // where: {
+            //     verified: false
+            // }
         });
     } catch (error) {
         console.error('Error counting users:', error);

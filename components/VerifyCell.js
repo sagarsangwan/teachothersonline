@@ -37,7 +37,7 @@ const VerifyButton = ({ applicantId, verified }) => {
     return (
         // <DropdownMenu>
         //     <DropdownMenuTrigger asChild>
-        //         <Button variant="ghost" className="h-8 w-8 p-0">
+        //         <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
         //             <span className="sr-only">Open menu</span>
         //             <IoIosMore className="h-4 w-4" />
         //         </Button>
@@ -56,11 +56,11 @@ const VerifyButton = ({ applicantId, verified }) => {
         // </DropdownMenu>
         <>
             {verified ? (
-                <Button onClick={handleVerify} disabled={loading}>
+                <Button size="sm" onClick={handleVerify} disabled={loading}>
                     {loading ? 'Unverifying...' : 'Un verify'}
                 </Button>
             ) : (
-                <Button onClick={handleVerify} disabled={loading}>
+                <Button size="sm" onClick={handleVerify} disabled={loading}>
                     {loading ? 'Verifying...' : 'Verify'}
                 </Button>
             )}

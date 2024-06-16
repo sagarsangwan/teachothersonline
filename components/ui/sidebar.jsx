@@ -21,15 +21,21 @@ export default function Sidebar() {
       </div>
 
 
-      <aside id="sidebar-multi-level-sidebar" className={`top-0 left-0 z-40 w-25 md:block md:pb-0 md:mt-0 ${state ? "block" : "hidden"}`} aria-label="Sidebar">
-        <div className="h-full px-3 py-4 overflow-y-auto ">
-          <ul className="">
+      <aside id="sidebar-multi-level-sidebar" className={`top-0 left-0 z-40 w-50 md:block md:pb-0 md:mt-0 ${state ? "block" : "hidden"}`} aria-label="Sidebar">
+        <div className="h-full px-3 py-4  ">
+          <Link href="/" class="flex items-center ps-2.5 mb-5">
+            <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Teachothersonline</span>
+          </Link>
+          <ul className="space-y-2 font-medium">
             <li>
-              <Link href="/"> <Button variant="outline"> home</Button></Link>
+              <Link href="/admin-dashboard" className="flex items-center p-2 rounded-lg">Dashboard</Link>
             </li>
             <li>
-              <Link href="/admin-dashboard/teachers"> <Button variant="outline"> teachers</Button></Link>
+              <Link href="/admin-dashboard/teachers" className="flex items-center p-2 rounded-lg">  teachers</Link>
             </li>
+
+          </ul>
+          <ul class="pt-4 mt-4 space-y-2 font-medium ">
             <li>
               <ModeToggle />
             </li>

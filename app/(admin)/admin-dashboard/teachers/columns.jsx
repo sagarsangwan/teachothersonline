@@ -18,10 +18,10 @@ export const teacherColums = [
 
     // },
     {
-        accessorKey: "name",
+        accessorKey: "Details",
         header: ({ column }) => {
             return (
-                <Button
+                <Button size="sm"
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
@@ -32,9 +32,10 @@ export const teacherColums = [
         },
         cell: ({ row }) => {
             const applicant = row.original.user
+            const contact = row.original.contact
             return (
-                <div className="flex gap-3 text-[10px]">
-                    <div>
+                <div className="flex gap-3 text-[12px]">
+                    <div className=" content-center">
                         <Avatar>
                             <AvatarImage src={applicant.image} alt="@shadcn" />
                         </Avatar>
@@ -42,6 +43,7 @@ export const teacherColums = [
                     <div className="flex flex-wrap">
                         <span>{applicant.name}</span>
                         <span>{applicant.email}</span>
+                        <span>{contact}</span>
                     </div>
 
 
@@ -54,7 +56,7 @@ export const teacherColums = [
         accessorKey: "subjects",
         header: ({ column }) => {
             return (
-                <Button
+                <Button size="sm"
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
@@ -63,38 +65,83 @@ export const teacherColums = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const subjects = row.original.subjects;
+            return (
+                <span className="text-[12px]">
+                    {subjects}
+                </span>
+            )
+        }
     },
     {
         accessorKey: "education",
         Header: "Education",
+        cell: ({ row }) => {
+            const education = row.original.education;
+            return (
+                <span className="text-[12px]">
+                    {education}
+                </span>
+            )
+        }
+
     },
     {
         accessorKey: "resume",
         Header: "Resume",
+        cell: ({ row }) => {
+            const resume = row.original.resume;
+            return (
+                <span className="text-[12px]">
+                    {resume}
+                </span>
+            )
+        }
+
     }, {
         accessorKey: "experience",
         Header: "Experience",
-    }, {
-        accessorKey: "contact",
-        Header: "Contact",
+        cell: ({ row }) => {
+            const experience = row.original.experience;
+            return (
+                <span className="text-[12px]">
+                    {experience}
+                </span>
+            )
+        }
+
     }, {
         accessorKey: "verified",
         Header: "Verified",
         cell: ({ row }) => {
             const verified = row.original.verified;
             return (
-                <span className={verified ? "text-green-500" : "text-red-500"}>
+                <span className={verified ? "text-green-500 text-[12px]" : "text-red-500 text-[12px]"}>
                     {verified ? "Verified" : "Not Verified"}
                 </span>
             )
         },
     }, {
         accessorKey: "subittedAt",
-        Header: "Submitted At",
+
+        header: ({ column }) => {
+            return (
+                <Button size="sm"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Submitted At
+                    <LuArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const date = row.original.subittedAt
             return (
-                moment(date).fromNow()
+                <div className="text-[12px]">
+                    {moment(date).fromNow()}
+                </div>
             )
         }
     },
