@@ -12,7 +12,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Add custom fields to session object
             session.user.id = user.id;
             session.user.role = user.role;
-            // session.Teacher = user.Teacher
+            session.user.Teacher = user.Teacher
+            session.user.Student = user.Student
             return session;
         },
     }
