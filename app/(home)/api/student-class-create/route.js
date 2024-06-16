@@ -3,18 +3,15 @@ import moment from "moment"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 export async function POST(req, res) {
-    console.log("inside posttttttttttttt--------------------------")
     const session = await auth()
     if (!session) {
         return NextResponse.unauthorized("Unauthorized")
     }
-    console.log("after check session-m-m-m-m-m-mm-m-m-m----------------", session.user.id)
     let existingClass = null; // Declare outside to use later
 
     const existingStudent = await prisma.Student.findUnique({
         where: { userId: session.user.id }
     });
-    console.log("student check krr liyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
     if (existingStudent) {
         existingClass = await prisma.OneToOneClass.findFirst({
@@ -24,13 +21,11 @@ export async function POST(req, res) {
             }
         });
     }
-    console.log("existingClass", existingClass, " existingstudent", existingStudent)
 
     if (existingClass && existingStudent) {
         return NextResponse.json({ message: "You have already submitted a demo class", status: 400 }, { data: existingClass })
     }
     if (existingStudent && !existingClass) {
-        console.log("student hai class nhi haiiiiii---------------------")
         const body = await req.json();
         const { time_of_class, date_of_class, contact, subjects } = body;
         let dateTime = new Date(date_of_class);
@@ -69,7 +64,6 @@ export async function POST(req, res) {
     const class_date_time_string = `${date_}T${time_of_class}:00.000Z`;
     const class_date_time = new Date(class_date_time_string);
     try {
-        console.log("no student block--------------------")
         const student = await prisma.Student.create({
             data: {
                 email: session.user.email,
@@ -80,7 +74,6 @@ export async function POST(req, res) {
 
             }
         })
-        console.log("--------------------------student bn gya")
         const user = await prisma.user.update({
             where: {
                 id: session.user.id
