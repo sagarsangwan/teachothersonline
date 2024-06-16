@@ -34,10 +34,36 @@ async function checkUserApplication() {
     }
     return null
 }
+async function checkDemoClass() {
+
+    const session = await auth()
+    if (!session) {
+        return null
+    }
+    const student = await prisma.Student.findUnique({
+        where: {
+            userId: session.user.id
+        }
+    })
+    if (!student) {
+        return null
+    }
+    const demoClass = await prisma.OneToOneClass.findFirst({
+        where: {
+            studentId: student.id,
+            type: "demo"
+        }
+    })
+    if (demoClass) {
+        return demoClass
+    }
+    return null
+}
 async function initialUserCheck() {
     const session = await auth()
 
     const teacherApplication = await checkUserApplication()
+    const demoClass = await checkDemoClass()
 
 
     // Check if the user is a teacher or is there an application pending
@@ -46,9 +72,42 @@ async function initialUserCheck() {
             <div>hii teacher</div>
         )
     }
-    if (session && session.user.role === "student") {
+    if (session && session.user.role === "student" && demoClass) {
         return (
-            <div>hii student</div>
+            <div>  heeloo student</div>
+        )
+    }
+    if (session && session.user.role === "student" && !demoClass) {
+        return (
+            <div className="flex flex-wrap md:h-screen">
+                <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
+                    <p className="flex flex-col space-y-4 md:space-y-7">
+                        <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
+                        <span>Request a demo, start learning</span>
+                        <span>
+                            {/* <Input />
+                            <Input />
+                            <Input /> */}
+                            {/* <Button color="primary">
+                                    <Link href="/teacher-application">
+                                        Book a demo class
+                                    </Link>
+                                </Button> */}
+                        </span>
+                    </p>
+                    <div className="sm:w-[238px] md:w-[324px]">
+                        <DemoClassStudent />
+                    </div>
+
+                </div>
+                <div className="sm:w-1/2 sm:my-auto ">
+
+                    <Image alt="" src={studentlearn} />
+
+                </div>
+
+
+            </div >
         )
     }
 
