@@ -33,10 +33,14 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import validator from "validator";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
-    time_of_class: z.date({
+    date_of_class: z.date({
         required_error: "A date of birth is required.",
+    }),
+    time_of_class: z.string().nonempty({
+        message: "Time of class is required"
     }),
     contact: z.string().refine(validator.isMobilePhone, {
         message: "Invalid phone number",
@@ -62,6 +66,8 @@ const subjects = [
 export default function DemoClassStudent() {
     const router = useRouter();
 
+
+
     const [loading, setLoading] = useState(false);
     const OnSubmit = async (data) => {
         setLoading(true)
@@ -74,16 +80,17 @@ export default function DemoClassStudent() {
                 body: JSON.stringify(data),
             })
             const res = await response.json()
-            console.log(res, "--------------------------")
+
             if (res.status === 200) {
                 setLoading(false)
                 toast.success(res.message || "submitted successfully")
                 form.reset({
                     time_of_class: "",
+                    date_of_class: "",
                     contact: "",
                     subjects: [],
                 });
-                // router.push('/');
+                router.refresh();
 
 
 
@@ -96,7 +103,6 @@ export default function DemoClassStudent() {
 
 
         } catch (error) {
-            console.error(error)
             toast.error(error || "something went wrong try after somee time")
         } finally {
             setLoading(false)
@@ -110,59 +116,77 @@ export default function DemoClassStudent() {
 
         defaultValues: {
             time_of_class: "",
-            contact: "",
-            // subjects: [],
+            contact: "1234567890",
+            date_of_class: "",
+            subjects: "math"
 
         },
     })
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(OnSubmit)} className=" space-y-4">
 
-                <FormField
-                    control={form.control}
-                    name="time_of_class"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Date of birth</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
-                                                !field.value && "text-muted-foreground"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP")
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CiCalendar className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        // fromDate={new Date("2024-6-14")}
-                                        // toDate={new Date("2024-6-24")}
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) =>
-                                            date > new Date("2024-6-24") || date < new Date()
-                                        }
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            <form onSubmit={form.handleSubmit(OnSubmit)} className=" space-y-4">
+                <div className="flex space-x-1">
+                    <FormField
+                        control={form.control}
+                        name="date_of_class"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>choose a date</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    " min-w-[200px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CiCalendar className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            // fromDate={new Date("2024-6-14")}
+                                            // toDate={new Date("2024-6-24")}
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) =>
+                                                date > new Date("2024-6-24") || date < new Date()
+                                            }
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="time_of_class"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Choose time</FormLabel>
+                                <FormControl>
+                                    <Input type="time" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+
+                </div>
                 <FormField
                     control={form.control}
                     name="contact"
