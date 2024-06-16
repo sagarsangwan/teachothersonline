@@ -17,6 +17,7 @@ import teacher from "../../public/teacher.svg"
 import { Input } from "../ui/input"
 import DemoClassStudent from "../student/demo-class-form"
 import studentClassStatusCard from "../student/student-demo-class-status"
+import teacherDashboard from "./teacher-dashboard"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
@@ -93,7 +94,7 @@ async function initialUserCheck() {
     // Check if the user is a teacher or is there an application pending
     if (session && session.user.role === "teacher") {
         return (
-            <div>hii teacher</div>
+            teacherDashboard()
         )
     }
     if (session && session.user.role === "student" && demoClass) {
