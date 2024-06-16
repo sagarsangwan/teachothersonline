@@ -20,30 +20,26 @@ export async function POST(req, res) {
 
     const { experience, contact, subjects, education } = body
 
-    const teacher = await prisma.Teacher.create({
-        data: {
-            name: name,
-            resume: "",
-            experience: experience,
-            contact: contact,
-            subjects: subjects,
-            education: education,
-            userId: session.user.id,
-            verified: false
-        }
-    })
-    return NextResponse.json({ message: " submitted successfully", data: teacher, status: 200 })
+    try {
+        const teacher = await prisma.Teacher.create({
+            data: {
+                name: name,
+                resume: "",
+                experience: experience,
+                contact: contact,
+                subjects: subjects,
+                education: education,
+                userId: session.user.id,
+                verified: false
+            }
+        })
+        return NextResponse.json({ message: " submitted successfully", data: teacher, status: 200 })
+    } catch (error) {
+        return NextResponse.json({ message: "Error submitting application", status: 400 })
+    } finally {
+        await prisma.$disconnect();
+    }
 
-    // res.json(teacher)
+
+
 }
-
-// export async function GET(req, res) {
-//     const session = await auth()
-//     if (session.user.role !== "admin") {
-//         return NextResponse.unauthorized("Unauthorized")
-//     }
-//     const teachers = await prisma.Teacher.findMany()
-//     return NextResponse.json(teachers)
-
-//     // res.json(teacher)
-// }

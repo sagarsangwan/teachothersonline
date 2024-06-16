@@ -22,17 +22,26 @@ async function checkUserApplication() {
     if (!session) {
         return null
     }
-    const teacherApplication = await prisma.Teacher.findUnique({
-        where: {
-            userId: session.user.id
-        },
-        include: {
-            user: true
+    try {
+        const teacherApplication = await prisma.Teacher.findUnique({
+            where: {
+                userId: session.user.id
+            },
+            include: {
+                user: true
+            }
+        })
+        if (teacherApplication) {
+            return teacherApplication
         }
-    })
-    if (teacherApplication) {
-        return teacherApplication
+    } catch {
+        return null
+    } finally {
+        await prisma.$disconnect()
     }
+
+
+
     return null
 }
 async function checkDemoClass() {
@@ -41,26 +50,33 @@ async function checkDemoClass() {
     if (!session) {
         return null
     }
-    const student = await prisma.Student.findUnique({
-        where: {
-            userId: session.user.id
+    try {
+        const student = await prisma.Student.findUnique({
+            where: {
+                userId: session.user.id
+            }
+        })
+        if (!student) {
+            return null
         }
-    })
-    if (!student) {
-        return null
-    }
-    const demoClass = await prisma.OneToOneClass.findFirst({
-        where: {
-            studentId: student.id,
-            type: "demo"
-        },
-        include: {
-            student: true
+        const demoClass = await prisma.OneToOneClass.findFirst({
+            where: {
+                studentId: student.id,
+                type: "demo"
+            },
+            include: {
+                student: true
 
+            }
+        })
+        if (demoClass) {
+            return demoClass
         }
-    })
-    if (demoClass) {
-        return demoClass
+    }
+    catch {
+        return null
+    } finally {
+        await prisma.$disconnect()
     }
     return null
 }
