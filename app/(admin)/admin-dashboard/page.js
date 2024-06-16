@@ -4,8 +4,9 @@ import allUserCount from "./_components/all-user-card"
 import allApplicantCount from "./_components/all-applicant-card"
 import allStudentCount from "./_components/all-student-card"
 export default async function page() {
+    let applicants = []
     try {
-        const applicants = await prisma.Teacher.findMany(
+        applicants = await prisma.Teacher.findMany(
             {
                 include: {
                     user: true
@@ -13,7 +14,7 @@ export default async function page() {
             }
         )
     } catch {
-        return null
+        return applicants
     } finally {
         await prisma.$disconnect()
     }
