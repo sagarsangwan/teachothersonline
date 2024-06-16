@@ -16,6 +16,7 @@ import studentlearn from "../../public/studentlearn.svg"
 import teacher from "../../public/teacher.svg"
 import { Input } from "../ui/input"
 import DemoClassStudent from "../student/demo-class-form"
+import studentClassStatusCard from "../student/student-demo-class-status"
 async function checkUserApplication() {
     const session = await auth()
     if (!session) {
@@ -74,7 +75,9 @@ async function initialUserCheck() {
     }
     if (session && session.user.role === "student" && demoClass) {
         return (
-            <div>  heeloo student</div>
+            // paas the demoClass to the studentClassStatusCard
+            studentClassStatusCard(demoClass)
+
         )
     }
     if (session && session.user.role === "student" && !demoClass) {
