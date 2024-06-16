@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import VerifyButton from "@/components/VerifyCell";
+import {
+    Avatar,
+    AvatarImage,
+} from "@/components/ui/avatar";
 
 
-
-export const columns = [
+export const teacherColums = [
     // {
     //     accessorKey: "id",
     //     Header: "ID",
@@ -27,13 +30,23 @@ export const columns = [
                 </Button>
             )
         },
-    },
-    {
-        accessorKey: "email",
-        Header: "User",
         cell: ({ row }) => {
             const applicant = row.original.user
-            return applicant.email
+            return (
+                <div className="flex gap-3 text-[10px]">
+                    <div>
+                        <Avatar>
+                            <AvatarImage src={applicant.image} alt="@shadcn" />
+                        </Avatar>
+                    </div>
+                    <div className="flex flex-wrap">
+                        <span>{applicant.name}</span>
+                        <span>{applicant.email}</span>
+                    </div>
+
+
+                </div>
+            )
         }
     },
 

@@ -19,7 +19,7 @@ import {
 import { useState } from "react"
 
 
-export function DataTable({ columns, data }) {
+export function TeacherDataTable({ columns, data }) {
     const [sorting, setSorting] = useState([])
     const table = useReactTable({
         columns,
