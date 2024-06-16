@@ -9,6 +9,7 @@ import {
     CardDescription,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Badge } from "../ui/badge"
 async function studentClassStatusCard(demoClass) {
     const session = await auth()
     const class_datetime = moment(demoClass.startTime)
@@ -28,9 +29,14 @@ async function studentClassStatusCard(demoClass) {
     return (
         <Card className="w-[350px]">
             <CardHeader>
-                <CardTitle>Demo class</CardTitle>
+                <CardTitle >
+                    <div className="flex justify-between">
+                        <span> Demo class</span>
+                        <Badge variant={`${demoClass.Booked ? "green" : "destructive"}`} > {demoClass.Booked ? "booked" : "not booked"} </Badge>
+                    </div>
+                </CardTitle>
                 <CardDescription>
-                    You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span>join this link {demoClass.classlink}</span> : <span>wait your class is not picked up by our teacher we will inform you when your class is scheluded</span>}
+                    Hi, {demoClass.student.name} You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span>join this link {demoClass.classlink}</span> : <span>wait your class is not booked by our teacher we will inform you when your class is scheduled</span>}
 
                 </CardDescription>
             </CardHeader>

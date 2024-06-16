@@ -53,6 +53,10 @@ async function checkDemoClass() {
         where: {
             studentId: student.id,
             type: "demo"
+        },
+        include: {
+            student: true
+
         }
     })
     if (demoClass) {
