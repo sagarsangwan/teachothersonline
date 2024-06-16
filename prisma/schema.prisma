@@ -23,6 +23,11 @@ enum ClassType {
   daily
 }
 
+enum teachingMode {
+  online
+  newdelhi
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -111,19 +116,19 @@ model Student {
 }
 
 model OneToOneClass {
-  id           String    @id @default(cuid())
-  subject      String
-  teachingMode String    @map("teaching_mode")
-  type         ClassType @default(demo)
-  startTime    DateTime  @map("start_time")
-  endTime      DateTime  @map("end_time")
-  Booked       Boolean   @default(false)
-  createdAt    DateTime  @default(now()) @map("created_at")
-  classlink    String
-  teacherId    String    @map("teacher_id")
-  teacher      Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  studentId    String    @map("student_id")
-  student      Student?  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  id           String       @id @default(cuid())
+  subject      String?
+  teachingMode teachingMode @default(online) @map("teaching_mode")
+  type         ClassType    @default(demo)
+  startTime    DateTime?    @map("start_time")
+  endTime      DateTime?    @map("end_time")
+  Booked       Boolean      @default(false)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  classlink    String?
+  teacherId    String?      @map("teacher_id")
+  teacher      Teacher?     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  studentId    String       @map("student_id")
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("onetooneclasses")
 }
