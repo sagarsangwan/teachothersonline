@@ -6,6 +6,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import isAuth from "@/lib/isAuth";
 import {
     Form,
     FormControl,
@@ -23,6 +24,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import validator from "validator";
+import { useSession } from "next-auth/react";
 
 const ACCEPTED_FILE_TYPES = ["application/pdf"]
 const MAX_FILE_SIZE = 5000000
@@ -113,6 +115,7 @@ function Teacherapplication() {
     })
 
     return (
+
         <div className=''>
 
             <div>
@@ -251,4 +254,6 @@ function Teacherapplication() {
     )
 }
 
-export default Teacherapplication
+
+export default isAuth(Teacherapplication)
+// export default Teacherapplication

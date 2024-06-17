@@ -4,7 +4,19 @@ import allUserCount from "./_components/all-user-card"
 import allApplicantCount from "./_components/all-applicant-card"
 import allStudentCount from "./_components/all-student-card"
 import prisma from "@/lib/prisma"
-export default async function page() {
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+async function page() {
+    const session = await auth()
+    if (!session) {
+        redirect("/")
+
+    } else {
+        if (session.user.role !== "admin") {
+            redirect("/")
+        }
+    }
+
     let applicants = []
     try {
         applicants = await prisma.Teacher.findMany(
@@ -20,6 +32,9 @@ export default async function page() {
         await prisma.$disconnect()
     }
     return (
+        //  redirect to login page if user is not logged in
+
+
         <div className="flex flex-wrap gap-6 mt-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 {allUserCount()}
@@ -35,3 +50,6 @@ export default async function page() {
         </div>
     )
 }
+
+
+export default page
