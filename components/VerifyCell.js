@@ -11,7 +11,6 @@ const VerifyButton = ({ applicantId, verified }) => {
     const handleVerify = async () => {
         // "use server"
         setLoading(true)
-        console.log(applicantId, "------------------------in habdle")
         try {
             const res = await fetch(`/api/admin-dashboard/teachers/${applicantId}`, {
                 method: "POST",

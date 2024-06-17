@@ -27,7 +27,6 @@ export default async function middleware(req) {
 
     if (protectedRoutes.includes(req.nextUrl.pathname)) {
         if (!isAuthenticated) {
-            console.log("not logged in ------------------------------------");
             const absoluteURL = new URL("/api/auth/signin", req.nextUrl.origin);
             return NextResponse.redirect(absoluteURL.toString());
         }
