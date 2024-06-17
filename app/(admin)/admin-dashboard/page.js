@@ -3,6 +3,7 @@ import { TeacherDataTable } from "./teachers/data-table"
 import allUserCount from "./_components/all-user-card"
 import allApplicantCount from "./_components/all-applicant-card"
 import allStudentCount from "./_components/all-student-card"
+import prisma from "@/lib/prisma"
 export default async function page() {
     let applicants = []
     try {
