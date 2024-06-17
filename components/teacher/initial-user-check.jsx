@@ -93,9 +93,21 @@ async function initialUserCheck() {
 
     // Check if the user is a teacher or is there an application pending
     if (session && session.user.role === "teacher") {
-        return (
-            teacherDashboard()
-        )
+        let teacher = null
+        try {
+            teacher = await prisma.Teacher.findUnique({
+                where: {
+                    userId: session.user.id
+                }
+            })
+        } catch {
+            return null
+        } finally {
+            await prisma.$disconnect()
+        }
+        if (teacher) {
+            return teacherDashboard(teacher)
+        }
     }
     if (session && session.user.role === "student" && demoClass) {
         return (

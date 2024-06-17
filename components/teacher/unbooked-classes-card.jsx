@@ -29,12 +29,13 @@ async function returnClassDate(startTime) {
     }
     return class_date
 }
-async function unbookedClassesCard(onetooneclasses) {
-
+async function unbookedClassesCard(onetooneclasses, teacher) {
+    // console.log(teacher)
     return (
         <div>
+
             {onetooneclasses.map((class_) => (
-                <Card key={class_.id} className="w-[350px]">
+                <Card key={class_.id} className="">
                     <CardHeader>
                         <CardTitle >
                             <div className="flex justify-between">
@@ -42,16 +43,18 @@ async function unbookedClassesCard(onetooneclasses) {
                                 <Badge variant={`${class_.Booked ? "green" : "destructive"}`} > {class_.Booked ? "booked" : "not booked"} </Badge>
                             </div>
                         </CardTitle>
-                        <CardDescription>
-                            {class_.student.name} wants to take a <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {returnClassTime(class_.startTime)} on {returnClassDate(class_.startTime)}
+                        {/* 
 
-                        </CardDescription>
+                        </CardDescription> */}
                     </CardHeader>
                     <CardContent>
-
+                        <CardDescription>
+                            {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
+                            <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {returnClassTime(class_.startTime)} on {returnClassDate(class_.startTime)}
+                        </CardDescription>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Button variant="outline">Book class</Button>
+                    <CardFooter className="flex justify-end">
+                        <Button size="sm">Book class</Button>
 
                     </CardFooter>
                 </Card>
