@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
-import { date } from "zod"
+
+
 export async function POST(req, res) {
     const session = await auth()
     if (!session) {
@@ -15,12 +16,19 @@ export async function POST(req, res) {
     if (existingTeacher) {
         return NextResponse.json({ message: "You have already submitted a teacher application", data: existingTeacher, status: 400 })
     }
-    const { name, email } = await session.user
-    const body = await req.json()
+    const { name } = session.user
 
-    const { experience, contact, subjects, education } = body
+
+    const Formdata = await req.formData();
+    const resume = Formdata.get("resume")
+    const education = Formdata.get('education')
+    const contact = Formdata.get('contact')
+    const subjects = Formdata.getAll('subjects')
+    const experience = Formdata.get('experience')
+    // const subjects = allsubjects.split(',');
 
     try {
+        console.log("creating teacher-------------------------------------in try block")
         const teacher = await prisma.Teacher.create({
             data: {
                 name: name,
@@ -33,9 +41,11 @@ export async function POST(req, res) {
                 verified: false
             }
         })
-        return NextResponse.json({ message: " submitted successfully", data: teacher, status: 200 })
+        console.log(teacher, "-------------------------------------")
+        return NextResponse.json({ message: " submitted successfully", data: teacher, status: 201 })
     } catch (error) {
-        return NextResponse.json({ message: "Error submitting application", status: 400 })
+        console.log("error------------=-=-=-----------------------------------------------------", error)
+        return NextResponse.internalServerError("Something went wrong")
     } finally {
         await prisma.$disconnect();
     }

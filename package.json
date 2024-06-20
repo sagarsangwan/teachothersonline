@@ -15,7 +15,6 @@
     "@hookform/resolvers": "^3.4.2",
     "@neondatabase/serverless": "^0.9.3",
     "@prisma/adapter-neon": "^5.15.0",
-    "@prisma/client": "^5.15.0",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -32,6 +31,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "googleapis": "^140.0.0",
     "moment": "^2.30.1",
     "next": "14.2.3",
     "next-auth": "^5.0.0-beta.18",
@@ -55,10 +55,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@prisma/client": "^5.15.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "i": "^0.3.7",
+    "npm": "^10.8.1",
     "postcss": "^8",
-    "prisma": "^5.15.0",
+    "prisma": "^5.15.1",
     "tailwindcss": "^3.4.1"
   }
 }
