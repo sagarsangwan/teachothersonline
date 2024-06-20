@@ -238,7 +238,7 @@ export default function DemoClassStudent() {
                             </div>
                             : 'Submit'}
                     </Button>
-                    : <Link href="/api/auth/signin"><Button>Sign in to submit</Button></Link>}
+                    : <Link href="/api/auth/signin"><Button className="mt-3">Sign in to submit</Button></Link>}
             </form>
         </Form>
     )

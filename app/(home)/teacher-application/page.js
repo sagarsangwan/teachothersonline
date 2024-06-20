@@ -44,6 +44,7 @@ const formSchema = z.object({
     }),
 })
 
+const currentFullUrl = process.env.NEXT_PUBLIC_BASE_URL + "/teacher-application"
 
 const subjects = [
     { id: "math", label: "Math" },
@@ -57,42 +58,41 @@ const subjects = [
 ]
 
 function Teacherapplication() {
+
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
     const OnSubmit = async (data) => {
         setLoading(true)
+        const formData = new FormData();
+        formData.append("education", data.education);
+        formData.append("experience", data.experience);
+        formData.append("contact", data.contact);
+        if (data.resume) {
+            formData.append("resume", data.resume[0]);
+        }
+        formData.append("subjects", data.subjects);
+        console.log(formData)
         try {
             const response = await fetch("/api/teacher-form-submission", {
                 method: "POST",
-                // headers: {
-                //     "Content-Type": "application/json",
-                // },
-                body: JSON.stringify(data),
+                body: formData,
+
             })
             const res = await response.json()
-            if (response.status === 200) {
-                toast.success("Application submitted successfully");
-                form.reset({
-                    education: "",
-                    experience: "",
-                    contact: "",
-                    resume: undefined,
-                    subjects: [],
-                });
+            if (res.status === 201) {
+                toast.success(res.message || "Application submitted successfully");
+                form.reset();
                 router.push("/");
-            } else {
-                toast.error(res.message || "Error submitting form. Try again later.");
             }
-
-
-            // clear the form 
-
-
-
+            if (res.status === 400) {
+                toast.error(res.message || "You have already submitted a teacher application go back to home page");
+                form.reset();
+                router.push("/");
+            }
         } catch (error) {
-            console.error(error)
-            toast.error("error submitting for try after somee time")
+
+            toast.error("something went wrong try after some time ")
         } finally {
 
             setLoading(false)
@@ -112,7 +112,9 @@ function Teacherapplication() {
             subjects: [],
 
         },
+
     })
+    const fileRef = form.register("resume");
 
     return (
 
@@ -198,7 +200,7 @@ function Teacherapplication() {
                                 <FormItem>
                                     <FormLabel>Resume</FormLabel>
                                     <FormControl>
-                                        <Input id="resume" type="file" {...field} />
+                                        <Input id="resume" type="file" {...fileRef} />
                                     </FormControl>
 
                                     <FormMessage />
@@ -255,5 +257,5 @@ function Teacherapplication() {
 }
 
 
-export default isAuth(Teacherapplication)
+export default isAuth(Teacherapplication,)
 // export default Teacherapplication
