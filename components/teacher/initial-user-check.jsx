@@ -91,73 +91,75 @@ async function initialUserCheck() {
     const demoClass = await checkDemoClass()
 
 
-    // Check if the user is a teacher or is there an application pending
-    if (session && session.user.role === "teacher") {
-        let teacher = null
-        try {
-            teacher = await prisma.Teacher.findUnique({
-                where: {
-                    userId: session.user.id
-                }
-            })
-        } catch {
-            return null
-        } finally {
-            await prisma.$disconnect()
-        }
-        if (teacher) {
-            // return teacherDashboard(teacher)
-            <div>
-                hi
-            </div>
-        }
-    }
-    if (session && session.user.role === "student" && demoClass) {
-        return (
-            // paas the demoClass to the studentClassStatusCard
-            studentClassStatusCard(demoClass)
+    if (session) {
+        if (session.user.role === "teacher") {
+            let teacher = null
+            console.log("=[[[[[[[[[[[[[[[[=[[[[[[[[[[[[[")
+            try {
+                teacher = await prisma.Teacher.findUnique({
+                    where: {
+                        userId: session.user.id
+                    }
+                })
+            } catch {
+                return null
+            } finally {
+                await prisma.$disconnect()
+            }
+            if (teacher) {
+                return (
+                    <div>
 
-        )
-    }
-    if (session && session.user.role === "student" && !demoClass) {
-        return (
-            <div className="flex flex-wrap md:h-screen">
-                <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
-                    <p className="flex flex-col space-y-4 md:space-y-7">
-                        <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
-                        <span>Request a demo, start learning</span>
-                        <span>
-                            {/* <Input />
+                    </div>)
+            }
+        }
+        if (session.user.role === "student" && demoClass) {
+            return (
+                // paas the demoClass to the studentClassStatusCard
+                studentClassStatusCard(demoClass)
+
+            )
+        }
+        if (session.user.role === "student" && !demoClass) {
+            return (
+                <div className="flex flex-wrap md:h-screen">
+                    <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
+                        <p className="flex flex-col space-y-4 md:space-y-7">
+                            <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
+                            <span>Request a demo, start learning</span>
+                            <span>
+                                {/* <Input />
                             <Input />
                             <Input /> */}
-                            {/* <Button color="primary">
+                                {/* <Button color="primary">
                                     <Link href="/teacher-application">
                                         Book a demo class
                                     </Link>
                                 </Button> */}
-                        </span>
-                    </p>
-                    <div className="sm:w-[238px] md:w-[324px]">
-                        <DemoClassStudent />
+                            </span>
+                        </p>
+                        <div className="sm:w-[238px] md:w-[324px]">
+                            <DemoClassStudent />
+                        </div>
+
+                    </div>
+                    <div className="sm:w-1/2 sm:my-auto ">
+
+                        <Image alt="" src={studentlearn} />
+
                     </div>
 
-                </div>
-                <div className="sm:w-1/2 sm:my-auto ">
 
-                    <Image alt="" src={studentlearn} />
-
-                </div>
-
-
-            </div >
-        )
+                </div >
+            )
+        }
     }
 
 
 
 
 
-    if (teacherApplication) {
+    else if (teacherApplication) {
         return (
             (<div>
                 <Card>

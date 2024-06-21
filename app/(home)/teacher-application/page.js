@@ -74,7 +74,7 @@ function Teacherapplication() {
         formData.append("subjects", data.subjects);
         console.log(formData)
         try {
-            const response = await fetch("/api/teacher-form-submission", {
+            const response = await fetch("/api/teacher/teacher-form-submission", {
                 method: "POST",
                 body: formData,
 

@@ -1,3 +1,4 @@
+"use client"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import {
@@ -11,7 +12,6 @@ import {
 import moment from "moment";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 async function returnClassTime(startTime) {
     const class_datetime = moment(startTime)
     const class_time = class_datetime.format('HH:mm')
@@ -33,7 +33,21 @@ async function returnClassDate(startTime) {
     return class_date
 }
 
-function bookClass(id) {
+async function bookClass(id) {
+    try {
+        response = fetch(`/api/teacher/handle-class/${id}`, {
+            method: POST,
+        })
+        const res = await response.json()
+        if (res.ok) {
+            console.log("okay hai--------------------------------")
+        }
+        else {
+            console.log("okay nhi hai-------------------")
+        }
+    } catch (error) {
+        console.log(error)
+    }
 
 }
 async function page() {
@@ -93,7 +107,7 @@ async function page() {
                                     </CardDescription>
                                 </CardContent>
                                 <CardFooter className="flex justify-end">
-                                    <Button size="sm" onClick={bookClass(class_.id)}>
+                                    <Button size="sm" onClick={() => bookClass(class_.id)}>
                                         Book class</Button>
                                 </CardFooter>
                             </Card>
