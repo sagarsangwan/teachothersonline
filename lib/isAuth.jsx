@@ -24,16 +24,16 @@ export default function isAuth(Component, callbackurl) {
         useEffect(() => {
             if (status === "unauthenticated") {
                 redirect("/")
-                // router.push(`/api/auth/signin?callbackurl=${encodeURIComponent(callbackurl)}`);
+
             }
         }, [status, router]);
 
         if (status === "loading") {
-            return <div>Loading...</div>; // Optionally, you can show a loading state
+            return <div>Loading...</div>;
         }
 
         if (status === "unauthenticated") {
-            return null; // This will trigger the useEffect redirect
+            return null;
         }
 
         return <Component {...props} />;

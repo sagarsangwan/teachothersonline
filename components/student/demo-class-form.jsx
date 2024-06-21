@@ -71,6 +71,7 @@ export default function DemoClassStudent() {
 
     const [loading, setLoading] = useState(false);
     const OnSubmit = async (data) => {
+        console.log(data)
         setLoading(true)
         try {
             const response = await fetch("/api/student-class-create", {
@@ -89,7 +90,7 @@ export default function DemoClassStudent() {
                     time_of_class: "",
                     date_of_class: "",
                     contact: "",
-                    subjects: [],
+                    subjects: "",
                 });
                 router.refresh();
 

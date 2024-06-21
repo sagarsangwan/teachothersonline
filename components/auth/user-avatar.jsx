@@ -1,4 +1,5 @@
 "use client";
+import { signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -37,11 +38,26 @@ export default function UserAvatar() {
                         <DropdownMenuItem>
                             <Link href="/profile">{session.user.name}</Link>
                         </DropdownMenuItem>
+                        {session.user.role === "admin" &&
+                            <DropdownMenuItem>
+                                <Link href={"/admin-dashboard"}>Admin</Link>
+                            </DropdownMenuItem>}
+                        {session.user.role === "teacher" &&
+                            <div>
+                                <DropdownMenuItem>
+                                    <Link href={"/teacher-dashboard"}>dashboard</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link href={"/teacher-booked-classes"}>Your classes</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link href={"/teacher-book-new-class"}>Book classes</Link>
+                                </DropdownMenuItem>
+                            </div>
+                        }
                         <DropdownMenuItem>
-                            {session.user.role === "admin" ? <Link href={"/admin-dashboard"}>Admin</Link> : ""}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Link href="/api/auth/signout">Sign out</Link>
+                            <Button size="sm" onClick={() => signOut()} >Sign out</Button>
+                            {/* <Link href="/api/auth/signout">Sign out</Link> */}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -49,5 +65,5 @@ export default function UserAvatar() {
 
             </div>
         )
-    return <Link href="/api/auth/signin"><Button>Sign in</Button></Link>
+    return <Button onClick={() => signIn()}>Sign in</Button>
 }
