@@ -22,6 +22,8 @@ import moment from "moment";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 function returnClassTime(startTime) {
     const class_datetime = moment(startTime)
     const class_time = class_datetime.format('HH:mm')
@@ -49,22 +51,30 @@ function returnClassDate(startTime) {
 function AllUnbookedClasses({ unbooked_classes }) {
     console.log("unbooked_classes=======///////////////////")
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
     async function bookClass(id) {
-        console.log(id)
+
+        const Booked = true
         try {
             setLoading(true)
             const response = await fetch(`/api/teacher/handle-classes/${id}`, {
-                method: "PUT"
-                // send id as body
+                method: "PUT",
+                body: JSON.stringify({ Booked })
+
 
             })
             const res = await response.json()
             if (res.status === 200) {
                 console.log("okay hai--------------------------------")
+                console.log(res)
+                toast.success(res.message)
                 setLoading(false)
+                router.refresh()
+
             }
             else {
-                console.log("okay nhi hai-------------------")
+                toast.error(res.message)
+                setLoading(false)
             }
         } catch (error) {
             console.log(error)

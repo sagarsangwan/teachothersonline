@@ -43,7 +43,7 @@ async function page() {
         <div>
             {unbooked_classes.length > 0 ? (
                 <AllUnbookedClasses unbooked_classes={unbooked_classes} />
-            ) : (<div>nnnnnnooooooooooooooo</div>)
+            ) : (<div>No classes available</div>)
             }
         </div>
     )
