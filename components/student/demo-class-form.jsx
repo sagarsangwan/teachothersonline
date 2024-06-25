@@ -163,7 +163,7 @@ export default function DemoClassStudent() {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             disabled={(date) =>
-                                                date > new Date("2024-6-24") || date < new Date()
+                                                date < new Date()
                                             }
                                             initialFocus
                                         />
