@@ -17,8 +17,8 @@ async function fetchUnbookedClasses() {
     if (!teacher) {
         return redirect('/')
     }
-    const teacher_subjects = teacher.subjects[0].split(',');
-    console.log(teacher_subjects, "teacher_subjects")
+    const teacher_subjects = teacher.subjects[0].split(',').map(subject => subject.trim().toLowerCase());
+
     try {
 
         unbooked_classes = await prisma.OneToOneClass.findMany({
@@ -36,7 +36,6 @@ async function fetchUnbookedClasses() {
     } finally {
         await prisma.$disconnect();
     }
-    console.log("unbooked_classes=======;;;;;;;;;;;;;;;;;;;", unbooked_classes)
     return (unbooked_classes)
 }
 

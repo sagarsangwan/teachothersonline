@@ -69,7 +69,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                 console.log(res)
                 toast.success(res.message)
                 setLoading(false)
-                router.refresh()
+                router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
 
             }
             else {

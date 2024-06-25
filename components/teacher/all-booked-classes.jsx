@@ -66,10 +66,8 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
         }
 
     }
-    if (!booked_classes) return <div>Loading...</div>;
     return (
         <div>
-            <p>sagar</p>
             {booked_classes.length > 0 &&
                 <div className="">
                     <div className="mb-4">
@@ -143,6 +141,82 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
                         <Button>View More</Button>
                     </div>
                 </div>}
+
+
+            {expired_classes.length > 0 &&
+                <div className="">
+                    <div className="mb-4">
+                        <h1 className="text-xl font-bold">Expired classes</h1>
+
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {/* {unbookedClassesCard(booked_classes, teacher)} */}
+                        {expired_classes.map((class_) => (
+                            <Card key={class_.id} className="">
+                                <CardHeader>
+                                    <CardTitle >
+                                        <div className="flex justify-between">
+                                            <span> Demo class</span>
+                                            <Badge variant="destructive" > expired </Badge>
+                                        </div>
+                                    </CardTitle>
+                                    {/* 
+
+                        </CardDescription> */}
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription>
+                                        {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {returnClassTime(class_.startTime)} on {returnClassDate(class_.startTime)}
+                                    </CardDescription>
+                                    {/* <TimerComponent starttime={class_.startTime} /> */}
+                                </CardContent>
+                                <CardFooter className="flex justify-end">
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <Button size="sm">
+                                                Upload class link</Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-md">
+                                            <DialogHeader>
+                                                <DialogTitle>upload class link</DialogTitle>
+                                                <DialogDescription>
+
+
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <div className="flex items-center space-x-2">
+
+                                            </div>
+                                            <DialogFooter className="sm:justify-start">
+                                                {!loading &&
+                                                    <Button size="sm" onClick={() => bookClass(class_.id)}>
+                                                        Upload class link</Button>}
+                                                {loading &&
+                                                    <Button disabled>
+                                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                                                        Please wait
+                                                    </Button>}
+                                                <DialogClose asChild>
+                                                    <Button type="button" variant="secondary">
+                                                        No
+                                                    </Button>
+                                                </DialogClose>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
+
+
+                                </CardFooter>
+                            </Card>
+                        ))}
+
+                    </div>
+                    <div className="flex justify-end mt-3">
+                        <Button>View More</Button>
+                    </div>
+                </div>}
+
 
         </div>
     )

@@ -26,6 +26,9 @@ async function fetchUnbookedClasses() {
         booked_classes = await prisma.OneToOneClass.findMany({
             where: {
                 teacherId: teacher.id,
+                endTime: {
+                    gte: new Date()
+                }
             },
             include: { student: true }
         })
@@ -34,7 +37,7 @@ async function fetchUnbookedClasses() {
                 teacherId: teacher.id,
                 classlink: null,
                 endTime: {
-                    gte: new Date()
+                    lte: new Date()
                 }
             },
             include: { student: true }
@@ -56,15 +59,13 @@ async function page() {
     console.log(booked_classes, "booked_classes=====================")
     console.log(expired_classes, "expired_classes=====================")
 
-    if (!booked_classes) {
-        return <div>..........loading</div>
-    }
+    // if (!booked_classes && !expired_classes) {
+    //     return <div>..........loading</div>
+    // }
     return (
         <div>
-            {booked_classes.length > 0 ? (
-                <AllBookedClasses booked_classes={booked_classes} expired_classes={expired_classes} />
-            ) : (<div>No classes available</div>)
-            }
+            <AllBookedClasses booked_classes={booked_classes} expired_classes={expired_classes} />
+
         </div>
     )
 }

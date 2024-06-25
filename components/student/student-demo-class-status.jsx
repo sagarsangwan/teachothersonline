@@ -36,7 +36,7 @@ async function studentClassStatusCard(demoClass) {
                     </div>
                 </CardTitle>
                 <CardDescription>
-                    Hi, {demoClass.student.subjects} You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span>join this link {demoClass.classlink}</span> : <span>wait your class is not booked by our teacher we will inform you when your class is scheduled</span>}
+                    Hi, {demoClass.student.name} You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span>join this link on sharp {class_time}  {demoClass.classlink}</span> : <span> your request fo demo class is accepted wait until our teacher upload a link  </span>}
 
                 </CardDescription>
             </CardHeader>
