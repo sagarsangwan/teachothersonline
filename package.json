@@ -39,6 +39,7 @@
     "nextjs-toploader": "^1.6.12",
     "novel": "^0.4.2",
     "react": "^18",
+    "react-countdown-circle-timer": "^3.2.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.51.5",

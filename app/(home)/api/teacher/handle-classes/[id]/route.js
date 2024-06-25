@@ -14,6 +14,11 @@ export async function PUT(req, { params }) {
     if (!session) {
         return NextResponse.unauthorized("Unauthorized")
     }
+    const current_teacher = await prisma.teacher.findUnique({
+        where: {
+            userId: session.user.id
+        }
+    })
     const oneToOneClass = await prisma.oneToOneClass.findUnique({
         where: {
             id: classId
@@ -32,7 +37,12 @@ export async function PUT(req, { params }) {
                 id: classId
             },
             data: {
-                Booked
+                Booked,
+                teacher: {
+                    connect: {
+                        id: current_teacher.id
+                    }
+                }
             }
         })
         // const oneToOneClass = "Class Booked Successfully"

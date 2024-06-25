@@ -12,11 +12,6 @@ import {
 
 
 export const teacherColums = [
-    // {
-    //     accessorKey: "id",
-    //     Header: "ID",
-
-    // },
     {
         accessorKey: "Details",
         header: ({ column }) => {

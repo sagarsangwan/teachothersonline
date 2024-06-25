@@ -7,7 +7,7 @@ export async function POST(req, res) {
     if (!session) {
         return NextResponse.unauthorized("Unauthorized")
     }
-    let existingClass = null; // Declare outside to use later
+    let existingClass = null
 
     const existingStudent = await prisma.Student.findUnique({
         where: { userId: session.user.id }
@@ -29,6 +29,7 @@ export async function POST(req, res) {
         const body = await req.json();
         const { time_of_class, date_of_class, contact, subjects } = body;
         let dateTime = new Date(date_of_class);
+        console.log(subjects, "subjects")
         const date_ = dateTime.toISOString().slice(0, 10);
         const class_date_time_string = `${date_}T${time_of_class}:00.000Z`;
         const class_date_time = new Date(class_date_time_string);

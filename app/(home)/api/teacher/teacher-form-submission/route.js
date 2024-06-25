@@ -28,7 +28,6 @@ export async function POST(req, res) {
     // const subjects = allsubjects.split(',');
 
     try {
-        console.log("creating teacher-------------------------------------in try block")
         const teacher = await prisma.Teacher.create({
             data: {
                 name: name,
@@ -41,10 +40,8 @@ export async function POST(req, res) {
                 verified: false
             }
         })
-        console.log(teacher, "-------------------------------------")
         return NextResponse.json({ message: " submitted successfully", data: teacher, status: 201 })
     } catch (error) {
-        console.log("error------------=-=-=-----------------------------------------------------", error)
         return NextResponse.internalServerError("Something went wrong")
     } finally {
         await prisma.$disconnect();
