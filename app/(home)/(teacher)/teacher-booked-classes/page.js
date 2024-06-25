@@ -1,23 +1,71 @@
+
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
-async function page() {
+import AllBookedClasses from "@/components/teacher/all-booked-classes"
+import moment from "moment"
+import { redirect } from 'next/navigation'
+
+
+async function fetchUnbookedClasses() {
+    let booked_classes = [];
+    let expired_classes = [];
     const session = await auth()
-    let teacher
+    if (!session) {
+        return redirect('/api/auth/signin')
+    }
+    const teacher = await prisma.Teacher.findUnique({
+        where: {
+            userId: session.user.id
+        }
+    })
+    if (!teacher) {
+        return redirect('/')
+    }
     try {
-        teacher = await prisma.Teacher.findUnique({
+
+        booked_classes = await prisma.OneToOneClass.findMany({
             where: {
-                userId: session.user.id
-            }
+                teacherId: teacher.id,
+            },
+            include: { student: true }
         })
-    } catch {
+        expired_classes = await prisma.OneToOneClass.findMany({
+            where: {
+                teacherId: teacher.id,
+                classlink: null,
+                endTime: {
+                    gte: new Date()
+                }
+            },
+            include: { student: true }
+        })
+
+    } catch (error) {
+        console.log(error)
         return null
     } finally {
-        await prisma.$disconnect()
+        await prisma.$disconnect();
+    }
+    return [booked_classes, expired_classes]
+}
+
+
+
+async function page() {
+    const [booked_classes, expired_classes] = await fetchUnbookedClasses()
+    console.log(booked_classes, "booked_classes=====================")
+    console.log(expired_classes, "expired_classes=====================")
+
+    if (!booked_classes) {
+        return <div>..........loading</div>
     }
     return (
-        <p>
-            no classes
-        </p>
+        <div>
+            {booked_classes.length > 0 ? (
+                <AllBookedClasses booked_classes={booked_classes} expired_classes={expired_classes} />
+            ) : (<div>No classes available</div>)
+            }
+        </div>
     )
 }
 
