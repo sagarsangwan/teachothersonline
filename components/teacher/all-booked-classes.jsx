@@ -36,7 +36,7 @@ function returnClassTime(startTime) {
 
 function AllBookedClasses({ booked_classes, expired_classes }) {
     const [loading, setLoading] = useState(false)
-    console.log(expired_classes)
+
 
     const router = useRouter()
     async function bookClass(id) {

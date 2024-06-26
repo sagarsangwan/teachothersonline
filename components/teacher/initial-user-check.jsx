@@ -92,10 +92,8 @@ async function initialUserCheck() {
 
 
     if (session) {
-        console.log("session haiiiiiiiiiiiiiiiii", session.user.role)
         if (session.user.role === "teacher") {
             let teacher = null
-            console.log("=[[[[[[[[[[[[[[[[=[[[[[[[[[[[[[")
             try {
                 teacher = await prisma.Teacher.findUnique({
                     where: {

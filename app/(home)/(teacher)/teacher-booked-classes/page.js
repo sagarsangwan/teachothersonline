@@ -56,8 +56,6 @@ async function fetchUnbookedClasses() {
 
 async function page() {
     const [booked_classes, expired_classes] = await fetchUnbookedClasses()
-    console.log(booked_classes, "booked_classes=====================")
-    console.log(expired_classes, "expired_classes=====================")
 
     // if (!booked_classes && !expired_classes) {
     //     return <div>..........loading</div>
