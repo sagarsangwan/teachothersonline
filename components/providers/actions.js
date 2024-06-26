@@ -10,10 +10,11 @@ export async function getToken() {
         throw new Error("---------------")
     }
     const session = await auth()
-    const user = session.user
     if (!session) {
-        throw new Error("not authenticated")
+        // throw new Error("not authenticated")
+        return
     }
+    const user = session.user
     const streamClient = new StreamClient(streamApiKey, streamApiSecret)
     const expirationTime = Math.floor(Date.now() / 1000) * 60 * 60
     const issuedAt = Math.floor(Date.now() / 1000) - 60

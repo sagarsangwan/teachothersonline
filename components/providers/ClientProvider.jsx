@@ -9,6 +9,24 @@ import { getToken } from "./actions"
 
 function ClientProvider({ children }) {
     const videoCLient = useIntilizeVideoClient()
+    const { status } = useSession()
+
+    if (status === "loading") {
+        return (
+            <div className="flex h-screen justify-center items-center ">
+                <ReloadIcon className="mr-2 h-10 w-10 animate-spin" />
+            </div>
+        )
+    }
+
+    if (status === "unauthenticated") {
+        return (
+            <div>
+                {children}
+            </div>
+        )
+    }
+
     if (!videoCLient) {
         return (
             <div className="flex h-screen justify-center items-center ">
@@ -37,24 +55,20 @@ function useIntilizeVideoClient() {
                 image: session.user.image
             }
         } else {
-            const id = nanoid
-            streamUser = {
-                id: id,
-                type: "guest",
-                name: `guest ${id}`
-            }
-            const client = new StreamVideoClient({
-                apiKey: process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY,
-                user: streamUser,
-                tokenProvider: getToken()
-            })
-            setVideoClient(client)
-            return () => {
-                client.disconnectUser()
-                setVideoClient(null)
-            }
+
         }
-    }, [])
+        const client = new StreamVideoClient({
+            apiKey: process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY,
+            user: streamUser,
+            tokenProvider: getToken()
+        })
+        setVideoClient(client)
+
+        return () => {
+            client.disconnectUser()
+            setVideoClient(null)
+        }
+    }, [session?.user?.id, session?.user?.image, session?.user?.username, status])
 
     return videoCLient
 }
