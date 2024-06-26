@@ -24,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useStreamVideoClient } from "@stream-io/video-react-sdk";
+// import prisma from "@/lib/prisma";
+import getCurrentClass from "./get-current-class";
 function returnClassTime(startTime) {
     const class_datetime = moment(startTime)
     const class_time = class_datetime.format('HH:mm')
@@ -51,9 +55,40 @@ function returnClassDate(startTime) {
 function AllUnbookedClasses({ unbooked_classes }) {
     console.log("unbooked_classes=======///////////////////")
     const [loading, setLoading] = useState(false)
+    const [call, setCall] = useState(null)
     const router = useRouter()
-    async function bookClass(id) {
+    const { data: session, status } = useSession()
+    const client = useStreamVideoClient()
+    const user = session.user
 
+    async function createMetting(startsAt) {
+        if (!client || !user) {
+            return
+        }
+        console.log(client, "clienttttttttttttttttttt")
+        try {
+            const id = crypto.randomUUID()
+            const call = client.call("default", id,)
+            await call.getOrCreate({
+                data: {
+                    starts_at: startsAt,
+                    custom: { description: "sagar" }
+                }
+            })
+            setCall(call)
+
+
+        } catch (error) {
+            console.log(error)
+            toast.error("something went wrong try after sometimeeeeeeeeeee")
+        }
+    }
+
+    async function bookClass(id) {
+        const class_ = await getCurrentClass(id)
+        const startsAt = class_.startTime.toISOString()
+        console.log(startsAt, "{[[[[[[[[[[[[[[[[[[[[[[[[")
+        createMetting(startsAt)
         const Booked = true
         try {
             setLoading(true)
@@ -69,7 +104,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                 console.log(res)
                 toast.success(res.message)
                 setLoading(false)
-                router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
+                // router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
 
             }
             else {
