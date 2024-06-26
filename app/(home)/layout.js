@@ -4,6 +4,7 @@ import Navbar from "@/components/ui/navbar";
 import { SessionProvider } from "next-auth/react";
 import Providers from "@/components/providers";
 import Script from 'next/script'
+import ClientProvider from "@/components/providers/ClientProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -18,15 +19,16 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <SessionProvider>
           <Providers>
-            <div className="container">
-              <Navbar />
-              {children}
-            </div>
-            {process.env.NODE_ENV === 'production' &&
+            <ClientProvider>
+              <main className="container">
+                <Navbar />
+                {children}
+              </main>
+              {process.env.NODE_ENV === 'production' &&
 
-              <Script id="clarity"
-                dangerouslySetInnerHTML={{
-                  __html: `
+                <Script id="clarity"
+                  dangerouslySetInnerHTML={{
+                    __html: `
         (function(c,l,a,r,i,t,y){
             c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
             t=l.createElement(r);
@@ -35,12 +37,12 @@ export default function RootLayout({ children }) {
             y=l.getElementsByTagName(r)[0];
             y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");`,
-                }}
-              >
-              </Script>
+                  }}
+                >
+                </Script>
 
-            }
-
+              }
+            </ClientProvider>
           </Providers>
         </SessionProvider>
       </body>

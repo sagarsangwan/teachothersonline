@@ -3,11 +3,11 @@ import { auth } from "@/auth";
 export default async function Home() {
   const session = await auth()
   return (
-    <main className="flex  flex-col">
+    <div className="flex  flex-col">
 
       {session ? session.user.role !== "admin" ? initialUserCheck() : "admin" : initialUserCheck()}
 
 
-    </main>
+    </div>
   );
 }
