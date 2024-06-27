@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import '@stream-io/video-react-sdk/dist/css/styles.css';
 import "../globals.css";
 import Navbar from "@/components/ui/navbar";
 import { SessionProvider } from "next-auth/react";
