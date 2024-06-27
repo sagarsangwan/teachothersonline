@@ -1,48 +1,15 @@
 "use client"
 
-import { ReloadIcon } from "@radix-ui/react-icons"
 import { StreamVideo, StreamVideoClient } from "@stream-io/video-react-sdk"
-import { nanoid } from "nanoid"
+
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { getToken } from "./actions"
+import Loader from "../ui/Loader"
 
 function ClientProvider({ children }) {
-    const videoCLient = useIntilizeVideoClient()
-    const { status } = useSession()
-
-    if (status === "loading") {
-        return (
-            <div className="flex h-screen justify-center items-center ">
-                <ReloadIcon className="mr-2 h-10 w-10 animate-spin" />
-            </div>
-        )
-    }
-
-    if (status === "unauthenticated") {
-        return (
-            <div>
-                {children}
-            </div>
-        )
-    }
-
-    if (!videoCLient) {
-        return (
-            <div className="flex h-screen justify-center items-center ">
-                <ReloadIcon className="mr-2 h-10 w-10 animate-spin" />
-            </div>
-        )
-    }
-    return (
-        <StreamVideo client={videoCLient}>
-            {children}
-        </StreamVideo>
-    )
-
-}
-
-function useIntilizeVideoClient() {
+    // const videoCLient = useIntilizeVideoClient()
+    // const { status } = useSession()
     const { data: session, status } = useSession()
     const [videoCLient, setVideoClient] = useState(null)
     useEffect(() => {
@@ -65,14 +32,74 @@ function useIntilizeVideoClient() {
         })
         setVideoClient(client)
 
-        return () => {
-            client.disconnectUser();
-            setVideoClient(null);
-        };
+        // return () => {
+        //     client.disconnectUser();
+        //     setVideoClient(null);
+        // };
     }, [session, status])
 
-    return videoCLient
+    if (status === "loading") {
+        return (
+            <div className="flex h-screen justify-center items-center ">
+                <Loader />
+            </div>
+        )
+    }
+
+    if (status === "unauthenticated") {
+        return (
+            <div>
+                {children}
+            </div>
+        )
+    }
+
+    if (!videoCLient) {
+        return (
+            <div className="flex h-screen justify-center items-center ">
+                <Loader />
+            </div>
+        )
+    }
+    return (
+        <StreamVideo client={videoCLient}>
+            {children}
+        </StreamVideo>
+    )
+
 }
+
+// function useIntilizeVideoClient() {
+//     const { data: session, status } = useSession()
+//     const [videoCLient, setVideoClient] = useState(null)
+//     useEffect(() => {
+//         if (status === "loading") return;
+//         let streamUser = "";
+//         if (session?.user?.id) {
+//             streamUser = {
+//                 id: session.user.id,
+//                 name: session.user.username,
+//                 image: session.user.image
+//             }
+//         } else {
+
+//         }
+//         const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
+//         const client = new StreamVideoClient({
+//             apiKey,
+//             user: streamUser,
+//             tokenProvider: streamUser?.id ? getToken : undefined
+//         })
+//         setVideoClient(client)
+
+//         return () => {
+//             client.disconnectUser();
+//             setVideoClient(null);
+//         };
+//     }, [session, status])
+
+//     return videoCLient
+// }
 
 export default ClientProvider
 
@@ -117,7 +144,7 @@ export default ClientProvider
 //     if (status === "loading") {
 //         return (
 //             <div className="flex h-screen justify-center items-center ">
-//                 <ReloadIcon className="mr-2 h-10 w-10 animate-spin" />
+//                 <Loader />
 //             </div>
 //         )
 //     }
@@ -132,7 +159,7 @@ export default ClientProvider
 //     if (!videoClient) {
 //         return (
 //             <div className="flex h-screen justify-center items-center ">
-//                 <ReloadIcon className="mr-2 h-10 w-10 animate-spin" />
+//                 <Loader />
 //             </div>
 //         )
 //     }

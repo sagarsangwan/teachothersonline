@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import Loader from '@/components/ui/Loader';
 import { CallControls, SpeakerLayout, StreamCall, StreamTheme, useStreamVideoClient } from '@stream-io/video-react-sdk';
 import React, { useState } from 'react'
 
@@ -8,7 +8,7 @@ function MeetingPage({ id }) {
     const [call, setCall] = useState(null);
     const client = useStreamVideoClient()
     if (!client) {
-        return (<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />)
+        return (<Loader />)
     }
     if (!call) {
         return (
