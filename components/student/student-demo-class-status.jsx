@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "../ui/badge"
+import Link from "next/link"
 async function studentClassStatusCard(demoClass) {
     const session = await auth()
     const class_datetime = moment(demoClass.startTime)
@@ -36,7 +37,7 @@ async function studentClassStatusCard(demoClass) {
                     </div>
                 </CardTitle>
                 <CardDescription>
-                    Hi, {demoClass.student.name} You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span>join this link on sharp {class_time}  {demoClass.classlink}</span> : <span> your request fo demo class is accepted wait until our teacher upload a link  </span>}
+                    Hi, {demoClass.student.name} You have booked a <span className=" font-bold"> {demoClass.teachingMode}</span> demo class with us for {demoClass.subject} at {class_time} on {class_date}   {demoClass.classlink ? <span className="mt-3"> <br /> Join the meeting on time using below button</span> : <span> your request fo demo class is accepted wait until our teacher upload a link  </span>}
 
                 </CardDescription>
             </CardHeader>
@@ -45,6 +46,7 @@ async function studentClassStatusCard(demoClass) {
             </CardContent>
             <CardFooter className="flex justify-between">
                 <Button variant="outline">Cancel</Button>
+                <Button > <Link href={demoClass.classlink}>Go To Meeting</Link> </Button>
 
             </CardFooter>
         </Card>

@@ -30,22 +30,25 @@ export async function PUT(req, { params }) {
 
 
     const body = await req.json();
-    const { Booked } = body
+    const { Booked, meetingId, classlink } = body
+    console.log(Booked, meetingId, classlink)
     try {
-        // const oneToOneClass = await prisma.oneToOneClass.update({
-        //     where: {
-        //         id: classId
-        //     },
-        //     data: {
-        //         Booked,
-        //         teacher: {
-        //             connect: {
-        //                 id: current_teacher.id
-        //             }
-        //         }
-        //     }
-        // })
-        const oneToOneClass = "Class Booked Successfully"
+        const oneToOneClass = await prisma.oneToOneClass.update({
+            where: {
+                id: classId
+            },
+            data: {
+                Booked,
+                meetingId,
+                classlink,
+                teacher: {
+                    connect: {
+                        id: current_teacher.id
+                    }
+                }
+            }
+        })
+        // const oneToOneClass = "Class Booked Successfully"
 
 
         return NextResponse.json({ message: "Class submitted successfully", data: oneToOneClass, status: 200 })

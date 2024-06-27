@@ -61,13 +61,19 @@ function AllUnbookedClasses({ unbooked_classes }) {
     const client = useStreamVideoClient()
     const user = session.user
 
-    async function createMetting(startsAt) {
+    async function createMetting(startsAt, meetingId) {
         if (!client || !user) {
             return
         }
         console.log(client, "clienttttttttttttttttttt")
         try {
-            const id = crypto.randomUUID()
+            let id
+            if (!meetingId) {
+                id = crypto.randomUUID()
+            } else {
+                id = meetingId
+            }
+            console.log(id, meetingId, "ppppppppppppppppppppppppppppppppppppppppppppp")
             const call = client.call("default", id,)
             await call.getOrCreate({
                 data: {
@@ -87,14 +93,21 @@ function AllUnbookedClasses({ unbooked_classes }) {
     async function bookClass(id) {
         const class_ = await getCurrentClass(id)
         const startsAt = class_.startTime.toISOString()
-        console.log(startsAt, "{[[[[[[[[[[[[[[[[[[[[[[[[")
-        createMetting(startsAt)
+        const oldMeetingId = class_.meetingId
+        console.log(startsAt, oldMeetingId, "{[[[[[[[[[[[[[[[[[[[[[[[[")
+        createMetting(startsAt, oldMeetingId)
+        let meetingId
+        if (call) {
+            meetingId = call.id
+        }
+        const classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
         const Booked = true
+        console.log(Booked, classlink, meetingId, "hihihihiihihihihihiihih")
         try {
             setLoading(true)
             const response = await fetch(`/api/teacher/handle-classes/${id}`, {
                 method: "PUT",
-                body: JSON.stringify({ Booked })
+                body: JSON.stringify({ Booked, meetingId, classlink })
 
 
             })
@@ -104,7 +117,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                 console.log(res)
                 toast.success(res.message)
                 setLoading(false)
-                // router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
+                router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
 
             }
             else {
