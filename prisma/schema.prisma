@@ -6,26 +6,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // engineType = "binary"
-}
-
-enum Role {
-  admin
-  user
-  teacher
-  student
-}
-
-enum ClassType {
-  demo
-  monthly
-  weekly
-  daily
-}
-
-enum teachingMode {
-  online
-  newdelhi
 }
 
 model Account {
@@ -34,15 +14,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -64,13 +43,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
+  role          Role      @default(user)
   accounts      Account[]
   sessions      Session[]
-  role          Role      @default(user)
-  // oneToOneClassesteacher OneToOneClass[]      @relation("OneToOneClassTeacher")
-  // oneToOneClassesstudent OneToOneClass[]      @relation("OneToOneClassStudents")
-  Teacher       Teacher?
   Student       Student?
+  Teacher       Teacher?
 
   @@map("users")
 }
@@ -95,8 +72,8 @@ model Teacher {
   verified   Boolean         @default(false)
   subittedAt DateTime        @default(now()) @map("submitted_at")
   userId     String          @unique @map("user_id")
-  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   classes    OneToOneClass[]
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("teachers")
 }
@@ -109,8 +86,8 @@ model Student {
   contact   String
   createdAt DateTime        @default(now()) @map("submitted_at")
   userId    String          @unique @map("user_id")
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   classes   OneToOneClass[]
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("students")
 }
@@ -125,10 +102,30 @@ model OneToOneClass {
   Booked       Boolean      @default(false)
   createdAt    DateTime     @default(now()) @map("created_at")
   classlink    String?
+  meetingId    String?
   teacherId    String?      @map("teacher_id")
-  teacher      Teacher?     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   studentId    String       @map("student_id")
   student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher      Teacher?     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   @@map("onetooneclasses")
+}
+
+enum Role {
+  admin
+  user
+  teacher
+  student
+}
+
+enum ClassType {
+  demo
+  monthly
+  weekly
+  daily
+}
+
+enum teachingMode {
+  online
+  newdelhi
 }

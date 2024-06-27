@@ -126,16 +126,7 @@ async function initialUserCheck() {
                         <p className="flex flex-col space-y-4 md:space-y-7">
                             <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
                             <span>Request a demo, start learning</span>
-                            <span>
-                                {/* <Input />
-                            <Input />
-                            <Input /> */}
-                                {/* <Button color="primary">
-                                    <Link href="/teacher-application">
-                                        Book a demo class
-                                    </Link>
-                                </Button> */}
-                            </span>
+
                         </p>
                         <div className="sm:w-[238px] md:w-[324px]">
                             <DemoClassStudent />
@@ -179,16 +170,7 @@ async function initialUserCheck() {
                             <p className="flex flex-col space-y-4 md:space-y-7">
                                 <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
                                 <span>Request a demo, start learning</span>
-                                <span>
-                                    {/* <Input />
-                                <Input />
-                                <Input /> */}
-                                    {/* <Button color="primary">
-                                        <Link href="/teacher-application">
-                                            Book a demo class
-                                        </Link>
-                                    </Button> */}
-                                </span>
+
                             </p>
                             <div className="sm:w-[238px] md:w-[324px]">
                                 <DemoClassStudent />
@@ -248,16 +230,7 @@ async function initialUserCheck() {
                         <p className="flex flex-col space-y-4 md:space-y-7">
                             <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
                             <span>Request a demo, start learning</span>
-                            <span>
-                                {/* <Input />
-                            <Input />
-                            <Input /> */}
-                                {/* <Button color="primary">
-                                    <Link href="/teacher-application">
-                                        Book a demo class
-                                    </Link>
-                                </Button> */}
-                            </span>
+
                         </p>
                         <div className="sm:w-[238px] md:w-[324px]">
                             <DemoClassStudent />

@@ -57,17 +57,18 @@ function useIntilizeVideoClient() {
         } else {
 
         }
+        const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
         const client = new StreamVideoClient({
-            apiKey: process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY,
+            apiKey,
             user: streamUser,
-            tokenProvider: getToken
+            tokenProvider: streamUser?.id ? getToken : undefined
         })
         setVideoClient(client)
 
         return () => {
-            client.disconnectUser()
-            setVideoClient(null)
-        }
+            client.disconnectUser();
+            setVideoClient(null);
+        };
     }, [session, status])
 
     return videoCLient
