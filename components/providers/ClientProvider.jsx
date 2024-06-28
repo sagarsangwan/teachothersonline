@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { getToken } from "./actions"
 import Loader from "../ui/Loader"
+import { nanoid } from "nanoid"
 
 function ClientProvider({ children }) {
     // const videoCLient = useIntilizeVideoClient()
@@ -22,6 +23,12 @@ function ClientProvider({ children }) {
                 image: session.user.image
             }
         } else {
+            const id = nanoid()
+            streamUser = {
+                id,
+                type: "guest",
+                name: `Guest${id}`,
+            }
 
         }
         const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
