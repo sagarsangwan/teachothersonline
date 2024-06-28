@@ -2,39 +2,46 @@
 import isAuth from '@/lib/isAuth';
 import { Button } from '@/components/ui/button';
 import Loader from '@/components/ui/Loader';
-
-import { CallControls, SpeakerLayout, StreamCall, StreamTheme, useStreamVideoClient, useCallStateHooks } from '@stream-io/video-react-sdk';
+import {
+    CallControls, SpeakerLayout, StreamCall, StreamTheme, useStreamVideoClient, useCallStateHooks, Call,
+} from '@stream-io/video-react-sdk';
 import React, { useState } from 'react'
-import { CiUser } from 'react-icons/ci';
+import useLoadCall from '@/hooks/useLoadCall';
+import { useSession } from 'next-auth/react';
 function MeetingPage({ id }) {
-    const [call, setCall] = useState(null);
-    const [showParticipants, setShowParticipants] = useState(false)
-    const client = useStreamVideoClient()
-    if (!client) {
+    const { data: session, status } = useSession()
+    const { call, callLoading } = useLoadCall(id)
+    if (!callLoading || status === "loading") {
         return (<Loader />)
     }
     if (!call) {
         return (
-            <Button onClick={async () => {
-                console.log(id, "=============")
-                const call = client.call("default", id)
-                await call.join()
-                setCall(call)
-            }}>
-                Join meeting
-            </Button>
+            <div className=' h-screen flex justify-center items-center my-auto'>
+
+                <p className="text-xl">Class not Found</p>
+            </div>
+        )
+    }
+    const notAllowedToJoin = call.type === "default" && (!session.user || !call.state.member.find((m) => m.user.id === session.user.id))
+
+    if (notAllowedToJoin) {
+        return (
+            <div className=' h-screen flex justify-center items-center my-auto'>
+
+                <p className="text-xl">You are not allowed to join</p>
+            </div>
         )
     }
     return (
         <div>
             <StreamCall call={call}>
                 <StreamTheme className=''>
+
                     <SpeakerLayout />
                     <div className='flex content-center justify-center'>
                         <CallControls />
-                        <div className=' my-auto'>
-                            <Button variant="outline" className="ms-2" onClick={() => setShowParticipants((prev) => !prev)} > <CiUser /> </Button>
-                        </div>
+                        {/* <MyCallUI /> */}
+
                     </div>
                 </StreamTheme>
             </StreamCall>
