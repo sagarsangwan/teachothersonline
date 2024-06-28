@@ -14,6 +14,7 @@ export async function POST(req, res) {
     });
 
     if (existingStudent) {
+        console.log("existing student haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         existingClass = await prisma.OneToOneClass.findFirst({
             where: {
                 studentId: existingStudent.id,
@@ -26,19 +27,16 @@ export async function POST(req, res) {
         return NextResponse.json({ message: "You have already submitted a demo class", status: 400 }, { data: existingClass })
     }
     if (existingStudent && !existingClass) {
+        console.log("student hai lekin class nhi ahiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         const body = await req.json();
-        const { time_of_class, date_of_class, contact, subjects } = body;
-        let dateTime = new Date(date_of_class);
-        console.log(subjects, "subjects")
-        const date_ = dateTime.toISOString().slice(0, 10);
-        const class_date_time_string = `${date_}T${time_of_class}:00.000Z`;
-        const class_date_time = new Date(class_date_time_string);
+        const { datetime, contact, subjects } = body;
+        let dateTimee = new Date(datetime);
         try {
             const class_ = await prisma.OneToOneClass.create({
                 data: {
                     subject: subjects,
-                    startTime: class_date_time,
-                    endTime: moment(class_date_time).add(1, "hour").toDate(),
+                    startTime: dateTimee,
+                    endTime: moment(dateTimee).add(1, "hour").toDate(),
                     type: "demo",
                     teachingMode: "online",
                     student: {
@@ -57,13 +55,10 @@ export async function POST(req, res) {
             await prisma.$disconnect();
         }
     }
-
+    console.log("na class hai na student haiiiiiiiiiiiiiiiii")
     const body = await req.json();
-    const { time_of_class, date_of_class, contact, subjects } = body;
-    let dateTime = new Date(date_of_class);
-    const date_ = dateTime.toISOString().slice(0, 10);
-    const class_date_time_string = `${date_}T${time_of_class}:00.000Z`;
-    const class_date_time = new Date(class_date_time_string);
+    const { datetime, contact, subjects } = body;
+    let dateTimee = new Date(datetime);
     try {
         const student = await prisma.Student.create({
             data: {
@@ -88,11 +83,12 @@ export async function POST(req, res) {
                 }
             }
         })
+        console.log(user, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$4")
         const class_ = await prisma.OneToOneClass.create({
             data: {
                 subject: subjects,
-                startTime: class_date_time,
-                endTime: moment(class_date_time).add(1, "hour").toDate(),
+                startTime: dateTimee,
+                endTime: moment(dateTimee).add(1, "hour").toDate(),
                 type: "demo",
                 teachingMode: "online",
                 student: {
