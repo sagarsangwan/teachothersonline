@@ -81,26 +81,18 @@ export default function DemoClassStudent() {
     // add data to cookie and redirect to login page if not logged in
     useEffect(() => {
         if (!session) {
-            console.log("setting form value--=========-==========--------------=========")
-            console.log(formValue)
             localStorage.setItem("formValue", JSON.stringify(formValue))
         }
     }, [formValue, session])
-
-
-
-
     const [loading, setLoading] = useState(false);
     const OnSubmit = async (data) => {
         setLoading(true)
         if (!session) {
-            console.log("setting ata to cokissssssssssss$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             setFormValue(data)
 
             router.push("/api/auth/signin")
             return
         }
-        console.log(data)
 
         try {
             const response = await fetch("/api/student-class-create", {

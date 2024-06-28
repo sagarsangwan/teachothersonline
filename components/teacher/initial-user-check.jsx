@@ -135,7 +135,7 @@ async function initialUserCheck() {
                     </div>
                     <div className="sm:w-1/2 sm:my-auto ">
 
-                        <Image alt="" src={studentlearn} />
+                        <Image alt="" priority={true} src={studentlearn} />
 
                     </div>
 
@@ -179,7 +179,7 @@ async function initialUserCheck() {
                         </div>
                         <div className="sm:w-1/2 sm:my-auto ">
 
-                            <Image alt="" src={studentlearn} />
+                            <Image alt="" priority={true} src={studentlearn} />
 
                         </div>
 
@@ -188,7 +188,7 @@ async function initialUserCheck() {
                     <div className="flex flex-wrap md:h-screen">
                         <div className=" my-16 sm:w-1/2 sm:my-auto ">
 
-                            <Image alt="" src={teacher} />
+                            <Image alt="" priority={true} src={teacher} />
 
                         </div>
                         <div className="w-full sm:w-1/2 sm:my-16 md:my-auto">
@@ -239,7 +239,7 @@ async function initialUserCheck() {
                     </div>
                     <div className="sm:w-1/2 sm:my-auto ">
 
-                        <Image alt="" src={studentlearn} />
+                        <Image alt="" priority={true} src={studentlearn} />
 
                     </div>
 
@@ -248,7 +248,7 @@ async function initialUserCheck() {
                 <div className="flex flex-wrap md:h-screen">
                     <div className=" my-16 sm:w-1/2 sm:my-auto ">
 
-                        <Image alt="" src={teacher} />
+                        <Image alt="" priority={true} src={teacher} />
 
                     </div>
                     <div className="w-full sm:w-1/2 sm:my-16 md:my-auto">
