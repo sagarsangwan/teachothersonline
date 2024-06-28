@@ -28,7 +28,7 @@ async function studentClassStatusCard(demoClass) {
     }
 
     return (
-        <Card className="w-[350px]">
+        <Card className=" w-max-[400px]">
             <CardHeader>
                 <CardTitle >
                     <div className="flex justify-between">

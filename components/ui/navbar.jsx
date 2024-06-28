@@ -23,9 +23,9 @@ export default function Navbar() {
             <div className="items-center max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <Link href="/">
-                        <h1 className=" text-xl md:text-3xl font-bold">
-                            Teach others online
-                        </h1>
+                        <p className=" text-xl md:text-3xl font-bold">
+                            Teachoo
+                        </p>
                     </Link>
                     <div className="md:hidden">
                         <button
