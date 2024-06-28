@@ -46,8 +46,9 @@ async function studentClassStatusCard(demoClass) {
             </CardContent>
             <CardFooter className="flex justify-between">
                 <Button variant="outline">Cancel</Button>
-                <Button > <Link href={demoClass.classlink}>Go To Meeting</Link> </Button>
-
+                {demoClass.classlink &&
+                    <Button > <Link href={demoClass.classlink}>Go To Meeting</Link> </Button>
+                }
             </CardFooter>
         </Card>
     )

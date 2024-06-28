@@ -61,47 +61,51 @@ function AllUnbookedClasses({ unbooked_classes }) {
     const client = useStreamVideoClient()
     const user = session.user
 
-    async function createMetting(startsAt, meetingId) {
-        if (!client || !user) {
-            return
-        }
-        console.log(client, "clienttttttttttttttttttt")
-        try {
-            let id
-            if (!meetingId) {
-                id = crypto.randomUUID()
-            } else {
-                id = meetingId
-            }
-            console.log(id, meetingId, "ppppppppppppppppppppppppppppppppppppppppppppp")
-            const call = client.call("default", id,)
-            await call.getOrCreate({
-                data: {
-                    starts_at: startsAt,
-                    custom: { description: "sagar" }
-                }
-            })
-            setCall(call)
+    // async function createMetting(class_) {
+    //     if (!client || !user) {
+    //         return
+    //     }
+    //     if (class_.meetingId) {
+    //         console.log("meeting hi hai pehle se")
+    //     }
 
-
-        } catch (error) {
-            console.log(error)
-            toast.error("something went wrong try after sometimeeeeeeeeeee")
-        }
-    }
+    // }
 
     async function bookClass(id) {
         const class_ = await getCurrentClass(id)
-        const startsAt = class_.startTime.toISOString()
-        const oldMeetingId = class_.meetingId
-        console.log(startsAt, oldMeetingId, "{[[[[[[[[[[[[[[[[[[[[[[[[")
-        createMetting(startsAt, oldMeetingId)
-        let meetingId
-        if (call) {
-            meetingId = call.id
+
+        let meetingId;
+        let classlink;
+        let Booked = false
+        if (class_) {
+            const startsAt = class_.startTime.toISOString()
+            console.log("inside create meeting", class_.studentId)
+            try {
+                const id = crypto.randomUUID()
+                const call = client.call("default", id,)
+                await call.getOrCreate({
+                    data: {
+                        // members: [{ user_id: class_.studentId, role: 'call_member' }],
+                        starts_at: startsAt,
+                        custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
+                    }
+                })
+                setCall(call)
+                meetingId = call.id
+                Booked = true
+                classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
+
+                console.log(call, "create call k ander call print")
+
+
+            } catch (error) {
+                console.log(error)
+                toast.error("something went wrong try after sometimeeeeeeeeeee")
+            }
+
         }
-        const classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
-        const Booked = true
+
+
         console.log(Booked, classlink, meetingId, "hihihihiihihihihihiihih")
         try {
             setLoading(true)
@@ -117,7 +121,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                 console.log(res)
                 toast.success(res.message)
                 setLoading(false)
-                router.push('/teacher-booked-classes').then(() => window.scrollTo(0, 0))
+                router.push('/teacher-booked-classes')
 
             }
             else {
