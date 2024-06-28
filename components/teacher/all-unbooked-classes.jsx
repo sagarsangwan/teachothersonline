@@ -136,7 +136,6 @@ function AllUnbookedClasses({ unbooked_classes }) {
     if (!unbooked_classes) return <div>Loading...</div>;
     return (
         <div>
-            <p>sagar</p>
             {unbooked_classes.length > 0 &&
                 <div className="">
                     <div className="mb-4">
@@ -161,7 +160,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                                 <CardContent>
                                     <CardDescription>
                                         {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
-                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {returnClassTime(class_.startTime)} on {returnClassDate(class_.startTime)}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
                                     </CardDescription>
                                 </CardContent>
                                 <CardFooter className="flex justify-end">
