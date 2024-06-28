@@ -19,7 +19,7 @@ async function page({ params }) {
   const session = await auth()
   if (!session) { return redirect("/") }
   const id = params.id
-  console.log(id)
+
   return (
     <div>
       <MeetingPage id={id} />

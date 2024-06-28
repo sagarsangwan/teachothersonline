@@ -1,26 +1,25 @@
-"use client"
+// "use client"
 import { useStreamVideoClient } from '@stream-io/video-react-sdk'
 import { useEffect, useState } from 'react'
 
 function useLoadCall(id) {
   const client = useStreamVideoClient()
-  const [call, setCall] = useState(null)
-  const [callLoading, setCallLoading] = useState(false)
+  const [call, setCall] = useState()
+  const [callLoading, setCallLoading] = useState(true)
   useEffect(() => {
     async function loadCall() {
       setCallLoading(true);
-      if (!client) {
-        return
-      }
+      if (!client) return;
+
       const { calls } = await client.queryCalls({
         filter_conditions: { id }
       })
       if (calls.length > 0) {
-        const call = calls[0]
-        await call.get()
+        const call = calls[0];
+        await call.get();
         setCall(call)
       }
-      setCallLoading(false)
+      setCallLoading(false);
     }
     loadCall()
   }, [id, client])
