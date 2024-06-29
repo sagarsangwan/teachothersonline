@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch"
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import MyCallUI from './MyCallUI';
 function MeetingPage({ id }) {
     const { data: session, status } = useSession()
 
@@ -57,7 +58,7 @@ function MeetingScreen() {
     return (
         <div className=' h-screen flex justify-center items-center my-auto'>
             {isSetupComplete ? (
-                <SpeakerLayout />
+                <MyCallUI />
             ) : (<SetupUi setIsSetupComplete={setIsSetupComplete} />)}
         </div>
     )
