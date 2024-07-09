@@ -58,6 +58,7 @@ const subjects = [
 ]
 
 function Teacherapplication() {
+    const { data: session } = useSession()
 
     const router = useRouter();
 
@@ -74,9 +75,12 @@ function Teacherapplication() {
         formData.append("subjects", data.subjects);
         console.log(formData)
         try {
-            const response = await fetch("/api/teacher/teacher-form-submission", {
+            const response = await fetch("/api/teacher/teacher-form-submission", formData, {
                 method: "POST",
-                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+
 
             })
             const res = await response.json()
@@ -115,7 +119,9 @@ function Teacherapplication() {
 
     })
     const fileRef = form.register("resume");
-
+    if (session?.user?.role !== "user") {
+        return router.push("/")
+    }
     return (
 
         <div className=''>
@@ -257,5 +263,5 @@ function Teacherapplication() {
 }
 
 
-export default isAuth(Teacherapplication,)
+export default isAuth(Teacherapplication, currentFullUrl)
 // export default Teacherapplication
