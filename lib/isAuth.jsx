@@ -23,7 +23,7 @@ export default function isAuth(Component, callbackurl) {
 
         useEffect(() => {
             if (status === "unauthenticated") {
-                redirect("/")
+                redirect("/api/auth/signin?callbackUrl=" + callbackurl || process.env.NEXT_PUBLIC_URL);
 
             }
         }, [status, router]);
