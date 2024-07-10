@@ -9,8 +9,6 @@ import Loader from "../ui/Loader"
 import { nanoid } from "nanoid"
 
 function ClientProvider({ children }) {
-    // const videoCLient = useIntilizeVideoClient()
-    // const { status } = useSession()
     const { data: session, status } = useSession()
     const [videoCLient, setVideoClient] = useState(null)
     useEffect(() => {
@@ -31,6 +29,7 @@ function ClientProvider({ children }) {
             }
 
         }
+        // console.log(streamUser, streamUser.id)
         const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
         const client = new StreamVideoClient({
             apiKey,
@@ -39,10 +38,6 @@ function ClientProvider({ children }) {
         })
         setVideoClient(client)
 
-        // return () => {
-        //     client.disconnectUser();
-        //     setVideoClient(null);
-        // };
     }, [session, status])
 
     if (status === "loading") {

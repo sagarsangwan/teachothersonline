@@ -1,8 +1,5 @@
 
-import { auth } from "@/auth"
-import prisma from "@/lib/prisma"
 import AllUnbookedClasses from "@/components/teacher/all-unbooked-classes"
-import { redirect } from "next/navigation"
 import { getAllUnbookedClasses } from "@/lib/teacher/teacher-info"
 
 
