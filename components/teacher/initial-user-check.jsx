@@ -17,66 +17,22 @@ import teacher from "../../public/teacher.svg"
 import DemoClassStudent from "../student/demo-class-form"
 import TeacherDashboard from "./teacher-dashboard"
 import StudentDashboard from "../student/student-dashboard"
+import { checkUserApplication } from "@/lib/teacher/teacher-info"
 
-async function checkUserApplication() {
-    const session = await auth()
-    if (!session) {
-        return null
-    }
-    let teacherApplication = null
-    try {
-        teacherApplication = await prisma.Teacher.findUnique({
-            where: {
-                userId: session.user.id
-            },
-            include: {
-                user: true
-            }
-        })
-        if (teacherApplication) {
-            return teacherApplication
-        }
-    } catch {
-        return null
-    } finally {
-        await prisma.$disconnect()
-    }
-
-
-
-    return null
-}
 
 async function initialUserCheck() {
     const session = await auth()
-
     const teacherApplication = await checkUserApplication()
-
-
     if (session) {
         if (session.user.role === "teacher") {
-            let teacher = null
-            try {
-                teacher = await prisma.Teacher.findUnique({
-                    where: {
-                        userId: session.user.id
-                    }
-                })
-            } catch {
-                return null
-            } finally {
-                await prisma.$disconnect()
-            }
-            if (teacher) {
-                return (
-                    <TeacherDashboard teacher={teacher} />
-                )
-            }
+            console.log("teacher------------------------------------")
+            return (
+                <TeacherDashboard />
+            )
         }
         if (session.user.role === "student") {
             return (
                 <StudentDashboard />
-
             )
         }
         if (session.user.role === "user" && teacherApplication) {

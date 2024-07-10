@@ -10,12 +10,19 @@ import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
 async function StudentDashboard() {
-    const demoClass = await checkDemoClass()
 
+    const demoClass = await checkDemoClass()
+    const session = await auth()
     return (
         <div>
-            {demoClass ? studentClassStatusCard(demoClass) : <DemoClassFormScreen />}
+            <div className="text-2xl font-medium mb-7">
+                {session ? <span>Hi, {session.user.name}</span> : <span>Hi, Student</span>}
+            </div >
+            <div>
+                {demoClass ? studentClassStatusCard(demoClass) : <DemoClassFormScreen />}
+            </div>
         </div>
+
     )
 
 }
