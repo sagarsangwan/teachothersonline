@@ -6,6 +6,10 @@ async function getCurrentClass(id) {
         class_ = await prisma.OneToOneClass.findUnique({
             where: {
                 id: id
+            },
+            include: {
+                student: true,
+                teacher: true
             }
         })
     } catch (error) {

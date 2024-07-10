@@ -82,10 +82,11 @@ function AllUnbookedClasses({ unbooked_classes }) {
             console.log("inside create meeting", class_.studentId)
             try {
                 const id = crypto.randomUUID()
-                const call = client.call("default", id,)
+                const call = client.call("private_meeting", id,)
+                const studentDetails = { user_id: class_.studentId, role: "call_member" }
                 await call.getOrCreate({
                     data: {
-                        // members: [{ user_id: class_.studentId, role: 'call_member' }],
+                        members: [studentDetails],
                         starts_at: startsAt,
                         custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
                     }

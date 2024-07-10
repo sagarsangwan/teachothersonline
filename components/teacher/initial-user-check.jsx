@@ -11,13 +11,12 @@ import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "../ui/separator"
 import studentlearn from "../../public/studentlearn.svg"
 import teacher from "../../public/teacher.svg"
 
 import DemoClassStudent from "../student/demo-class-form"
-import studentClassStatusCard from "../student/student-demo-class-status"
 import TeacherDashboard from "./teacher-dashboard"
+import StudentDashboard from "../student/student-dashboard"
 
 async function checkUserApplication() {
     const session = await auth()
@@ -47,49 +46,11 @@ async function checkUserApplication() {
 
     return null
 }
-async function checkDemoClass() {
 
-    const session = await auth()
-    if (!session) {
-        return null
-    }
-    let student = null;
-    let demoClass = null
-    try {
-        student = await prisma.Student.findUnique({
-            where: {
-                userId: session.user.id
-            }
-        })
-        if (!student) {
-            return null
-        }
-        demoClass = await prisma.OneToOneClass.findFirst({
-            where: {
-                studentId: student.id,
-                type: "demo"
-            },
-            include: {
-                student: true
-
-            }
-        })
-        if (demoClass) {
-            return demoClass
-        }
-    }
-    catch {
-        return null
-    } finally {
-        await prisma.$disconnect()
-    }
-    return null
-}
 async function initialUserCheck() {
     const session = await auth()
 
     const teacherApplication = await checkUserApplication()
-    const demoClass = await checkDemoClass()
 
 
     if (session) {
@@ -112,35 +73,10 @@ async function initialUserCheck() {
                 )
             }
         }
-        if (session.user.role === "student" && demoClass) {
+        if (session.user.role === "student") {
             return (
-                // paas the demoClass to the studentClassStatusCard
-                studentClassStatusCard(demoClass)
+                <StudentDashboard />
 
-            )
-        }
-        if (session.user.role === "student" && !demoClass) {
-            return (
-                <div className="flex flex-wrap md:h-screen">
-                    <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
-                        <p className="flex flex-col space-y-4 md:space-y-7">
-                            <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
-                            <span>Request a demo, start learning</span>
-
-                        </p>
-                        <div className="sm:w-[238px] md:w-[324px]">
-                            <DemoClassStudent />
-                        </div>
-
-                    </div>
-                    <div className="sm:w-1/2 sm:my-auto ">
-
-                        <Image alt="" priority={true} src={studentlearn} />
-
-                    </div>
-
-
-                </div >
             )
         }
         if (session.user.role === "user" && teacherApplication) {

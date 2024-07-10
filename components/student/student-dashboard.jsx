@@ -1,0 +1,48 @@
+import React from 'react'
+import studentClassStatusCard from './student-demo-class-status'
+import { checkDemoClass } from '@/lib/student-info'
+import DemoClassStudent from './demo-class-form'
+import studentlearn from "../../public/studentlearn.svg"
+
+import Image from "next/image"
+import { Button } from "../ui/button"
+import { auth } from '@/auth'
+import Link from "next/link"
+import prisma from "@/lib/prisma"
+async function StudentDashboard() {
+    const demoClass = await checkDemoClass()
+
+    return (
+        <div>
+            {demoClass ? studentClassStatusCard(demoClass) : <DemoClassFormScreen />}
+        </div>
+    )
+
+}
+
+function DemoClassFormScreen() {
+    return (
+        <div className="flex flex-wrap md:h-screen">
+            <div className="w-full my-16 sm:w-1/2  md:my-auto sm:px-6">
+                <p className="flex flex-col space-y-4 md:space-y-7">
+                    <span className=" text-2xl md:text-5xl font-medium">Book a class</span>
+                    <span>Request a demo, start learning</span>
+
+                </p>
+                <div className="sm:w-[238px] md:w-[324px]">
+                    <DemoClassStudent />
+                </div>
+
+            </div>
+            <div className="sm:w-1/2 sm:my-auto ">
+
+                <Image alt="" priority={true} src={studentlearn} />
+
+            </div>
+
+
+        </div >
+    )
+}
+
+export default StudentDashboard
