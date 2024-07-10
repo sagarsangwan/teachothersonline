@@ -25,7 +25,6 @@ async function initialUserCheck() {
     const teacherApplication = await checkUserApplication()
     if (session) {
         if (session.user.role === "teacher") {
-            console.log("teacher------------------------------------")
             return (
                 <TeacherDashboard />
             )

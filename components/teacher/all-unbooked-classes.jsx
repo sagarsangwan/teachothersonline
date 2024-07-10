@@ -26,13 +26,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { bookClassAndCreateMeeting } from "./book-class";
 // import prisma from "@/lib/prisma";
-import getCurrentClass from "./get-current-class";
-function returnClassTime(startTime) {
-    const class_datetime = moment(startTime)
-    const class_time = class_datetime.format('HH:mm')
-    return class_time
-}
+
 
 
 function returnClassDate(startTime) {
@@ -53,88 +49,24 @@ function returnClassDate(startTime) {
 
 
 function AllUnbookedClasses({ unbooked_classes }) {
-    console.log("unbooked_classes=======///////////////////")
     const [loading, setLoading] = useState(false)
-    const [call, setCall] = useState(null)
+    // const [call, setCall] = useState(null)
     const router = useRouter()
-    const { data: session, status } = useSession()
+    // const { data: session, status } = useSession()
     const client = useStreamVideoClient()
-    const user = session.user
-
-    // async function createMetting(class_) {
-    //     if (!client || !user) {
-    //         return
-    //     }
-    //     if (class_.meetingId) {
-    //         console.log("meeting hi hai pehle se")
-    //     }
-
-    // }
-
     async function bookClass(id) {
-        const class_ = await getCurrentClass(id)
-
-        let meetingId;
-        let classlink;
-        let Booked = false
-        if (class_) {
-            const startsAt = class_.startTime.toISOString()
-            console.log("inside create meeting", class_.studentId)
-            try {
-                const id = crypto.randomUUID()
-                const call = client.call("private_meeting", id,)
-                const studentDetails = { user_id: class_.studentId, role: "call_member" }
-                await call.getOrCreate({
-                    data: {
-                        members: [studentDetails],
-                        starts_at: startsAt,
-                        custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
-                    }
-                })
-                setCall(call)
-                meetingId = call.id
-                Booked = true
-                classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
-
-                console.log(call, "create call k ander call print")
-
-
-            } catch (error) {
-                console.log(error)
-                toast.error("something went wrong try after sometimeeeeeeeeeee")
-            }
-
+        setLoading(true)
+        const response = await bookClassAndCreateMeeting(id, client)
+        if (response.status === 200) {
+            setLoading(false)
+            toast.success("Class booked successfully")
+            router.push("/")
         }
-
-
-        console.log(Booked, classlink, meetingId, "hihihihiihihihihihiihih")
-        try {
-            setLoading(true)
-            const response = await fetch(`/api/teacher/handle-classes/${id}`, {
-                method: "PUT",
-                body: JSON.stringify({ Booked, meetingId, classlink })
-
-
-            })
-            const res = await response.json()
-            if (res.status === 200) {
-                console.log("okay hai--------------------------------")
-                console.log(res)
-                toast.success(res.message)
-                setLoading(false)
-                router.push('/teacher-booked-classes')
-
-            }
-            else {
-                toast.error(res.message)
-                setLoading(false)
-            }
-        } catch (error) {
-            console.log(error)
+        else {
+            setLoading(false)
+            toast.error("Error booking class")
         }
-
     }
-    if (!unbooked_classes) return <div>Loading...</div>;
     return (
         <div>
             {unbooked_classes.length > 0 &&
@@ -174,7 +106,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                                             <DialogHeader>
                                                 <DialogTitle>Confirm Booking</DialogTitle>
                                                 <DialogDescription>
-                                                    Do you want to book this class
+                                                    Do you want to book this class are you free at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <div className="flex items-center space-x-2">
