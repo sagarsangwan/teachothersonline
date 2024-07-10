@@ -49,7 +49,6 @@ function MeetingScreen() {
     const { useCallStartsAt, useCallEndedAt } = useCallStateHooks()
     const callStartAt = useCallStartsAt()
     const callEndedAt = useCallEndedAt()
-    const [setupComplete, useSetupCpmplete] = useState(false)
     const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
 
     // if (callIsInFuture) {

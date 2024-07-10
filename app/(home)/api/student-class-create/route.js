@@ -14,7 +14,6 @@ export async function POST(req, res) {
     });
 
     if (existingStudent) {
-        console.log("existing student haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         existingClass = await prisma.OneToOneClass.findFirst({
             where: {
                 studentId: existingStudent.id,
@@ -27,7 +26,6 @@ export async function POST(req, res) {
         return NextResponse.json({ message: "You have already submitted a demo class", status: 400 }, { data: existingClass })
     }
     if (existingStudent && !existingClass) {
-        console.log("student hai lekin class nhi ahiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         const body = await req.json();
         const { datetime, contact, subjects } = body;
         let dateTimee = new Date(datetime);
@@ -55,7 +53,6 @@ export async function POST(req, res) {
             await prisma.$disconnect();
         }
     }
-    console.log("na class hai na student haiiiiiiiiiiiiiiiii")
     const body = await req.json();
     const { datetime, contact, subjects } = body;
     let dateTimee = new Date(datetime);
@@ -83,7 +80,6 @@ export async function POST(req, res) {
                 }
             }
         })
-        console.log(user, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$4")
         const class_ = await prisma.OneToOneClass.create({
             data: {
                 subject: subjects,
