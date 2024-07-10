@@ -26,9 +26,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
-import { bookClassAndCreateMeeting } from "./book-class";
-// import prisma from "@/lib/prisma";
-
+import { createMeeting } from "./book-class";
+import getCurrentClass from "./get-current-class";
+import { updateClassLink } from "./book-class";
 
 
 function returnClassDate(startTime) {
@@ -47,25 +47,77 @@ function returnClassDate(startTime) {
     return class_date
 }
 
-
 function AllUnbookedClasses({ unbooked_classes }) {
     const [loading, setLoading] = useState(false)
-    // const [call, setCall] = useState(null)
+    const [call, setCall] = useState(null)
     const router = useRouter()
-    // const { data: session, status } = useSession()
+    const { data: session, status } = useSession()
     const client = useStreamVideoClient()
     async function bookClass(id) {
         setLoading(true)
-        const response = await bookClassAndCreateMeeting(id, client)
-        if (response.status === 200) {
-            setLoading(false)
-            toast.success("Class booked successfully")
-            router.push("/")
+        const class_ = await getCurrentClass(id)
+        let meetingId;
+        let classlink;
+        let Booked = false
+        if (class_) {
+            const startsAt = class_.startTime.toISOString()
+            console.log("inside create meeting", class_.studentId)
+            // await createUser(client, class_)
+            try {
+                const id = crypto.randomUUID()
+                const call = client.call("private_meeting", id,)
+                // create a streamuser 
+
+                const studentDetails = { user_id: class_.student.userId, role: "call_member" }
+                const teacherDetails = { user_id: session.user.id, role: "call_member" }
+                await call.getOrCreate({
+                    data: {
+                        members: [teacherDetails, studentDetails],
+                        starts_at: startsAt,
+                        custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
+                    }
+                })
+                // add members in the call
+                // await call.updateCallMembers({
+                //     update_members: [studentDetails]
+                // })
+                setCall(call)
+                meetingId = call.id
+                Booked = true
+                classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
+
+                console.log(call, "create call k ander call print")
+
+
+            } catch (error) {
+                console.log(error)
+                toast.error("something went wrong try after sometimeeeeeeeeeee")
+
+            }
+
         }
-        else {
+
+
+        console.log(Booked, classlink, meetingId, "hihihihiihihihihihiihih")
+        if (Booked) {
+            const body = { Booked, meetingId, classlink }
+            const res = await updateClassLink(id, body)
+            if (res.status === 200) {
+
+                toast.success("class booked successfully")
+                setLoading(false)
+                router.reload()
+            } else {
+                toast.error("something went wrong try after sometimeeeeeeeeeee")
+                setLoading(false)
+            }
+
+        } else {
             setLoading(false)
-            toast.error("Error booking class")
+            toast.error("something went wrong try after sometimeeeeeeeeeee")
+
         }
+
     }
     return (
         <div>

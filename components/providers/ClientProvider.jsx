@@ -29,7 +29,6 @@ function ClientProvider({ children }) {
             }
 
         }
-        // console.log(streamUser, streamUser.id)
         const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
         const client = new StreamVideoClient({
             apiKey,
