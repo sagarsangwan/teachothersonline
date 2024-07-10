@@ -105,6 +105,7 @@ model OneToOneClass {
   meetingId    String?
   teacherId    String?      @map("teacher_id")
   studentId    String       @map("student_id")
+  completed    Boolean      @default(false)
   student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   teacher      Teacher?     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 

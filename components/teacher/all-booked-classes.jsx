@@ -34,7 +34,7 @@ function returnClassTime(startTime) {
 }
 
 
-function AllBookedClasses({ booked_classes, expired_classes }) {
+function AllBookedClasses({ booked_classes, completed_classes, expired_not_completed_classes }) {
     const [loading, setLoading] = useState(false)
 
 
@@ -75,7 +75,6 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
 
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                        {/* {unbookedClassesCard(booked_classes, teacher)} */}
                         {booked_classes.map((class_) => (
                             <Card key={class_.id} className="">
                                 <CardHeader>
@@ -143,7 +142,7 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
                 </div>}
 
 
-            {expired_classes.length > 0 &&
+            {completed_classes.length > 0 &&
                 <div className="">
                     <div className="mb-4">
                         <h1 className="text-xl font-bold">Expired classes</h1>
@@ -151,7 +150,7 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
                         {/* {unbookedClassesCard(booked_classes, teacher)} */}
-                        {expired_classes.map((class_) => (
+                        {completed_classes.map((class_) => (
                             <Card key={class_.id} className="">
                                 <CardHeader>
                                     <CardTitle >
@@ -217,6 +216,42 @@ function AllBookedClasses({ booked_classes, expired_classes }) {
                     </div>
                 </div>}
 
+            {expired_not_completed_classes.length > 0 &&
+                <div className="">
+                    <div className="mb-4">
+                        <h1 className="text-xl font-bold">Expired classes</h1>
+
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {/* {unbookedClassesCard(booked_classes, teacher)} */}
+                        {expired_not_completed_classes.map((class_) => (
+                            <Card key={class_.id} className="">
+                                <CardHeader>
+                                    <CardTitle >
+                                        <div className="flex justify-between">
+                                            <span> Demo class</span>
+                                            <Badge variant="destructive" > expired </Badge>
+                                        </div>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription>
+                                        {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {returnClassTime(class_.startTime)} on {returnClassDate(class_.startTime)}
+                                    </CardDescription>
+                                    {/* <TimerComponent starttime={class_.startTime} /> */}
+                                </CardContent>
+                                <CardFooter className="flex justify-end">
+                                    <Button size="sm">
+                                        reassign class</Button>
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+
+
+                </div>
+            }
 
         </div>
     )

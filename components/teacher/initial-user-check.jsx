@@ -17,6 +17,7 @@ import teacher from "../../public/teacher.svg"
 
 import DemoClassStudent from "../student/demo-class-form"
 import studentClassStatusCard from "../student/student-demo-class-status"
+import TeacherDashboard from "./teacher-dashboard"
 
 async function checkUserApplication() {
     const session = await auth()
@@ -107,9 +108,8 @@ async function initialUserCheck() {
             }
             if (teacher) {
                 return (
-                    <div>
-                        sagar
-                    </div>)
+                    <TeacherDashboard teacher={teacher} />
+                )
             }
         }
         if (session.user.role === "student" && demoClass) {
