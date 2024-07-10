@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { CallControls, PaginatedGridLayout, SpeakerLayout, useCall } from '@stream-io/video-react-sdk'
 import { BetweenHorizonalEndIcon, Grid } from 'lucide-react'
 import React, { useState } from 'react'
+import EndCallButton from './EndCallButton'
 
 function FlexibleCallLayout() {
     const [layout, setLayout] = useState("speaker-vert")
@@ -12,6 +13,7 @@ function FlexibleCallLayout() {
             <CallLayoutButtons layout={layout} setLayout={setLayout} />
             <CallLayoutView layout={layout} />
             <CallControls />
+            <EndCallButton />
         </div>
     )
 }
