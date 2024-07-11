@@ -26,6 +26,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import returnClassDate from "../return-class-date";
+import Link from "next/link";
 // import TimerComponent from "../CountdownCircleTimer";
 function returnClassTime(startTime) {
     const class_datetime = moment(startTime)
@@ -96,41 +97,11 @@ function AllBookedClasses({ booked_classes, completed_classes, expired_not_compl
                                     {/* <TimerComponent starttime={class_.startTime} /> */}
                                 </CardContent>
                                 <CardFooter className="flex justify-end">
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button size="sm">
-                                                Upload class link</Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-md">
-                                            <DialogHeader>
-                                                <DialogTitle>upload class link</DialogTitle>
-                                                <DialogDescription>
-
-
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex items-center space-x-2">
-
-                                            </div>
-                                            <DialogFooter className="sm:justify-start">
-                                                {!loading &&
-                                                    <Button size="sm" onClick={() => bookClass(class_.id)}>
-                                                        Upload class link</Button>}
-                                                {loading &&
-                                                    <Button disabled>
-                                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                                        Please wait
-                                                    </Button>}
-                                                <DialogClose asChild>
-                                                    <Button type="button" variant="secondary">
-                                                        No
-                                                    </Button>
-                                                </DialogClose>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-
-
+                                    <Button size="sm">
+                                        <Link href={class_.classlink} target="_blank">
+                                            Join class
+                                        </Link>
+                                    </Button>
                                 </CardFooter>
                             </Card>
                         ))}

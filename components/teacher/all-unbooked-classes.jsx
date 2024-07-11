@@ -77,10 +77,6 @@ function AllUnbookedClasses({ unbooked_classes }) {
                         custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
                     }
                 })
-                // add members in the call
-                // await call.updateCallMembers({
-                //     update_members: [studentDetails]
-                // })
                 setCall(call)
                 meetingId = call.id
                 Booked = true
@@ -91,14 +87,13 @@ function AllUnbookedClasses({ unbooked_classes }) {
 
             } catch (error) {
                 console.log(error)
-                toast.error("something went wrong try after sometimeeeeeeeeeee")
+                toast.error("something went wrong try after sometime")
 
             }
 
         }
 
 
-        console.log(Booked, classlink, meetingId, "hihihihiihihihihihiihih")
         if (Booked) {
             const body = { Booked, meetingId, classlink }
             const res = await updateClassLink(id, body)
@@ -108,13 +103,13 @@ function AllUnbookedClasses({ unbooked_classes }) {
                 setLoading(false)
                 router.reload()
             } else {
-                toast.error("something went wrong try after sometimeeeeeeeeeee")
+                toast.error("something went wrong try after sometime")
                 setLoading(false)
             }
 
         } else {
             setLoading(false)
-            toast.error("something went wrong try after sometimeeeeeeeeeee")
+            toast.error("something went wrong try after sometime")
 
         }
 
