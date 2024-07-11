@@ -1,5 +1,6 @@
 "use client"
 import Loader from '@/components/ui/Loader';
+import moment from "moment";
 import {
     CallControls, SpeakerLayout, StreamCall, StreamTheme, useStreamVideoClient, useCallStateHooks, Call,
     useCall,
@@ -18,11 +19,17 @@ import { useEffect, useState } from 'react';
 import MyCallUI from './MyCallUI';
 function MeetingPage({ id }) {
     const { data: session, status } = useSession()
-
+    const [currentClass, setCurrentClass] = useState(null)
     const { call, callLoading } = useLoadCall(id)
+
+
+
+
+    // setCurrentClass(getClassByMeetingId(id))
     if (callLoading || status === "loading") {
         return (<Loader />)
     }
+
     if (!call) {
         return (
             <div className=' h-screen flex justify-center items-center my-auto'>
@@ -51,9 +58,9 @@ function MeetingScreen() {
     const callEndedAt = useCallEndedAt()
     const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
 
-    // if (callIsInFuture) {
-    //     return <UpcomingMeetingScreen />
-    // }
+    if (callIsInFuture) {
+        return (<UpcomingMeetingScreen />)
+    }
     return (
         <div className=' h-screen flex justify-center items-center my-auto'>
             {isSetupComplete ? (
@@ -61,8 +68,6 @@ function MeetingScreen() {
             ) : (<SetupUi setIsSetupComplete={setIsSetupComplete} />)}
         </div>
     )
-
-
 }
 
 function SetupUi({ setIsSetupComplete }) {
@@ -95,35 +100,36 @@ function SetupUi({ setIsSetupComplete }) {
 
 }
 
-// function MeetingEndedScreen() {
-//     return (
-//         <div className=' h-screen flex justify-center items-center my-auto'>
+function MeetingEndedScreen() {
+    return (
+        <div className=' h-screen flex justify-center items-center my-auto'>
 
-//             <p className="text-xl">Class Ended</p>
-//         </div>
-//     )
-// }
-// function UpcomingMeetingScreen() {
-//     const currentCall = useCall();
-//     return (
-//         <div className=' flex flex-col h-screen justify-center items-center '>
+            <p className="text-xl">Class Ended</p>
+        </div>
+    )
+}
+function UpcomingMeetingScreen() {
+    const currentCall = useCall();
+    console.log(currentCall.state.startsAt)
+    return (
+        <div className=' flex flex-col h-screen justify-center items-center '>
 
-//             <p className="text-xl">Class not Started yet it will start at
-//                 <span className=' font-bold'>{" "}
-//                     {currentCall.state.startsAt?.toLocaleTimeString()}
-//                 </span>
+            <p className="text-xl">Class not Started yet it will start at
+                <span className=' font-bold'>{" "}
+                    {moment(currentCall.state.startsAt).format("hh:mm A")}
+                </span>
 
-//             </p>
-//             {currentCall.state.custom.description && <p className="text-xl mt-5">Description : {" "}
-//                 <span className=' font-bold'>
-//                     {currentCall.state.custom?.description}
-//                 </span>
+            </p>
+            {currentCall.state.custom.description && <p className="text-xl mt-5">Description : {" "}
+                <span className=' font-bold'>
+                    {currentCall.state.custom?.description}
+                </span>
 
-//             </p>}
-//             <Button className="mt-10"> <Link href={"/"}>Go To Homepage</Link> </Button>
+            </p>}
+            <Button className="mt-10"> <Link href={"/"}>Go To Homepage</Link> </Button>
 
-//         </div>
-//     )
-// }
+        </div>
+    )
+}
 
 export default MeetingPage

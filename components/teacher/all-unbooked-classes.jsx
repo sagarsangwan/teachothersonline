@@ -26,7 +26,6 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
-import { createMeeting } from "./book-class";
 import getCurrentClass from "./get-current-class";
 import { updateClassLink } from "./book-class";
 
@@ -101,7 +100,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
 
                 toast.success("class booked successfully")
                 setLoading(false)
-                router.reload()
+                router.refresh();
             } else {
                 toast.error("something went wrong try after sometime")
                 setLoading(false)

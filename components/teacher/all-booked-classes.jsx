@@ -27,12 +27,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import returnClassDate from "../return-class-date";
 import Link from "next/link";
-// import TimerComponent from "../CountdownCircleTimer";
-function returnClassTime(startTime) {
-    const class_datetime = moment(startTime)
-    const class_time = class_datetime.format('HH:mm')
-    return class_time
-}
+
 
 
 function AllBookedClasses({ booked_classes, completed_classes, expired_not_completed_classes }) {

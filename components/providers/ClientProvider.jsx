@@ -37,7 +37,7 @@ function ClientProvider({ children }) {
         })
         setVideoClient(client)
 
-    }, [session, status])
+    }, [session?.user?.id, session?.user?.name, session?.user?.image, status])
 
     if (status === "loading") {
         return (
