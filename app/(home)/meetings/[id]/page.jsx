@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import MeetingPage from "./MeetingPage"
 import { redirect } from "next/navigation"
+import { getClassByMeetingId } from "./getClassUsingMeetingId"
 
 
 
@@ -19,10 +20,11 @@ async function page({ params }) {
   const session = await auth()
   if (!session) { return redirect("/") }
   const id = params.id
+  const currentClass = await getClassByMeetingId(id)
 
   return (
     <div>
-      <MeetingPage id={id} />
+      <MeetingPage id={id} currentClass={currentClass} />
     </div>
   )
 }

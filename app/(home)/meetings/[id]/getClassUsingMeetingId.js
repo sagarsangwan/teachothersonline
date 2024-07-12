@@ -4,9 +4,9 @@ import prisma from "@/lib/prisma";
 
 export async function getClassByMeetingId(meetingId) {
     try {
-        const classData = await prisma.class.findFirst({
+        const classData = await prisma.OneToOneClass.findFirst({
             where: {
-                meetingId,
+                meetingId: meetingId,
             },
         });
         return classData;

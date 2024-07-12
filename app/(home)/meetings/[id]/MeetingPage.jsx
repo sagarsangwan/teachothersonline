@@ -17,15 +17,23 @@ import { Switch } from "@/components/ui/switch"
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import MyCallUI from './MyCallUI';
-function MeetingPage({ id }) {
+function MeetingPage({ id, currentClass }) {
     const { data: session, status } = useSession()
-    const [currentClass, setCurrentClass] = useState(null)
     const { call, callLoading } = useLoadCall(id)
+    const notAllowedToJoin = (call?.state.members.find((member) => member.user.id === session.user?.id))
+    console.log(notAllowedToJoin)
 
 
 
+    if (!notAllowedToJoin) {
+        return (
+            <div className=' h-screen flex  flex-col justify-center items-center my-auto'>
 
-    // setCurrentClass(getClassByMeetingId(id))
+                <div className="text-xl">You are not allowed to join this call either contact with your teacher or kindly log in with correct account </div>
+                <Button className="mt-10"> <Link href={"/"}>Go To Homepage</Link> </Button>
+            </div>
+        )
+    }
     if (callLoading || status === "loading") {
         return (<Loader />)
     }
@@ -43,7 +51,7 @@ function MeetingPage({ id }) {
             <StreamCall call={call}>
                 <StreamTheme className=''>
 
-                    <MeetingScreen />
+                    <MeetingScreen currentClass={currentClass} />
                 </StreamTheme>
             </StreamCall>
         </div>
@@ -51,7 +59,7 @@ function MeetingPage({ id }) {
 }
 
 
-function MeetingScreen() {
+function MeetingScreen({ currentClass }) {
     const [isSetupComplete, setIsSetupComplete] = useState(false)
     const { useCallStartsAt, useCallEndedAt } = useCallStateHooks()
     const callStartAt = useCallStartsAt()
@@ -59,7 +67,7 @@ function MeetingScreen() {
     const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
 
     if (callIsInFuture) {
-        return (<UpcomingMeetingScreen />)
+        return (<UpcomingMeetingScreen currentClass={currentClass} />)
     }
     return (
         <div className=' h-screen flex justify-center items-center my-auto'>
@@ -108,7 +116,7 @@ function MeetingEndedScreen() {
         </div>
     )
 }
-function UpcomingMeetingScreen() {
+function UpcomingMeetingScreen({ currentClass }) {
     const currentCall = useCall();
     console.log(currentCall.state.startsAt)
     return (
@@ -116,7 +124,7 @@ function UpcomingMeetingScreen() {
 
             <p className="text-xl">Class not Started yet it will start at
                 <span className=' font-bold'>{" "}
-                    {moment(currentCall.state.startsAt).format("hh:mm A")}
+                    {currentClass.startTime.toISOString().slice(11, 10)}
                 </span>
 
             </p>
