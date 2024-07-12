@@ -21,10 +21,13 @@ function MeetingPage({ id, currentClass }) {
     const { data: session, status } = useSession()
     const { call, callLoading } = useLoadCall(id)
     const notAllowedToJoin = (call?.state.members.find((member) => member.user.id === session.user?.id))
-    console.log(notAllowedToJoin)
+    // console.log(call.state.members)
 
 
 
+    if (callLoading || status === "loading") {
+        return (<Loader />)
+    }
     if (!notAllowedToJoin) {
         return (
             <div className=' h-screen flex  flex-col justify-center items-center my-auto'>
@@ -33,9 +36,6 @@ function MeetingPage({ id, currentClass }) {
                 <Button className="mt-10"> <Link href={"/"}>Go To Homepage</Link> </Button>
             </div>
         )
-    }
-    if (callLoading || status === "loading") {
-        return (<Loader />)
     }
 
     if (!call) {
@@ -64,13 +64,22 @@ function MeetingScreen({ currentClass }) {
     const { useCallStartsAt, useCallEndedAt } = useCallStateHooks()
     const callStartAt = useCallStartsAt()
     const callEndedAt = useCallEndedAt()
-    const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
 
-    if (callIsInFuture) {
-        return (<UpcomingMeetingScreen currentClass={currentClass} />)
+
+    const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
+    const callHasEnded = !!callEndedAt
+    if (callHasEnded) {
+        return (
+            <MeetingEndedScreen currentClass={currentClass} />
+        )
     }
+
+    // if (callIsInFuture) {
+    //     return (<UpcomingMeetingScreen currentClass={currentClass} />)
+    // }
     return (
         <div className=' h-screen flex justify-center items-center my-auto'>
+
             {isSetupComplete ? (
                 <MyCallUI />
             ) : (<SetupUi setIsSetupComplete={setIsSetupComplete} />)}
@@ -81,6 +90,8 @@ function MeetingScreen({ currentClass }) {
 function SetupUi({ setIsSetupComplete }) {
     const currrentCall = useCall()
     const [isMicOn, setIsMicOn] = useState(false)
+
+    const callDescription = currrentCall.state.custom?.description
     useEffect(() => {
         if (isMicOn) {
             currrentCall.camera.disable();
@@ -90,25 +101,35 @@ function SetupUi({ setIsSetupComplete }) {
             currrentCall.camera.enable();
         }
     }, [isMicOn, currrentCall?.camera, currrentCall?.microphone])
-    return (<div className='' >
-        <VideoPreview />
-        <div className='flex flex-col justify-center items-center gap-2'>
-            <DeviceSettings />
-            <div>
-                <Switch checked={isMicOn} onCheckedChange={(checked) => setIsMicOn(checked)} />
-                <Label htmlFor="airplane-mode">Camera and Mic</Label>
+    return (
+        <div className='flex flex-col justify-center text-center' >
+
+            <div className='mb-3'>
+                <p>
+                    Meeting description : {callDescription}
+                </p>
+                <p className="text-xl font-medium"> Setup</p>
             </div>
-            <Button onClick={async () => {
-                currrentCall.join();
-                setIsSetupComplete(true)
-            }}>Join meeting</Button>
+            <div className=' w-auto h-auto'>
+                <VideoPreview className=' !w-auto !h-auto md:!h-[300px]' />
+            </div>
+            <div className='flex flex-col justify-center items-center gap-2 mt-4'>
+                <DeviceSettings />
+                <div className='m-auto flex content-center'>
+                    <Switch className="me-2" checked={isMicOn} onCheckedChange={(checked) => setIsMicOn(checked)} />
+                    <span >Camera and Mic</span>
+                </div>
+                <Button onClick={async () => {
+                    currrentCall.join();
+                    setIsSetupComplete(true)
+                }}>Join meeting</Button>
+            </div>
         </div>
-    </div>
     )
 
 }
 
-function MeetingEndedScreen() {
+function MeetingEndedScreen({ currentClass }) {
     return (
         <div className=' h-screen flex justify-center items-center my-auto'>
 
@@ -122,22 +143,20 @@ function UpcomingMeetingScreen({ currentClass }) {
     return (
         <div className=' flex flex-col h-screen justify-center items-center '>
 
-            <p className="text-xl">Class not Started yet it will start at
-                <span className=' font-bold'>{" "}
-                    {currentClass.startTime.toISOString().slice(11, 10)}
-                </span>
+            <p className="text-xl">This meeting has not started yet. It will start on given time
 
             </p>
-            {currentCall.state.custom.description && <p className="text-xl mt-5">Description : {" "}
-                <span className=' font-bold'>
+            {currentCall.state.custom.description &&
+                <p className='mt-5 font-bold'>
                     {currentCall.state.custom?.description}
-                </span>
+                </p>
 
-            </p>}
-            <Button className="mt-10"> <Link href={"/"}>Go To Homepage</Link> </Button>
+            }
+            <Button className="mt-10 " size="sm"> <Link href={"/"}>Go To Homepage</Link> </Button>
 
         </div>
     )
 }
+
 
 export default MeetingPage
