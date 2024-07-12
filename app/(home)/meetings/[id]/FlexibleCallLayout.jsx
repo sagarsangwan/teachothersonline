@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import EndCallButton from './EndCallButton'
 import { useRouter } from 'next/navigation'
 
-function FlexibleCallLayout() {
+function FlexibleCallLayout({ currentClassId }) {
     const [layout, setLayout] = useState("speaker-vert")
     const call = useCall()
     const router = useRouter()
@@ -16,7 +16,7 @@ function FlexibleCallLayout() {
 
             <CallControls onLeave={() => router.push(`/meetings/${call.id}/left`)} />
             <div className='flex justify-center text-center content-center'>
-                <EndCallButton />
+                <EndCallButton currentClassId={currentClassId} />
             </div>
         </div>
     )

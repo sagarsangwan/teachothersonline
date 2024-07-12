@@ -20,6 +20,7 @@ import MyCallUI from './MyCallUI';
 function MeetingPage({ id, currentClass }) {
     const { data: session, status } = useSession()
     const { call, callLoading } = useLoadCall(id)
+    const currentClassId = currentClass.id
     const notAllowedToJoin = (call?.state.members.find((member) => member.user.id === session.user?.id))
     // console.log(call.state.members)
 
@@ -51,7 +52,7 @@ function MeetingPage({ id, currentClass }) {
             <StreamCall call={call}>
                 <StreamTheme className=''>
 
-                    <MeetingScreen currentClass={currentClass} />
+                    <MeetingScreen currentClassId={currentClassId} />
                 </StreamTheme>
             </StreamCall>
         </div>
@@ -59,7 +60,7 @@ function MeetingPage({ id, currentClass }) {
 }
 
 
-function MeetingScreen({ currentClass }) {
+function MeetingScreen({ currentClassId }) {
     const [isSetupComplete, setIsSetupComplete] = useState(false)
     const { useCallStartsAt, useCallEndedAt } = useCallStateHooks()
     const callStartAt = useCallStartsAt()
@@ -68,11 +69,11 @@ function MeetingScreen({ currentClass }) {
 
     const callIsInFuture = callStartAt && new Date(callStartAt) > new Date();
     const callHasEnded = !!callEndedAt
-    if (callHasEnded) {
-        return (
-            <MeetingEndedScreen currentClass={currentClass} />
-        )
-    }
+    // if (callHasEnded) {
+    //     return (
+    //         <MeetingEndedScreen currentClassId={currentClassId} />
+    //     )
+    // }
 
     // if (callIsInFuture) {
     //     return (<UpcomingMeetingScreen currentClass={currentClass} />)
@@ -81,7 +82,7 @@ function MeetingScreen({ currentClass }) {
         <div className=' h-screen flex justify-center items-center my-auto'>
 
             {isSetupComplete ? (
-                <MyCallUI />
+                <MyCallUI currentClassId={currentClassId} />
             ) : (<SetupUi setIsSetupComplete={setIsSetupComplete} />)}
         </div>
     )

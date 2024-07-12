@@ -13,7 +13,7 @@ import { CiUser } from 'react-icons/ci';
 import { Button } from '@/components/ui/button'
 import Loader from '@/components/ui/Loader';
 import FlexibleCallLayout from './FlexibleCallLayout';
-function MyCallUI() {
+function MyCallUI({ currentClassId }) {
     const { useParticipants, useCallCallingState } = useCallStateHooks();
     const callingState = useCallCallingState()
 
@@ -22,7 +22,7 @@ function MyCallUI() {
     }
     return (
         <div >
-            <FlexibleCallLayout />
+            <FlexibleCallLayout currentClassId={currentClassId} />
         </div>
     )
 }
