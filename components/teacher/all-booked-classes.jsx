@@ -40,7 +40,7 @@ function AllBookedClasses({ booked_classes, completed_classes, expired_not_compl
         const Booked = true
         try {
             setLoading(true)
-            const response = await fetch(`/api/teacher/handle-classes/${id}`, {
+            const response = await fetch(`/api/teacher/book-class/${id}`, {
                 method: "PUT",
                 body: JSON.stringify({ Booked })
 
