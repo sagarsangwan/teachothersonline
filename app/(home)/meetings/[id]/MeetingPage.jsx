@@ -92,6 +92,10 @@ function SetupUi({ setIsSetupComplete }) {
     const [isMicOn, setIsMicOn] = useState(false)
 
     const callDescription = currrentCall.state.custom?.description
+    const words = callDescription.split(' ');
+
+    // Extract words from index 1 to 7 (inclusive)
+    const selectedWords = words.slice(0, 7).join(' ')
     useEffect(() => {
         if (isMicOn) {
             currrentCall.camera.disable();
@@ -106,12 +110,12 @@ function SetupUi({ setIsSetupComplete }) {
 
             <div className='mb-3'>
                 <p>
-                    Meeting description : {callDescription}
+                    Meeting description : {selectedWords}
                 </p>
                 <p className="text-xl font-medium"> Setup</p>
             </div>
             <div className=' w-auto h-auto'>
-                <VideoPreview className=' !w-auto !h-auto md:!h-[300px]' />
+                <VideoPreview className=' !w-auto !h-auto md:!h-[500px] ' />
             </div>
             <div className='flex flex-col justify-center items-center gap-2 mt-4'>
                 <DeviceSettings />
