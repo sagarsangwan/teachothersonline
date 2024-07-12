@@ -87,7 +87,7 @@ function AllBookedClasses({ booked_classes, completed_classes, expired_not_compl
                                 <CardContent>
                                     <CardDescription>
                                         {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
-                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on {returnClassDate(class_.startTime)}
                                     </CardDescription>
                                 </CardContent>
                                 <CardFooter className="flex justify-end">
@@ -131,7 +131,7 @@ function AllBookedClasses({ booked_classes, completed_classes, expired_not_compl
                                 <CardContent>
                                     <CardDescription>
                                         {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
-                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on {returnClassDate(class_.startTime)}
                                     </CardDescription>
                                     {/* <TimerComponent starttime={class_.startTime} /> */}
                                 </CardContent>
@@ -202,7 +202,7 @@ function AllBookedClasses({ booked_classes, completed_classes, expired_not_compl
                                 <CardContent>
                                     <CardDescription>
                                         {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
-                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on {returnClassDate(class_.startTime)}
                                     </CardDescription>
                                     {/* <TimerComponent starttime={class_.startTime} /> */}
                                 </CardContent>

@@ -59,7 +59,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
         let classlink;
         let Booked = false
         if (class_) {
-            const startsAt = class_.startTime.toISOString()
+            const startsAt = new Date(class_.startTime).toISOString()
             console.log("inside create meeting", class_.studentId)
             // await createUser(client, class_)
             try {
@@ -73,7 +73,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                     data: {
                         members: [teacherDetails, studentDetails],
                         starts_at: startsAt,
-                        custom: { description: `This is a ${class_.type} class of ${class_.subject} from  ${class_.startTime.toISOString().slice(11, 16)}} to ${class_.endTime.toISOString().slice(11, 16)}} on ${class_.endTime.toISOString().slice(0, 10)}}. Join this meeting on given time` }
+                        custom: { description: `This is a ${class_.type} class of ${class_.subject} from  ${moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} to ${moment(class_.endTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on ${class_.endTime.toISOString().slice(0, 10)}. Join this meeting on given time` }
                     }
                 })
                 setCall(call)
@@ -139,7 +139,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                                 <CardContent>
                                     <CardDescription>
                                         {/* {teacher.subjects.map((subject) => { <span> {subject}</span> })} */}
-                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {class_.subject} at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
+                                        <span className=" font-bold"> {class_.teachingMode}</span> demo class for {moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on {returnClassDate(class_.startTime)}
                                     </CardDescription>
                                 </CardContent>
                                 <CardFooter className="flex justify-end">
@@ -152,7 +152,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                                             <DialogHeader>
                                                 <DialogTitle>Confirm Booking</DialogTitle>
                                                 <DialogDescription>
-                                                    Do you want to book this class are you free at {class_.startTime.toISOString().slice(11, 16)} on {returnClassDate(class_.startTime)}
+                                                    Do you want to book this class are you free at {moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on {returnClassDate(class_.startTime)}
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <div className="flex items-center space-x-2">
