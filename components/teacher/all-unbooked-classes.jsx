@@ -73,7 +73,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                     data: {
                         members: [teacherDetails, studentDetails],
                         starts_at: startsAt,
-                        custom: { description: `this meeting is for ${class_.subject} at ${class_.startTime.toISOString()}` }
+                        custom: { description: `This is a ${class_.type} class of ${class_.subject} from  ${class_.startTime.toISOString().slice(11, 16)}} to ${class_.endTime.toISOString().slice(11, 16)}} on ${class_.endTime.toISOString().slice(0, 10)}}. Join this meeting on given time` }
                     }
                 })
                 setCall(call)
