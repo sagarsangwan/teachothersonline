@@ -62,54 +62,98 @@ model VerificationToken {
 }
 
 model Teacher {
-  id         String          @id @default(cuid())
-  name       String?
-  resume     String
-  subjects   String[]
-  education  String
-  experience String
-  contact    String
-  verified   Boolean         @default(false)
-  subittedAt DateTime        @default(now()) @map("submitted_at")
-  userId     String          @unique @map("user_id")
-  classes    OneToOneClass[]
-  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String                 @id @default(cuid())
+  name                 String?
+  resume               String
+  subjects             String[]
+  education            String
+  experience           String
+  contact              String
+  verified             Boolean                @default(false)
+  subittedAt           DateTime               @default(now()) @map("submitted_at")
+  userId               String                 @unique @map("user_id")
+  classes              OneToOneClass[]
+  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  TeacherRating        TeacherRating[]
+  ClassReviewByTeacher ClassReviewByTeacher[]
 
   @@map("teachers")
 }
 
 model Student {
-  id        String          @id @default(cuid())
-  name      String?
-  email     String?
-  subjects  String[]
-  contact   String
-  createdAt DateTime        @default(now()) @map("submitted_at")
-  userId    String          @unique @map("user_id")
-  classes   OneToOneClass[]
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String                 @id @default(cuid())
+  name        String?
+  email       String?
+  subjects    String[]
+  contact     String
+  createdAt   DateTime               @default(now()) @map("submitted_at")
+  userId      String                 @unique @map("user_id")
+  classes     OneToOneClass[]
+  user        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classReview ClassReviewByStudent[]
 
   @@map("students")
 }
 
 model OneToOneClass {
-  id           String       @id @default(cuid())
-  subject      String?
-  teachingMode teachingMode @default(online) @map("teaching_mode")
-  type         ClassType    @default(demo)
-  startTime    DateTime?    @map("start_time")
-  endTime      DateTime?    @map("end_time")
-  Booked       Boolean      @default(false)
-  createdAt    DateTime     @default(now()) @map("created_at")
-  classlink    String?
-  meetingId    String?
-  teacherId    String?      @map("teacher_id")
-  studentId    String       @map("student_id")
-  completed    Boolean      @default(false)
-  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  teacher      Teacher?     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  id                   String                 @id @default(cuid())
+  subject              String?
+  teachingMode         teachingMode           @default(online) @map("teaching_mode")
+  type                 ClassType              @default(demo)
+  startTime            DateTime?              @map("start_time")
+  endTime              DateTime?              @map("end_time")
+  Booked               Boolean                @default(false)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  classlink            String?
+  meetingId            String?
+  teacherId            String?                @map("teacher_id")
+  studentId            String                 @map("student_id")
+  completed            Boolean                @default(false)
+  student              Student                @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher              Teacher?               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  ClassReviewByStudent ClassReviewByStudent[]
+  ClassReviewByTeacher ClassReviewByTeacher[]
 
   @@map("onetooneclasses")
+}
+
+model ClassReviewByStudent {
+  id        String        @id @default(cuid())
+  rating    Int
+  review    String?
+  type      ClassType     @default(demo)
+  createdAt DateTime      @default(now()) @map("created_at")
+  classId   String        @map("class_id")
+  studentId String        @map("student_id")
+  student   Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     OneToOneClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@map("classreviewbystudents")
+}
+
+model ClassReviewByTeacher {
+  id        String        @id @default(cuid())
+  rating    Int
+  review    String?
+  type      ClassType     @default(demo)
+  createdAt DateTime      @default(now()) @map("created_at")
+  classId   String        @map("class_id")
+  teacherId String        @map("teacher_id")
+  teacher   Teacher       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class     OneToOneClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@map("classreviewbyteachers")
+}
+
+model TeacherRating {
+  id        String   @id @default(cuid())
+  rating    Int
+  review    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  teacherId String   @map("teacher_id")
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@map("teacherratings")
 }
 
 enum Role {
