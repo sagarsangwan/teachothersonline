@@ -39,7 +39,7 @@ async function studentClassStatusCardCompleted(demoClass) {
                     </div>
                 </CardTitle>
                 <CardDescription>
-                    <p> You have completed a {demoClass.type} with us for {demoClass.subject} from  {moment(demoClass.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} to {moment(demoClass.endTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)}  on {class_date} </p>
+                    You have completed a {demoClass.type} with us for {demoClass.subject} from  {moment(demoClass.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} to {moment(demoClass.endTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)}  on {class_date}
 
 
                 </CardDescription>
@@ -48,7 +48,8 @@ async function studentClassStatusCardCompleted(demoClass) {
 
             </CardContent>
             <CardFooter className="flex justify-end">
-                <StudentRatingForm demoClass={demoClass} />
+                {!demoClass.ClassReviewByStudent && <StudentRatingForm demoClass={demoClass} />}
+
             </CardFooter>
         </Card>
     )

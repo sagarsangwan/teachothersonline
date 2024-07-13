@@ -89,7 +89,7 @@ export default function DemoClassStudent() {
         }
 
         try {
-            const response = await fetch("/api/student-class-create", {
+            const response = await fetch("/api/student/student-class-create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

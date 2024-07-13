@@ -81,16 +81,17 @@ model Teacher {
 }
 
 model Student {
-  id          String                 @id @default(cuid())
-  name        String?
-  email       String?
-  subjects    String[]
-  contact     String
-  createdAt   DateTime               @default(now()) @map("submitted_at")
-  userId      String                 @unique @map("user_id")
-  classes     OneToOneClass[]
-  user        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  classReview ClassReviewByStudent[]
+  id            String                 @id @default(cuid())
+  name          String?
+  email         String?
+  subjects      String[]
+  contact       String
+  createdAt     DateTime               @default(now()) @map("submitted_at")
+  userId        String                 @unique @map("user_id")
+  classes       OneToOneClass[]
+  user          User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classReview   ClassReviewByStudent[]
+  TeacherRating TeacherRating[]
 
   @@map("students")
 }
@@ -151,6 +152,8 @@ model TeacherRating {
   review    String?
   createdAt DateTime @default(now()) @map("created_at")
   teacherId String   @map("teacher_id")
+  studentId String   @map("student_id")
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   @@map("teacherratings")
