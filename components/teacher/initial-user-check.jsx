@@ -52,7 +52,7 @@ async function initialUserCheck() {
 
             )
         }
-        if (session.user.role === "user" && !teacherApplication && !demoClass) {
+        if (session.user.role === "user" && !teacherApplication) {
 
             return (
                 <>
