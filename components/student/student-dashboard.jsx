@@ -1,5 +1,5 @@
 import React from 'react'
-import studentClassStatusCard from './student-demo-class-status'
+import studentClassStatusCardInitial from './student-demo-class-card-initial'
 import { checkDemoClass } from '@/lib/student-info'
 import DemoClassStudent from './demo-class-form'
 import studentlearn from "../../public/studentlearn.svg"
@@ -9,17 +9,31 @@ import { Button } from "../ui/button"
 import { auth } from '@/auth'
 import Link from "next/link"
 import prisma from "@/lib/prisma"
+import studentClassStatusCardCompleted from './student-demo-class-card-completed'
 async function StudentDashboard() {
 
     const demoClass = await checkDemoClass()
     const session = await auth()
+    if (demoClass?.completed) {
+        return (
+            <div>
+                <div className="text-2xl font-medium mb-7">
+                    {session ? <span>Hi, {session.user.name}</span> : <span>Hi, Student</span>}
+                </div >
+                <div>
+                    {studentClassStatusCardCompleted(demoClass)}
+                </div>
+            </div>
+        )
+    }
     return (
         <div>
             <div className="text-2xl font-medium mb-7">
                 {session ? <span>Hi, {session.user.name}</span> : <span>Hi, Student</span>}
             </div >
             <div>
-                {demoClass ? studentClassStatusCard(demoClass) : <DemoClassFormScreen />}
+                {demoClass ? studentClassStatusCardInitial(demoClass) : <DemoClassFormScreen />}
+                {/* {demoClass? :<DemoClassFormScreen />} */}
             </div>
         </div>
 
