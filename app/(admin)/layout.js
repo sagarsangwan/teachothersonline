@@ -16,13 +16,14 @@ export default function DashboardLayout({ children }) {
         <html lang="en">
             <body className={inter.className}  >
                 <SessionProvider >
-                    <div className="flex">
+                    {/* <AdminNavbar /> */}
+                    <Providers>
+                        <div className="flex mt-6">
 
-                        <Providers>
                             <Sidebar />
                             {children}
-                        </Providers>
-                    </div>
+                        </div>
+                    </Providers>
                 </SessionProvider>
             </body>
         </html>

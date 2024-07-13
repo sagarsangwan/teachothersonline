@@ -35,7 +35,7 @@ async function page() {
         //  redirect to login page if user is not logged in
 
 
-        <div className="flex flex-wrap gap-6 mt-8">
+        <div className="flex flex-wrap gap-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 {allUserCount()}
                 {allApplicantCount()}

@@ -24,7 +24,7 @@ export default function Sidebar() {
       <aside id="sidebar-multi-level-sidebar" className={`top-0 left-0 z-40 w-50 md:block md:pb-0 md:mt-0 ${state ? "block" : "hidden"}`} aria-label="Sidebar">
         <div className="h-full px-3 py-4  ">
           <Link href="/" className="flex items-center ps-2.5 mb-5">
-            <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Teachothersonline</span>
+            <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-white">teachoo</span>
           </Link>
           <ul className="space-y-2 font-medium">
             <li>
