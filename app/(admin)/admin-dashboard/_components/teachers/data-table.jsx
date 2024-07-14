@@ -35,7 +35,7 @@ export function TeacherDataTable({ columns, data }) {
     })
     return (
         <div>
-            <div className="container rounded border-solid border-2 border-gray-500">
+            <div className=" rounded border-solid border-2 border-gray-500">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

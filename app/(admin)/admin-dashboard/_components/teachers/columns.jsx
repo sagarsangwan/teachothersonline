@@ -126,7 +126,7 @@ export const teacherColums = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Submitted At
+                    At
                     <LuArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
