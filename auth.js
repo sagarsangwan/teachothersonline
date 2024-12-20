@@ -1,16 +1,10 @@
-import NextAuth from "next-auth"
+// import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import prisma from "./lib/prisma"
-
-
-
+import NextAuth from "next-auth"
+ import prisma from "./lib/prisma"
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
 
-    providers: [Google],
-    // pages: {                             will do it later
-    //     signIn: "/signin",
-    // },
-   
+  providers: [Google],
 })
