@@ -1,218 +1,205 @@
-"use client"
+"use client";
 import { use, useEffect, useState } from "react";
 import { CiCalendar } from "react-icons/ci";
 
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { DateTimePicker } from "../ui/datetime-picker";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import validator from "validator";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 const formSchema = z.object({
-    datetime: z.date().refine((date) => date > new Date(), {
-        message: "Date must be in the future",
-    }),
+  datetime: z.date().refine((date) => date > new Date(), {
+    message: "Date must be in the future",
+  }),
 
-    contact: z.string().refine(validator.isMobilePhone, {
-        message: "Invalid phone number",
-    }),
-    subjects: z.string().min(1, {
-        message: "Please select a subject"
-
-    })
-})
-
+  contact: z.string().refine(validator.isMobilePhone, {
+    message: "Invalid phone number",
+  }),
+  subjects: z.string().min(1, {
+    message: "Please select a subject",
+  }),
+});
 
 const subjects = [
-    { id: "math", label: "Math" },
-    { id: "science", label: "Science" },
-    { id: "english", label: "English" },
-    { id: "history", label: "History" },
-    { id: "foreign-language", label: "Foreign Language" },
-    { id: "other", label: "Other" },
-
-
-]
+  { id: "math", label: "Math" },
+  { id: "science", label: "Science" },
+  { id: "english", label: "English" },
+  { id: "history", label: "History" },
+  { id: "foreign-language", label: "Foreign Language" },
+  { id: "other", label: "Other" },
+];
 
 export default function DemoClassStudent() {
-    const router = useRouter();
-    const { data: session, status } = useSession();
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
-    const [formValue, setFormValue] = useState({
-        datetime: null,
-        contact: "",
-        subjects: "",
-    });
-    // add data to cookie and redirect to login page if not logged in
-    useEffect(() => {
-        if (!session) {
-            localStorage.setItem("formValue", JSON.stringify(formValue))
-        }
-    }, [formValue, session])
-    const [loading, setLoading] = useState(false);
-    const OnSubmit = async (data) => {
-        setLoading(true)
-        if (!session) {
-            setFormValue(data)
+  const [formValue, setFormValue] = useState({
+    datetime: null,
+    contact: "",
+    subjects: "",
+  });
+  // add data to cookie and redirect to login page if not logged in
+  useEffect(() => {
+    if (!session && formValue) {
+      localStorage.setItem("formValue", JSON.stringify(formValue));
+    }
+  }, [session]); // remove formValue from deps
 
-            router.push("/api/auth/signin")
-            return
-        }
-
-        try {
-            const response = await fetch("/api/student/student-class-create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
-            const res = await response.json()
-
-            if (res.status === 200) {
-                setLoading(false)
-                toast.success(res.message || "submitted successfully")
-                localStorage.removeItem("formValue")
-                router.refresh();
-
-
-
-            } else {
-                toast.error(res.message || "Error submitting form. Try again later.");
-            }
-
-
-
-
-
-        } catch (error) {
-            toast.error(error || "something went wrong try after somee time")
-        } finally {
-            // revoke the items from local storage
-            localStorage.removeItem("formValue")
-
-            setLoading(false)
-
-        }
-
-
+  const [loading, setLoading] = useState(false);
+  const OnSubmit = async (data) => {
+    setLoading(true);
+    if (!session) {
+      localStorage.setItem("formValue", JSON.stringify(data)); // store only once
+      router.push("/api/auth/signin");
+      return;
     }
 
-
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-
-        defaultValues: {
-            // add default values from local storage if value is present in local storage
-            // else set default values to empty string
-            // contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
-
-            contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
-            subjects: JSON.parse(localStorage.getItem("formValue"))?.subjects || "",
-            // get the date from local storage and convert it to date object if it is present in local storage else set it to next day date
-            datetime: JSON.parse(localStorage.getItem("formValue"))?.datetime ? new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime) : null,
-            // datetime: new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime) || new Date(),
-
-
+    try {
+      const response = await fetch("/api/student/student-class-create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-    })
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
 
-    return (
-        <Form {...form}>
+      if (res.status === 200) {
+        setLoading(false);
+        toast.success(res.message || "submitted successfully");
+        localStorage.removeItem("formValue");
+        router.refresh();
+      } else {
+        toast.error(res.message || "Error submitting form. Try again later.");
+      }
+    } catch (error) {
+      toast.error(error || "something went wrong try after somee time");
+    } finally {
+      // revoke the items from local storage
+      localStorage.removeItem("formValue");
 
-            <form onSubmit={form.handleSubmit(OnSubmit)} className=" space-y-4">
+      setLoading(false);
+    }
+  };
 
-                <FormField
-                    control={form.control}
-                    name="datetime"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel htmlFor="datetime">Date time</FormLabel>
-                            <FormControl>
-                                <DateTimePicker
-                                    disabled={(date) =>
-                                        date < new Date()
-                                    }
-                                    granularity="second"
-                                    jsDate={field.value}
-                                    onJsDateChange={field.onChange}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+
+    defaultValues: {
+      // add default values from local storage if value is present in local storage
+      // else set default values to empty string
+      // contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
+
+      contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
+      subjects: JSON.parse(localStorage.getItem("formValue"))?.subjects || "",
+      // get the date from local storage and convert it to date object if it is present in local storage else set it to next day date
+      datetime: JSON.parse(localStorage.getItem("formValue"))?.datetime
+        ? new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime)
+        : null,
+      // datetime: new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime) || new Date(),
+    },
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(OnSubmit)} className=" space-y-4">
+        <FormField
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="datetime">Date time</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  disabled={(date) => date < new Date()}
+                  granularity="second"
+                  jsDate={field.value || null}
+                  onJsDateChange={(date) => {
+                    if (date?.getTime() !== field.value?.getTime()) {
+                      field.onChange(date);
+                    }
+                  }}
                 />
-                <FormField
-                    control={form.control}
-                    name="contact"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <FormControl>
-                                <Input  {...field} />
-                            </FormControl>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="contact"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                <FormField
-                    control={form.control}
-                    name="subjects"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>subject</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a subject" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {subjects.map((subject) => (
-                                        <SelectItem key={subject.id} value={subject.id}>{subject.label}</SelectItem>
-                                    ))}
+        <FormField
+          control={form.control}
+          name="subjects"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>subject</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a subject" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {subjects.map((subject) => (
+                    <SelectItem key={subject.id} value={subject.id}>
+                      {subject.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                                </SelectContent>
-                            </Select>
-
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {/* {status === "authenticated" ? */}
-                <Button disabled={loading} type="submit">submit </Button>
-                {/* {loading ?
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* {status === "authenticated" ? */}
+        <Button disabled={loading} type="submit">
+          submit{" "}
+        </Button>
+        {/* {loading ?
                             <div role="status">
                                 <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -223,9 +210,7 @@ export default function DemoClassStudent() {
                             : 'Submit'}
                     </Button>
                     : <Link href="/api/auth/signin"><Button className="mt-3">Sign in to submit</Button></Link>} */}
-            </form>
-        </Form>
-    )
+      </form>
+    </Form>
+  );
 }
-
-
