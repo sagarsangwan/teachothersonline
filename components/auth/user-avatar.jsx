@@ -9,6 +9,8 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react"
 export default function UserAvatar() {
@@ -35,9 +37,10 @@ export default function UserAvatar() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
 
-                        <DropdownMenuItem>
-                            <Link href="/profile">{session.user.name}</Link>
-                        </DropdownMenuItem>
+                        <DropdownMenuLabel>
+                            {session.user.name}
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
                         {session.user.role === "admin" &&
                             <DropdownMenuItem>
                                 <Link href={"/admin-dashboard"}>Admin</Link>

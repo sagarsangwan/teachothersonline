@@ -83,7 +83,7 @@
 - **Recommended fix**: Synchronize README features and environment variable prerequisites with actual codebase implementation.
 - **Dependencies**: None.
 
-### 12. Dead Dependencies and Broken Navigation Links
+### ~~12. Dead Dependencies and Broken Navigation Links~~ (Completed)
 - **Classification**: Technical debt
 - **Evidence**: [package.json](file:///f:/teachothersonline/package.json#L13-L67), [components/ui/sidebar.jsx](file:///f:/teachothersonline/components/ui/sidebar.jsx#L34), [components/auth/user-avatar.jsx](file:///f:/teachothersonline/components/auth/user-avatar.jsx#L39), [app/(home)/(teacher)/teacher-dashboard/page.jsx](file:///f:/teachothersonline/app/(home)/(teacher)/teacher-dashboard/page.jsx)
 - **Why it matters**: Unused packages (`"-"`, `"save"`, `"i"`, `"npm"`, `"socket.io"`, `"googleapis"`, `@editorjs/*`) bloat node_modules. Sidebar and avatar link to non-existent `/admin-dashboard/teachers` and `/profile` routes (404), while `/teacher-dashboard` is an empty text stub.
