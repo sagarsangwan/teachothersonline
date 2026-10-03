@@ -218,6 +218,8 @@ function AllBookedClasses({
           </div>
         </div>
       )}
+
+      <div>no classes found</div>
     </div>
   );
 }
