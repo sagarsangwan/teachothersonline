@@ -1,19 +1,15 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
-export async function POST(req, { params }) {
-    const classId = params.id
-
-    console.log(classId, "gggggggggggggggggggggggggggggggggggggggggggggggggg")
-    return NextResponse.json({ message: "Class submitted successfully", data: applicantId, status: 200 })
-}
-
-
 export async function PUT(req, { params }) {
-    const classId = params.id
+    const { id } = await params
+    const classId = id
     const session = await auth()
     if (!session) {
-        return NextResponse.unauthorized("Unauthorized")
+        return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        )
     }
     const current_teacher = await prisma.teacher.findUnique({
         where: {
