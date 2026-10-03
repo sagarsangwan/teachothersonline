@@ -32,28 +32,28 @@
 
 ## Important
 
-### 5. Subject Array JSON Parsing Failure in Matching Logic
+### ~~5. Subject Array JSON Parsing Failure in Matching Logic~~ (Completed)
 - **Classification**: Confirmed bug
 - **Evidence**: [app/(home)/(teacher)/teacher-application/page.js](file:///f:/teachothersonline/app/(home)/(teacher)/teacher-application/page.js#L82), [app/(home)/api/teacher/teacher-form-submission/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/teacher-form-submission/route.js#L35-L46), [lib/teacher/teacher-info.js](file:///f:/teachothersonline/lib/teacher/teacher-info.js#L61-L64)
 - **Why it matters**: The application form appends JSON-stringified subjects to FormData. The API saves it as a nested string inside an array (`['["Math"]']`), and `teacher-info.js` splits `teacher.subjects[0]` directly without JSON parsing. Teacher-student subject matching fails, and empty arrays throw an unhandled TypeError.
 - **Recommended fix**: Parse `JSON.parse(formData.get("subjects"))` in the API route, store clean array elements, and add safety checks in `teacher-info.js`.
 - **Dependencies**: None.
 
-### 6. Premature `prisma.$disconnect()` Killing Serverless Connection Pool
+### ~~6. Premature `prisma.$disconnect()` Killing Serverless Connection Pool~~ (Completed)
 - **Classification**: Technical debt
 - **Evidence**: [lib/student-info.js](file:///f:/teachothersonline/lib/student-info.js#L41), [lib/teacher/teacher-info.js](file:///f:/teachothersonline/lib/teacher/teacher-info.js#L25), [lib/teacher/get-current-class.jsx](file:///f:/teachothersonline/components/teacher/get-current-class.jsx#L18), [app/(admin)/admin-dashboard/_components/all-user-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-user-card.jsx#L23)
 - **Why it matters**: Calling `$disconnect()` inside request functions closes database connections in serverless environments, causing latency spikes and connection failures under concurrent traffic.
 - **Recommended fix**: Remove all manual `$disconnect()` calls from query helpers and routes; rely on global Prisma client singleton.
 - **Dependencies**: None.
 
-### 7. Student Rating Modal Never Renders Due to Truthy Array Check
+### ~~7. Student Rating Modal Never Renders Due to Truthy Array Check~~ (Completed)
 - **Classification**: Confirmed bug
 - **Evidence**: [components/student/student-demo-class-card-completed.jsx](file:///f:/teachothersonline/components/student/student-demo-class-card-completed.jsx#L51)
 - **Why it matters**: `!demoClass.ClassReviewByStudent` evaluates to `false` because an empty array `[]` is truthy in JavaScript, permanently hiding the class rating dialog.
 - **Recommended fix**: Update condition to `demoClass.ClassReviewByStudent?.length === 0`.
 - **Dependencies**: None.
 
-### 8. Admin Stat Cards Render Unawaited Promises in JSX
+### ~~8. Admin Stat Cards Render Unawaited Promises in JSX~~ (Completed)
 - **Classification**: Confirmed bug
 - **Evidence**: [app/(admin)/admin-dashboard/_components/all-user-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-user-card.jsx#L39), [all-student-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-student-card.jsx#L39), [teachers/all-applicant-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/teachers/all-applicant-card.jsx#L43)
 - **Why it matters**: Async functions `countUsers()`, `countStudents()`, and `countTeacherApplicant()` are invoked inside JSX without `await`, rendering `[object Promise]` on screen.
@@ -90,7 +90,7 @@
 - **Recommended fix**: Prune dead packages, implement or remove broken navigation links, and move `@prisma/client` from devDependencies to dependencies.
 - **Dependencies**: None.
 
-### 13. Microphone Unmute Bug in Meeting Setup
+### ~~13. Microphone Unmute Bug in Meeting Setup~~ (Completed)
 - **Classification**: Confirmed bug
 - **Evidence**: [app/(home)/meetings/[id]/MeetingPage.jsx](file:///f:/teachothersonline/app/(home)/meetings/[id]/MeetingPage.jsx#L105-L107)
 - **Why it matters**: Toggling audio/video calls `currrentCall.camera.enable()` twice; microphone is never unmuted.
@@ -100,7 +100,7 @@
 ## Recommended implementation order
 1. ~~**Fix Critical API & Auth Crashes**: Replace invalid `NextResponse.unauthorized()` calls and handle async `params` to stabilize HTTP responses.~~ (Completed)
 2. ~~**Restore Edge Route Protection**: Rename `middlewaree.js` to `middleware.js` and add matcher rules for admin and teacher routes.~~ (Completed via proxy.js)
-3. **Resolve Database Connection & Query Bugs**: Eliminate `$disconnect()` calls in serverless handlers, fix unawaited count promises in admin cards, and fix the `ClassReviewByStudent` array length check.
-4. **Fix Core Subject Matching & Application Flow**: Normalize subject parsing between `teacher-application` and `teacher-info.js`, and verify teacher authorization on class updates.
-5. ~~**Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.~~ (React/Next mismatch & config files completed)
+3. ~~**Resolve Database Connection & Query Bugs**: Eliminate `$disconnect()` calls in serverless handlers, fix unawaited count promises in admin cards, and fix the `ClassReviewByStudent` array length check.~~ (Completed)
+4. ~~**Fix Core Subject Matching & Application Flow**: Normalize subject parsing between `teacher-application` and `teacher-info.js`, and verify teacher authorization on class updates.~~ (Completed)
+5. ~~**Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.~~ (React/Next mismatch, config files, & prisma client completed)
 6. **Implement Missing Storage & Polish UI**: Integrate cloud resume file uploads, fix the meeting microphone enable bug, and correct dead links and README documentation.

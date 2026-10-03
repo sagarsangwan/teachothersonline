@@ -13,12 +13,9 @@ async function getCurrentClass(id) {
             }
         })
     } catch (error) {
-        console.log("erorrrrrrrrrrrrrrr, ", error)
-    } finally {
-        await prisma.$disconnect();
+        console.error("Error fetching current class:", error);
     }
-    console.log(class_)
-    return class_
+    return class_;
 }
 
 export default getCurrentClass

@@ -19,27 +19,25 @@ async function countUsers() {
         userCount = await prisma.user.count();
     } catch (error) {
         console.error('Error counting users:', error);
-    } finally {
-        await prisma.$disconnect();
     }
     return userCount;
-
 }
+
 async function allUserCount() {
+    const userCount = await countUsers();
+
     return (
-        <Card className="px-3 " >
+        <Card className="px-3" >
             <div className="flex justify-between gap-10 py-3">
                 <p className=" text-[10px]">Total Users</p>
                 <PiDotsThree />
-
             </div>
 
             <CardContent className="text-start">
                 <p className="text-lg font-medium leading-none">
-                    {countUsers()}
+                    {userCount}
                 </p>
             </CardContent>
-            {/* <p className=" text-[10px]">Total Users</p> */}
         </Card>
     )
 }

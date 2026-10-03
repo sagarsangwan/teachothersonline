@@ -18,28 +18,26 @@ async function countStudents() {
     try {
         studentsCount = await prisma.Student.count();
     } catch (error) {
-        console.error('Error counting users:', error);
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error counting students:', error);
     }
     return studentsCount;
-
 }
+
 async function allStudentCount() {
+    const studentsCount = await countStudents();
+
     return (
-        <Card className="px-3 " >
+        <Card className="px-3" >
             <div className="flex justify-between gap-10 py-3">
                 <p className=" text-[10px]">Total Students</p>
                 <PiDotsThree />
-
             </div>
 
             <CardContent className="text-start">
                 <p className="text-lg font-medium leading-none">
-                    {countStudents()}
+                    {studentsCount}
                 </p>
             </CardContent>
-            {/* <p className=" text-[10px]">Total Users</p> */}
         </Card>
     )
 }

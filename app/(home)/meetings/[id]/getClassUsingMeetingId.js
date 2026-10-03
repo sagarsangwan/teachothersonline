@@ -13,7 +13,5 @@ export async function getClassByMeetingId(meetingId) {
     } catch (error) {
         console.error("Error in getClassByMeetingId: ", error);
         return null;
-    } finally {
-        prisma.$disconnect()
     }
 }

@@ -42,12 +42,9 @@ async function fetchUnbookedClasses() {
       include: { student: true },
     });
   } catch (error) {
-    console.log(error);
-    return null;
-  } finally {
-    await prisma.$disconnect();
+    console.error("Error fetching unbooked classes:", error);
+    return [[], []];
   }
-  console.log(booked_classes, expired_classes);
   return [booked_classes, expired_classes];
 }
 

@@ -32,10 +32,25 @@ export async function POST(request) {
     const resume = formData.get("resume"); // You’ll need to handle this if it's a file
     const education = formData.get("education");
     const contact = formData.get("contact");
-    const subjects = formData.getAll("subjects");
     const experience = formData.get("experience");
 
-    // Optional: handle file upload for resume if it's a File object
+    let subjects = [];
+    const rawSubjects = formData.get("subjects");
+    if (rawSubjects) {
+      try {
+        const parsed = JSON.parse(rawSubjects);
+        subjects = Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        subjects = formData.getAll("subjects");
+      }
+    } else {
+      subjects = formData.getAll("subjects");
+    }
+
+    const normalizedSubjects = subjects
+      .flatMap((s) => (typeof s === "string" ? s.split(",") : [s]))
+      .map((s) => String(s).trim().toLowerCase())
+      .filter(Boolean);
 
     const teacher = await prisma.teacher.create({
       data: {
@@ -43,7 +58,7 @@ export async function POST(request) {
         resume: "", // You’ll need to replace this with uploaded file URL/path
         experience,
         contact,
-        subjects,
+        subjects: normalizedSubjects,
         education,
         userId: session.user.id,
         verified: false,

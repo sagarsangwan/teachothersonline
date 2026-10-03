@@ -35,7 +35,7 @@ export async function POST(req, res) {
         try {
             const class_ = await prisma.OneToOneClass.create({
                 data: {
-                    subject: subjects,
+                    subject: subjects?.toLowerCase()?.trim() || subjects,
                     startTime: dateTimee,
                     endTime: moment(dateTimee).add(1, "hour").toDate(),
                     type: "demo",
@@ -52,8 +52,6 @@ export async function POST(req, res) {
         } catch (error) {
             console.error(error)
             return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
-        } finally {
-            await prisma.$disconnect();
         }
     }
     const body = await req.json();
@@ -65,7 +63,7 @@ export async function POST(req, res) {
                 email: session.user.email,
                 name: session.user.name,
                 contact: contact,
-                subjects: [subjects],
+                subjects: [subjects?.toLowerCase()?.trim() || subjects],
                 userId: session.user.id,
 
             }
@@ -85,7 +83,7 @@ export async function POST(req, res) {
         })
         const class_ = await prisma.OneToOneClass.create({
             data: {
-                subject: subjects,
+                subject: subjects?.toLowerCase()?.trim() || subjects,
                 startTime: dateTimee,
                 endTime: moment(dateTimee).add(1, "hour").toDate(),
                 type: "demo",
@@ -102,7 +100,5 @@ export async function POST(req, res) {
     } catch (error) {
         console.error(error)
         return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
-    } finally {
-        await prisma.$disconnect();
     }
 }

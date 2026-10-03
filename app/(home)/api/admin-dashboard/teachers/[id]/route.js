@@ -60,11 +60,5 @@ export async function POST(request, { params }) {
     } catch {
 
         return NextResponse.json({ error: "user not found" }, { status: 400 })
-    } finally {
-        await prisma.$disconnect();
     }
-
-
-
-
 }

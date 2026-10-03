@@ -52,14 +52,6 @@ export async function PUT(req, { params }) {
         console.log(error)
         return NextResponse.json({ message: "Class not completed", data: classId, status: 400 })
     }
-    finally {
-        await prisma.$disconnect()
-    }
-
-
-
-
-
 }
 
 

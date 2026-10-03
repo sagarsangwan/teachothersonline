@@ -68,7 +68,5 @@ export async function POST(req, res) {
     } catch (error) {
         console.error(error)
         return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
-    } finally {
-        await prisma.$disconnect();
     }
 }
