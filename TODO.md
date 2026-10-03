@@ -2,28 +2,28 @@
 
 ## Critical
 
-### 1. Inactive Edge Middleware Due to File Naming Typo
+### ~~1. Inactive Edge Middleware Due to File Naming Typo~~ (Completed)
 - **Classification**: Security issue / Confirmed bug
 - **Evidence**: [middlewaree.js](file:///f:/teachothersonline/middlewaree.js)
 - **Why it matters**: Because the file is named `middlewaree.js` (two 'e's), Next.js never runs it. Protected routes (`/admin-dashboard`, `/teacher-application`, etc.) lack network-edge authentication.
 - **Recommended fix**: Rename to `middleware.js`, add proper route matchers, and protect all admin, teacher, and student dashboard paths.
 - **Dependencies**: None.
 
-### 2. Invalid `NextResponse.unauthorized()` Crashing API Handlers
+### ~~2. Invalid `NextResponse.unauthorized()` Crashing API Handlers~~ (Completed)
 - **Classification**: Confirmed bug
 - **Evidence**: [app/(home)/api/student/student-class-create/route.js](file:///f:/teachothersonline/app/(home)/api/student/student-class-create/route.js#L8), [app/(home)/api/teacher/book-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/book-class/[id]/route.js#L16), [app/(home)/api/teacher/end-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/end-class/[id]/route.js#L16), [app/(home)/api/student/class-review/route.js](file:///f:/teachothersonline/app/(home)/api/student/class-review/route.js#L7), [app/(home)/api/admin-dashboard/teachers/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/admin-dashboard/teachers/[id]/route.js#L12)
 - **Why it matters**: `NextResponse.unauthorized()` is not a valid Next.js method. Unauthorized requests throw 500 runtime exceptions instead of returning 401 status codes.
 - **Recommended fix**: Replace all occurrences with `NextResponse.json({ error: "Unauthorized" }, { status: 401 })`.
 - **Dependencies**: None.
 
-### 3. Missing Ownership & Authorization on Class Endpoints
+### ~~3. Missing Ownership & Authorization on Class Endpoints~~ (Completed)
 - **Classification**: Security issue
 - **Evidence**: [app/(home)/api/teacher/book-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/book-class/[id]/route.js#L12-L55), [app/(home)/api/teacher/end-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/end-class/[id]/route.js#L12-L47), [app/(home)/api/student/class-review/route.js](file:///f:/teachothersonline/app/(home)/api/student/class-review/route.js#L5-L48)
 - **Why it matters**: Any authenticated user can end, modify, or review any class without verifying teacher assignment or student attendance. `POST` in `book-class` and `end-class` references an undefined variable `applicantId`, causing crashes.
 - **Recommended fix**: Validate session identity against the class `teacherId` / `studentId` before modifying records, and remove broken `POST` handlers.
 - **Dependencies**: Fix Auth.js session handling first.
 
-### 4. React 18 / Next.js 15 Version Mismatch and Synchronous `params`
+### ~~4. React 18 / Next.js 15 Version Mismatch and Synchronous `params`~~ (Completed)
 - **Classification**: Outdated dependency / Confirmed bug
 - **Evidence**: [package.json](file:///f:/teachothersonline/package.json#L44-L52), [app/(home)/meetings/[id]/page.jsx](file:///f:/teachothersonline/app/(home)/meetings/[id]/page.jsx#L10), [app/(home)/api/admin-dashboard/teachers/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/admin-dashboard/teachers/[id]/route.js#L8)
 - **Why it matters**: Next.js 15 requires React 19. Running React 18 causes peer dependency conflicts and hydration anomalies. In Next.js 15, route parameters are promises; reading `params.id` without `await params` triggers warnings and runtime errors.
@@ -69,7 +69,7 @@
 
 ## Nice to have
 
-### 10. Conflicting Next.js Config Files and Deprecated Image Config
+### ~~10. Conflicting Next.js Config Files and Deprecated Image Config~~ (Completed)
 - **Classification**: Technical debt
 - **Evidence**: [next.config.js](file:///f:/teachothersonline/next.config.js), [next.config.mjs](file:///f:/teachothersonline/next.config.mjs)
 - **Why it matters**: Having both `.js` and `.mjs` causes Next.js configuration collision warnings. `images.domains` is deprecated.
@@ -98,9 +98,9 @@
 - **Dependencies**: None.
 
 ## Recommended implementation order
-1. **Fix Critical API & Auth Crashes**: Replace invalid `NextResponse.unauthorized()` calls and handle async `params` to stabilize HTTP responses.
-2. **Restore Edge Route Protection**: Rename `middlewaree.js` to `middleware.js` and add matcher rules for admin and teacher routes.
+1. ~~**Fix Critical API & Auth Crashes**: Replace invalid `NextResponse.unauthorized()` calls and handle async `params` to stabilize HTTP responses.~~ (Completed)
+2. ~~**Restore Edge Route Protection**: Rename `middlewaree.js` to `middleware.js` and add matcher rules for admin and teacher routes.~~ (Completed via proxy.js)
 3. **Resolve Database Connection & Query Bugs**: Eliminate `$disconnect()` calls in serverless handlers, fix unawaited count promises in admin cards, and fix the `ClassReviewByStudent` array length check.
 4. **Fix Core Subject Matching & Application Flow**: Normalize subject parsing between `teacher-application` and `teacher-info.js`, and verify teacher authorization on class updates.
-5. **Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.
+5. ~~**Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.~~ (React/Next mismatch & config files completed)
 6. **Implement Missing Storage & Polish UI**: Integrate cloud resume file uploads, fix the meeting microphone enable bug, and correct dead links and README documentation.

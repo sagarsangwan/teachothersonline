@@ -20,7 +20,7 @@ export async function POST(request, { params }) {
             include: { user: true },
         })
         if (!applicant) {
-            return NextResponse.error({ status: 400 }, "user not found")
+            return NextResponse.json({ error: "user not found" }, { status: 400 })
         }
 
         // if verified is true then make it false
@@ -59,7 +59,7 @@ export async function POST(request, { params }) {
         return NextResponse.json(updatedApplicant)
     } catch {
 
-        return NextResponse.error({ status: 400 }, "user not found")
+        return NextResponse.json({ error: "user not found" }, { status: 400 })
     } finally {
         await prisma.$disconnect();
     }
