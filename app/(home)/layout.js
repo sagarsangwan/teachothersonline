@@ -6,6 +6,9 @@ import { SessionProvider } from "next-auth/react";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import ClientProvider from "@/components/providers/ClientProvider";
+
+
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

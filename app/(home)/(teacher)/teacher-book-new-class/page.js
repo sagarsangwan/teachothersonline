@@ -1,6 +1,8 @@
 import AllUnbookedClasses from "@/components/teacher/all-unbooked-classes";
 import { getAllUnbookedClasses } from "@/lib/teacher/teacher-info";
 
+
+
 async function page() {
   const unbooked_classes = await getAllUnbookedClasses();
   console.log(unbooked_classes);

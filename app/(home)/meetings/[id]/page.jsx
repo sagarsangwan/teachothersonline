@@ -5,9 +5,13 @@ import { getClassByMeetingId } from "./getClassUsingMeetingId"
 
 
 
+
+
+
+
 export async function generateMetadata({ params }, parent) {
   // read route params
-  const id = params.id
+  const { id } = await params;
 
 
   return {
@@ -19,7 +23,7 @@ export async function generateMetadata({ params }, parent) {
 async function page({ params }) {
   const session = await auth()
   if (!session) { return redirect("/") }
-  const id = params.id
+  const { id } = await params;
   const currentClass = await getClassByMeetingId(id)
 
   return (
