@@ -5,11 +5,15 @@ import { revalidatePath } from "next/cache"
 import { auth } from "@/auth"
 export async function POST(request, { params }) {
     try {
-        const applicantId = params.id
+        const { id } = await params
+        const applicantId = id
         const session = await auth()
 
-        if (session.user.role !== "admin") {
-            return NextResponse.unauthorized("Unauthorized")
+        if (!session || session?.user?.role !== "admin") {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            )
         }
         const applicant = await prisma.Teacher.findUnique({
             where: { id: applicantId },

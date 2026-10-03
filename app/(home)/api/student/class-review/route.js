@@ -4,7 +4,10 @@ import prisma from "@/lib/prisma"
 export async function POST(req, res) {
     const session = await auth()
     if (!session) {
-        return NextResponse.unauthorized("Unauthorized")
+        return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        )
     }
     const body = await req.json();
     const { classId, teacherId, classType, studentId, classRating, classReview, teacherRating, teacherReview, } = body;

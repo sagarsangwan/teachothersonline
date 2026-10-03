@@ -1,6 +1,8 @@
 import initialUserCheck from "@/components/teacher/initial-user-check";
 import { auth } from "@/auth";
 
+
+
 // export metadata with whatsapp card 
 
 export async function generateMetadata() {

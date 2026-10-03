@@ -6,6 +6,9 @@ import allStudentCount from "./_components/all-student-card"
 import prisma from "@/lib/prisma"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
+
+
+
 async function page() {
     const session = await auth()
     if (!session) {
