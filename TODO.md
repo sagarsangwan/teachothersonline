@@ -104,3 +104,25 @@
 4. ~~**Fix Core Subject Matching & Application Flow**: Normalize subject parsing between `teacher-application` and `teacher-info.js`, and verify teacher authorization on class updates.~~ (Completed)
 5. ~~**Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.~~ (React/Next mismatch, config files, & prisma client completed)
 6. **Implement Missing Storage & Polish UI**: Integrate cloud resume file uploads, fix the meeting microphone enable bug, and correct dead links and README documentation.
+7. **Apply Foundational UI Redesign**: Implement the Sikhao design system by updating global CSS variables, switching to Geist font, and restyling core Shadcn UI components.
+
+## Foundational UI Redesign (Sikhao Design System)
+14. **Global Styling & Theme**
+- **Classification**: Missing feature
+- **Details**: Update `app/globals.css` with CSS variable tokens based on the new design system (Primary: #3525cd, Background: #faf8ff, etc.).
+- **Dependencies**: None.
+
+15. **Typography Update**
+- **Classification**: Missing feature
+- **Details**: Replace `Inter` with `Geist` font across `app/(home)/layout.js` and `app/(admin)/layout.js`.
+- **Dependencies**: None.
+
+16. **Restyle Core Components**
+- **Classification**: UI refinement
+- **Details**: Update `components/ui/*` (Button, Card, Badge) to match the new rounded geometries (`rounded-lg`/`rounded-xl`) and spacing.
+- **Dependencies**: Global styling update.
+
+17. **Update Navigation Layouts**
+- **Classification**: UI refinement
+- **Details**: Ensure `Navbar` and `Sidebar` use new CSS tokens and `Geist` font for brand consistency across student, teacher, and admin roles.
+- **Dependencies**: Core component restyling.
