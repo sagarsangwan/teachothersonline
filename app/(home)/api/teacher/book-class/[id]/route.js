@@ -16,6 +16,9 @@ export async function PUT(req, { params }) {
             userId: session.user.id
         }
     })
+    if (!current_teacher) {
+        return NextResponse.json({ message: "Teacher not found", status: 404 })
+    }
     const oneToOneClass = await prisma.oneToOneClass.findUnique({
         where: {
             id: classId
@@ -23,6 +26,9 @@ export async function PUT(req, { params }) {
     })
     if (!oneToOneClass) {
         return NextResponse.json({ message: "Class not found", data: classId, status: 404 })
+    }
+    if (oneToOneClass.Booked && oneToOneClass.teacherId && oneToOneClass.teacherId !== current_teacher.id) {
+        return NextResponse.json({ message: "Class already booked by another teacher", status: 403 })
     }
 
 
@@ -53,14 +59,6 @@ export async function PUT(req, { params }) {
         console.log(error)
         return NextResponse.json({ message: "Class not submitted", data: classId, status: 400 })
     }
-    finally {
-        await prisma.$disconnect()
-    }
-
-
-
-
-
 }
 
 

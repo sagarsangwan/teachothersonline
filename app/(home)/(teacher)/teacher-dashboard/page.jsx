@@ -1,11 +1,10 @@
 import React from 'react'
-
-
+import TeacherDashboard from '@/components/teacher/teacher-dashboard'
 
 function page() {
     return (
         <div>
-            hello
+            <TeacherDashboard />
         </div>
     )
 }

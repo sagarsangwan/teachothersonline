@@ -48,7 +48,9 @@ async function studentClassStatusCardCompleted(demoClass) {
 
             </CardContent>
             <CardFooter className="flex justify-end">
-                {!demoClass.ClassReviewByStudent && <StudentRatingForm demoClass={demoClass} />}
+                {(!demoClass.ClassReviewByStudent || demoClass.ClassReviewByStudent.length === 0) && (
+                    <StudentRatingForm demoClass={demoClass} />
+                )}
 
             </CardFooter>
         </Card>

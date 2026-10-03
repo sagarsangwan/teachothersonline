@@ -103,7 +103,7 @@ function SetupUi({ setIsSetupComplete }) {
             currrentCall.microphone.disable();
         } else {
             currrentCall.camera.enable();
-            currrentCall.camera.enable();
+            currrentCall.microphone.enable();
         }
     }, [isMicOn, currrentCall?.camera, currrentCall?.microphone])
     return (

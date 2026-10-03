@@ -10,7 +10,24 @@ export async function POST(req, res) {
         )
     }
     const body = await req.json();
-    const { classId, teacherId, classType, studentId, classRating, classReview, teacherRating, teacherReview, } = body;
+    const { classId, teacherId, classType, classRating, classReview, teacherRating, teacherReview } = body;
+
+    const current_student = await prisma.student.findUnique({
+        where: { userId: session.user.id }
+    })
+    if (!current_student) {
+        return NextResponse.json({ message: "Student not found", status: 404 })
+    }
+
+    const oneToOneClass = await prisma.oneToOneClass.findUnique({
+        where: { id: classId }
+    })
+    if (!oneToOneClass || oneToOneClass.studentId !== current_student.id) {
+        return NextResponse.json({ message: "Unauthorized or class not found", status: 403 })
+    }
+
+    const targetTeacherId = oneToOneClass.teacherId || teacherId;
+
     try {
         const reviewByStudent = await prisma.ClassReviewByStudent.create({
             data: {
@@ -19,7 +36,7 @@ export async function POST(req, res) {
                 review: classReview,
                 student: {
                     connect: {
-                        id: studentId
+                        id: current_student.id
                     }
                 },
                 class: {
@@ -36,12 +53,12 @@ export async function POST(req, res) {
                 review: teacherReview,
                 student: {
                     connect: {
-                        id: studentId
+                        id: current_student.id
                     }
                 },
                 teacher: {
                     connect: {
-                        id: teacherId
+                        id: targetTeacherId
                     }
                 }
 
@@ -51,7 +68,5 @@ export async function POST(req, res) {
     } catch (error) {
         console.error(error)
         return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
-    } finally {
-        await prisma.$disconnect();
     }
 }

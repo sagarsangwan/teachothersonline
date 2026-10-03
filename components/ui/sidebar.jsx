@@ -30,9 +30,6 @@ export default function Sidebar() {
             <li>
               <Link href="/admin-dashboard" className="flex items-center p-2 rounded-lg">Dashboard</Link>
             </li>
-            <li>
-              <Link href="/admin-dashboard/teachers" className="flex items-center p-2 rounded-lg">  teachers</Link>
-            </li>
 
           </ul>
           <ul className="pt-4 mt-4 space-y-2 font-medium ">
