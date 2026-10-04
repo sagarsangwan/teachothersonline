@@ -52,17 +52,25 @@ const formSchema = z.object({
 });
 
 const subjects = [
-  { id: "math", label: "Math" },
-  { id: "science", label: "Science" },
+  { id: "math", label: "Mathematics" },
+  { id: "physics", label: "Physics" },
+  { id: "chemistry", label: "Chemistry" },
+  { id: "biology", label: "Biology" },
+  { id: "computer-science", label: "Computer Science" },
   { id: "english", label: "English" },
+  { id: "literature", label: "Literature" },
   { id: "history", label: "History" },
-  { id: "foreign-language", label: "Foreign Language" },
-  { id: "other", label: "Other" },
+  { id: "geography", label: "Geography" },
+  { id: "economics", label: "Economics" },
+  { id: "business", label: "Business Studies" },
+  { id: "art", label: "Art & Design" },
+  { id: "music", label: "Music" },
+  { id: "foreign-language", label: "Foreign Languages" },
 ];
 
 export default function DemoClassStudent() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
 
   const [formValue, setFormValue] = useState({
     datetime: null,
@@ -81,7 +89,7 @@ export default function DemoClassStudent() {
     setLoading(true);
     if (!session) {
       localStorage.setItem("formValue", JSON.stringify(data)); // store only once
-      router.push("/api/auth/signin");
+      router.push("/login?callbackUrl=/?autoSubmit=true");
       return;
     }
 
@@ -99,7 +107,8 @@ export default function DemoClassStudent() {
         setLoading(false);
         toast.success(res.message || "submitted successfully");
         localStorage.removeItem("formValue");
-        router.refresh();
+        await update();
+        window.location.replace("/");
       } else {
         toast.error(res.message || "Error submitting form. Try again later.");
       }
@@ -132,6 +141,19 @@ export default function DemoClassStudent() {
       if (parsed.datetime) form.setValue("datetime", new Date(parsed.datetime));
     }
   }, [form]);
+
+  useEffect(() => {
+    if (session && typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("autoSubmit") === "true") {
+        const saved = localStorage.getItem("formValue");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          OnSubmit(parsed);
+        }
+      }
+    }
+  }, [session]);
 
   return (
     <Form {...form}>

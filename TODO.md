@@ -18,8 +18,8 @@
 - [x] **Avoid Hardcoded Origins in DB:** Stop storing full `classlink` URLs (e.g., `http://localhost:3000/...`) in the database; store only the `meetingId` and construct the route dynamically to support multi-environment deployments.
 
 ## 🟡 Priority 3: Foundational UI/UX Redesign (Sikhao Design System)
-- [ ] **Integrate Orphaned Landing Page Components:** Wire up the beautiful UI in `components/landing-page/*` to the main `/` route, replacing the raw forms currently rendered by `initialUserCheck()`.
-- [ ] **Update Tailwind & Global Styling Tokens:** Add the missing CSS variables (`bg-surface-container-*`, `px-space-*`, `text-on-surface`) to `tailwind.config.js` and `globals.css` so the landing page components render with their intended styles.
+- [x] **Integrate Orphaned Landing Page Components:** Wire up the beautiful UI in `components/landing-page/*` to the main `/` route, replacing the raw forms currently rendered by `initialUserCheck()`.
+- [x] **Update Tailwind & Global Styling Tokens:** Add the missing CSS variables (`bg-surface-container-*`, `px-space-*`, `text-on-surface`) to `tailwind.config.js` and `globals.css` so the landing page components render with their intended styles.
 - [ ] **Fix Navigation Menus & Broken URLs:** Fix the 404 `/admin-dashboard/teachers` sidebar link, populate the empty `menus = []` array in `Navbar.jsx`, and add Student dashboard links to the `UserAvatar` dropdown menu.
 - [ ] **Convert Components to Idiomatic JSX:** Stop invoking React functional components as raw javascript functions (e.g., `{studentClassStatusCardCompleted(demoClass)}`) and remove invalid `"use server"` directives from client presentation files.
 - [x] **Consolidate Toast Libraries:** Remove duplicate toast packages (`react-hot-toast`, `react-toastify`) and adopt standard shadcn/ui `sonner`.

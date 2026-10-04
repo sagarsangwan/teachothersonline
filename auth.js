@@ -7,6 +7,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
 
   providers: [Google],
+  pages: {
+    signIn: '/login',
+  },
   callbacks: {
     async session({ session, user }) {
       // Include extra fields in the session object
