@@ -54,64 +54,20 @@ function AllUnbookedClasses({ unbooked_classes }) {
     const client = useStreamVideoClient()
     async function bookClass(id) {
         setLoading(true)
-        const class_ = await getCurrentClass(id)
-        let meetingId;
-        let classlink;
-        let Booked = false
-        if (class_) {
-            const startsAt = new Date(class_.startTime).toISOString()
-            console.log("inside create meeting", class_.studentId)
-            // await createUser(client, class_)
-            try {
-                const id = crypto.randomUUID()
-                const call = client.call("private_meeting", id,)
-                // create a streamuser 
-
-                const studentDetails = { user_id: class_.student.userId, role: "call_member" }
-                const teacherDetails = { user_id: session.user.id, role: "call_member" }
-                await call.getOrCreate({
-                    data: {
-                        members: [teacherDetails, studentDetails],
-                        starts_at: startsAt,
-                        custom: { description: `This is a ${class_.type} class of ${class_.subject} from  ${moment(class_.startTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} to ${moment(class_.endTime).local().format("YYYY-MM-DD HH:mm:ss").slice(11, 16)} on ${class_.endTime.toISOString().slice(0, 10)}. Join this meeting on given time` }
-                    }
-                })
-                setCall(call)
-                meetingId = call.id
-                Booked = true
-                classlink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${meetingId}`
-
-                console.log(call, "create call k ander call print")
-
-
-            } catch (error) {
-                console.log(error)
-                toast.error("something went wrong try after sometime")
-
-            }
-
-        }
-
-
-        if (Booked) {
-            const body = { Booked, meetingId, classlink }
-            const res = await updateClassLink(id, body)
+        try {
+            const res = await updateClassLink(id, {})
             if (res.status === 200) {
-
                 toast.success("class booked successfully")
-                setLoading(false)
                 router.refresh();
             } else {
                 toast.error("something went wrong try after sometime")
-                setLoading(false)
             }
-
-        } else {
-            setLoading(false)
+        } catch (error) {
+            console.error(error)
             toast.error("something went wrong try after sometime")
-
+        } finally {
+            setLoading(false)
         }
-
     }
     return (
         <div>
@@ -129,7 +85,7 @@ function AllUnbookedClasses({ unbooked_classes }) {
                                     <CardTitle >
                                         <div className="flex justify-between">
                                             <span> Demo class</span>
-                                            <Badge variant={`${class_.Booked ? "green" : "destructive"}`} > {class_.Booked ? "booked" : "not booked"} </Badge>
+                                            <Badge variant={`${class_.status === "CONFIRMED" ? "green" : "destructive"}`} > {class_.status === "CONFIRMED" ? "booked" : "not booked"} </Badge>
                                         </div>
                                     </CardTitle>
                                     {/* 

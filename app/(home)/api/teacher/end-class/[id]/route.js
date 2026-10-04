@@ -33,25 +33,21 @@ export async function PUT(req, { params }) {
 
 
     const body = await req.json();
-    const { completed, endTime } = body
-    console.log(completed, endTime)
+    const { status, endTime } = body
+    console.log(status, endTime)
     try {
-        const oneToOneClass = await prisma.oneToOneClass.update({
+        const updatedClass = await prisma.oneToOneClass.update({
             where: {
                 id: classId
             },
             data: {
-                completed, endTime
+                status, endTime
             }
         })
-        // const oneToOneClass = "Class Booked Successfully"
 
-
-        return NextResponse.json({ message: "Class completed successfully", data: oneToOneClass, status: 200 })
+        return NextResponse.json({ message: "Class completed successfully", data: updatedClass }, { status: 200 })
     } catch (error) {
         console.log(error)
-        return NextResponse.json({ message: "Class not completed", data: classId, status: 400 })
+        return NextResponse.json({ message: "Class not completed", data: classId }, { status: 400 })
     }
 }
-
-

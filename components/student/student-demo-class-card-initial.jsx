@@ -33,9 +33,9 @@ async function studentClassStatusCardInitial(demoClass) {
         <CardTitle>
           <div className="flex justify-between">
             <span> Demo class</span>
-            <Badge variant={`${demoClass.Booked ? "green" : "destructive"}`}>
+            <Badge variant={`${demoClass.status === "CONFIRMED" ? "green" : "destructive"}`}>
               {" "}
-              {demoClass.Booked ? "booked" : "not booked"}{" "}
+              {demoClass.status === "CONFIRMED" ? "booked" : "not booked"}{" "}
             </Badge>
           </div>
         </CardTitle>
@@ -49,8 +49,8 @@ async function studentClassStatusCardInitial(demoClass) {
               .format("YYYY-MM-DD HH:mm:ss")
               .slice(11, 16)}{" "}
             on {class_date}
-            {demoClass.Booked ? (
-              demoClass.classlink ? (
+            {demoClass.status === "CONFIRMED" ? (
+              demoClass.meetingId ? (
                 <span className="mt-3">
                   {" "}
                   <br /> Join the meeting on time using below button
@@ -71,10 +71,10 @@ async function studentClassStatusCardInitial(demoClass) {
       <CardContent></CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
-        {demoClass.classlink && (
+        {demoClass.meetingId && (
           <Button>
             {" "}
-            <Link href={demoClass.classlink}>Go To Meeting</Link>{" "}
+            <Link href={`/meetings/${demoClass.meetingId}`}>Go To Meeting</Link>{" "}
           </Button>
         )}
       </CardFooter>

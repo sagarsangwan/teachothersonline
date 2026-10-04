@@ -37,12 +37,11 @@ function AllBookedClasses({
 
   const router = useRouter();
   async function bookClass(id) {
-    const Booked = true;
     try {
       setLoading(true);
       const response = await fetch(`/api/teacher/book-class/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ Booked }),
+        body: JSON.stringify({ status: "CONFIRMED" }),
       });
       const res = await response.json();
       if (res.status === 200) {
@@ -72,10 +71,10 @@ function AllBookedClasses({
                     <div className="flex justify-between">
                       <span> Demo class</span>
                       <Badge
-                        variant={`${class_.Booked ? "green" : "destructive"}`}
+                        variant={`${class_.status === "CONFIRMED" ? "green" : "destructive"}`}
                       >
                         {" "}
-                        {class_.Booked ? "booked" : "not booked"}{" "}
+                        {class_.status === "CONFIRMED" ? "booked" : "not booked"}{" "}
                       </Badge>
                     </div>
                   </CardTitle>
@@ -97,7 +96,7 @@ function AllBookedClasses({
                 </CardContent>
                 <CardFooter className="flex justify-end">
                   <Button size="sm">
-                    <Link href={class_.classlink}>Join class</Link>
+                    <Link href={`/meetings/${class_.meetingId}`}>Join class</Link>
                   </Button>
                 </CardFooter>
               </Card>

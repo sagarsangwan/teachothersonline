@@ -60,8 +60,6 @@ export async function POST(req, res) {
     try {
         const student = await prisma.Student.create({
             data: {
-                email: session.user.email,
-                name: session.user.name,
                 contact: contact,
                 subjects: [subjects?.toLowerCase()?.trim() || subjects],
                 userId: session.user.id,

@@ -39,8 +39,8 @@ TeachOthersOnline is an online tutoring platform connecting students for 1-on-1 
 - `User`: Central identity. Connects 1-to-many to `Account` & `Session`, and 1-to-1 to optional `Student` and `Teacher` records.
 - `Teacher`: Teacher profile (education, experience, subjects, verification status). Owns classes, reviews, and ratings.
 - `Student`: Student profile (contact, subjects). Owns booked classes, ratings, and reviews.
-- `OneToOneClass`: Central class record. References `Student` (mandatory) and `Teacher` (optional until accepted). Tracks `startTime`, `endTime`, `Booked` status, `completed`, `meetingId`, and `classlink`.
-- `ClassReviewByStudent`, `ClassReviewByTeacher`, `TeacherRating`: Feedback models linked to classes and participants.
+- `OneToOneClass`: Central class record. References `Student` (mandatory) and `Teacher` (optional until accepted). Tracks `startTime`, `endTime`, `status` (via `ClassStatus` enum), and `meetingId`.
+- `ClassReviewByStudent`, `ClassReviewByTeacher`, `TeacherRating`: Feedback models linked to classes and participants (with unique constraints to prevent spam).
 
 ## 5. Authentication & Role Handling
 - **Auth Flow**: Users sign in exclusively via Google OAuth handled by Auth.js (`auth.js`). The session callback injects `user.id` and `user.role` into the client session.
@@ -54,11 +54,11 @@ TeachOthersOnline is an online tutoring platform connecting students for 1-on-1 
 - **Teacher Application & Approval**:
   A `user` navigates to `/teacher-application`, enters education, experience, and subjects, and submits to `/api/teacher/teacher-form-submission`. A `Teacher` record is created with `verified: false`. The admin inspects the applicant at `/admin-dashboard` and toggles verification via `/api/admin-dashboard/teachers/[id]`. This flips `verified` to `true` and upgrades the user's role to `teacher`.
 - **Student Booking Flow**:
-  A `user` fills the `DemoClassStudent` form on `/` selecting subject, date, and phone number, posting to `/api/student/student-class-create`. If first-time, a `Student` record is created and user role becomes `student`. An unbooked `OneToOneClass` is inserted (`Booked: false`, `teacherId: null`).
+  A `user` fills the `DemoClassStudent` form on `/` selecting subject, date, and phone number, posting to `/api/student/student-class-create`. If first-time, a `Student` record is created and user role becomes `student`. An unbooked `OneToOneClass` is inserted (`status: "REQUESTED"`, `teacherId: null`).
 - **Teacher Acceptance Flow**:
-  A verified teacher opens `/teacher-book-new-class`. The query checks for unbooked classes matching the teacher's subject list. When clicking "Book class", the teacher client invokes the Stream SDK to create a `private_meeting` call room, constructs the meeting URL, and sends a `PUT` to `/api/teacher/book-class/[id]` setting `Booked: true`, `teacherId`, and `classlink`.
+  A verified teacher opens `/teacher-book-new-class`. The query checks for unbooked classes matching the teacher's subject list. When clicking "Book class", a request is sent to `/api/teacher/book-class/[id]`. The server invokes the Stream SDK securely to create a `private_meeting` call room, saves the `meetingId`, and sets `status: "CONFIRMED"` and `teacherId`.
 - **Stream Video / Live Class Flow**:
-  Participants open `/meetings/[id]`. `ClientProvider` wraps the tree and requests a signed user token from server action `getToken()`. `MeetingPage` joins the call, verifies the user is a listed call member, configures camera/microphone in `SetupUi`, and enters `MyCallUI`. When finished, the teacher clicks "End call for everyone", triggering `PUT /api/teacher/end-class/[id]` which sets `completed: true`.
+  Participants open `/meetings/[id]`. `ClientProvider` wraps the tree and requests a signed user token from server action `getToken()`. `MeetingPage` joins the call, verifies the user is a listed call member, configures camera/microphone in `SetupUi`, and enters `MyCallUI`. When finished, the teacher clicks "End call for everyone", triggering `PUT /api/teacher/end-class/[id]` which sets `status: "COMPLETED"`.
 - **Notification Flow**:
   *Not implemented.* Although claimed in the README, there is zero notification infrastructure (no websocket events, push notifications, or email alerts). Dependencies `socket.io` and `socket.io-client` are installed but unused.
 
@@ -83,5 +83,4 @@ TeachOthersOnline is an online tutoring platform connecting students for 1-on-1 
 1. **Disabled Edge Middleware**: `middlewaree.js` has a naming typo, leaving private routes without edge-level protection.
 2. **React 18 / Next.js 15 Compatibility Mismatch**: Next.js 15 requires React 19. Running React 18 leads to peer dependency warnings and Turbopack issues.
 3. **Database Connection Pool Exhaustion**: Handlers repeatedly call `await prisma.$disconnect()`, tearing down serverless connection pools on every request.
-4. **Client-Driven Meeting Creation**: Meeting IDs and Stream call parameters are created in the browser instead of validated on the server.
-5. **Missing API Authorization**: Several API routes accept arbitrary updates without confirming if the authenticated caller owns the target class or teacher record.
+4. **Missing API Authorization**: Several API routes accept arbitrary updates without confirming if the authenticated caller owns the target class or teacher record.

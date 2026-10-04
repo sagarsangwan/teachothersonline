@@ -1,128 +1,39 @@
 # TeachOthersOnline — Audit Findings & Action Items
 
-## Critical
+## 🔴 Priority 1: Critical Runtime Bugs & Crashes (Do First)
+- [ ] **Fix Fatal Crash on Teacher Booked Classes Route:** Update `teacher-booked-classes/page.js` to correctly fetch and pass `completed_classes` (instead of the misnamed `expired_classes` prop) to `<AllBookedClasses />` to prevent a `TypeError` when reading `.length`.
+- [ ] **Fix Teacher Application Premature Redirect & Status Check:** Remove the immediate `router.push("/")` during session load state in `teacher-application/page.js`. Fix the inverted HTTP 201 check so successful applications don't throw an error toast.
+- [ ] **Fix SSR Hydration Crash in Student Demo Form:** Remove synchronous `localStorage.getItem("formValue")` from the `defaultValues` in `demo-class-form.jsx` which causes SSR/hydration mismatches. Move this to a `useEffect`.
+- [ ] **Fix Unsafe Object Access in MeetingPage.jsx:** Add null checks before accessing `currentClass.id` and `currentCall.state.custom?.description.split(' ')` to prevent fatal exceptions when a class is invalid or description is missing. Also rename the inverted `notAllowedToJoin` variable.
+- [ ] **Fix HTTP Status Anti-Pattern in API Routes:** Update `NextResponse.json({ status: 400 })` to `NextResponse.json({...}, { status: 400 })` across `book-class`, `end-class`, `student-class-create`, and `class-review` routes to send correct HTTP headers instead of HTTP 200 OK for errors.
+- [ ] **Restore Edge Route Protection:** Rename `proxy.js` to `middleware.js` and use standard Next.js App Router matchers to properly secure `/admin-dashboard` and `/teacher-*` routes at the network edge.
+- [ ] **Fix Admin Dashboard Array Return:** Prevent `app/(admin)/admin-dashboard/page.js` from returning an array on database failures, which breaks Next.js App Router rendering.
 
-### ~~1. Inactive Edge Middleware Due to File Naming Typo~~ (Completed)
-- **Classification**: Security issue / Confirmed bug
-- **Evidence**: [middlewaree.js](file:///f:/teachothersonline/middlewaree.js)
-- **Why it matters**: Because the file is named `middlewaree.js` (two 'e's), Next.js never runs it. Protected routes (`/admin-dashboard`, `/teacher-application`, etc.) lack network-edge authentication.
-- **Recommended fix**: Rename to `middleware.js`, add proper route matchers, and protect all admin, teacher, and student dashboard paths.
-- **Dependencies**: None.
+## 🟠 Priority 2: Architectural & Database Schema Flaws
+- [x] **Refactor Prisma Schema (Naming & Normalization):** Fix `subittedAt` typo, standardize model casing, and remove duplicated student `name`/`email` fields that already exist in the `User` model.
+- [x] **Introduce `ClassStatus` Enum for Lifecycle Management:** Replace `Booked` and `completed` booleans in `OneToOneClass` with a robust `ClassStatus` enum (`REQUESTED`, `CONFIRMED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`).
+- [x] **Add Missing Database Indexes:** Add `@@index` on foreign keys (`studentId`, `teacherId`) and queryable fields (`startTime`, `status`) to prevent sequential table scans as the platform scales.
+- [x] **Implement Server-Side Video Meeting Creation:** Prevent clients from creating Stream UUIDs arbitrarily. Move Stream token and call generation into secure Next.js Server Actions.
+- [x] **Enforce Unique Review Constraints:** Add `@@unique([classId, studentId])` constraints in schema to prevent students from submitting spam/duplicate reviews for the same class.
+- [x] **Avoid Hardcoded Origins in DB:** Stop storing full `classlink` URLs (e.g., `http://localhost:3000/...`) in the database; store only the `meetingId` and construct the route dynamically to support multi-environment deployments.
 
-### ~~2. Invalid `NextResponse.unauthorized()` Crashing API Handlers~~ (Completed)
-- **Classification**: Confirmed bug
-- **Evidence**: [app/(home)/api/student/student-class-create/route.js](file:///f:/teachothersonline/app/(home)/api/student/student-class-create/route.js#L8), [app/(home)/api/teacher/book-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/book-class/[id]/route.js#L16), [app/(home)/api/teacher/end-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/end-class/[id]/route.js#L16), [app/(home)/api/student/class-review/route.js](file:///f:/teachothersonline/app/(home)/api/student/class-review/route.js#L7), [app/(home)/api/admin-dashboard/teachers/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/admin-dashboard/teachers/[id]/route.js#L12)
-- **Why it matters**: `NextResponse.unauthorized()` is not a valid Next.js method. Unauthorized requests throw 500 runtime exceptions instead of returning 401 status codes.
-- **Recommended fix**: Replace all occurrences with `NextResponse.json({ error: "Unauthorized" }, { status: 401 })`.
-- **Dependencies**: None.
+## 🟡 Priority 3: Foundational UI/UX Redesign (Sikhao Design System)
+- [ ] **Integrate Orphaned Landing Page Components:** Wire up the beautiful UI in `components/landing-page/*` to the main `/` route, replacing the raw forms currently rendered by `initialUserCheck()`.
+- [ ] **Update Tailwind & Global Styling Tokens:** Add the missing CSS variables (`bg-surface-container-*`, `px-space-*`, `text-on-surface`) to `tailwind.config.js` and `globals.css` so the landing page components render with their intended styles.
+- [ ] **Fix Navigation Menus & Broken URLs:** Fix the 404 `/admin-dashboard/teachers` sidebar link, populate the empty `menus = []` array in `Navbar.jsx`, and add Student dashboard links to the `UserAvatar` dropdown menu.
+- [ ] **Convert Components to Idiomatic JSX:** Stop invoking React functional components as raw javascript functions (e.g., `{studentClassStatusCardCompleted(demoClass)}`) and remove invalid `"use server"` directives from client presentation files.
+- [ ] **Consolidate Toast Libraries:** Remove duplicate toast packages (`react-hot-toast`, `react-toastify`) and adopt standard shadcn/ui `sonner`.
+- [ ] **Fix Unconditional "no classes found" Text:** Wrap the empty state footer in `all-booked-classes.jsx` with a proper `classes.length === 0` conditional so it doesn't always render at the bottom.
 
-### ~~3. Missing Ownership & Authorization on Class Endpoints~~ (Completed)
-- **Classification**: Security issue
-- **Evidence**: [app/(home)/api/teacher/book-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/book-class/[id]/route.js#L12-L55), [app/(home)/api/teacher/end-class/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/end-class/[id]/route.js#L12-L47), [app/(home)/api/student/class-review/route.js](file:///f:/teachothersonline/app/(home)/api/student/class-review/route.js#L5-L48)
-- **Why it matters**: Any authenticated user can end, modify, or review any class without verifying teacher assignment or student attendance. `POST` in `book-class` and `end-class` references an undefined variable `applicantId`, causing crashes.
-- **Recommended fix**: Validate session identity against the class `teacherId` / `studentId` before modifying records, and remove broken `POST` handlers.
-- **Dependencies**: Fix Auth.js session handling first.
+## 🟢 Priority 4: Missing & Requested Features (Roadmap)
+- [ ] **Teacher Resume Cloud Upload:** Integrate Vercel Blob or AWS S3 to upload and store the teacher's resume instead of hardcoding `resume: ""` on form submission.
+- [ ] **Interactive Availability & Calendar Scheduling:** Let teachers define their weekly available time slots, allowing students to book confirmed availability instead of guessing dates.
+- [ ] **Stripe / Razorpay Payment Integration:** Implement a checkout flow for paid classes, bundles, and recurring monthly tutoring subscriptions.
+- [ ] **In-Call Interactive Whiteboard:** Embed `tldraw` or `excalidraw` in the Stream video room for collaborative learning and math equation solving.
+- [ ] **Class Rescheduling & Cancellation UI:** Add functional API endpoints and handlers for the dead "Cancel" and "Reassign class" buttons on the student/teacher dashboards.
+- [ ] **Automated Notifications:** Implement email confirmations and reminders via Resend for bookings, acceptances, and upcoming classes (the `socket.io` dependency is currently unused).
 
-### ~~4. React 18 / Next.js 15 Version Mismatch and Synchronous `params`~~ (Completed)
-- **Classification**: Outdated dependency / Confirmed bug
-- **Evidence**: [package.json](file:///f:/teachothersonline/package.json#L44-L52), [app/(home)/meetings/[id]/page.jsx](file:///f:/teachothersonline/app/(home)/meetings/[id]/page.jsx#L10), [app/(home)/api/admin-dashboard/teachers/[id]/route.js](file:///f:/teachothersonline/app/(home)/api/admin-dashboard/teachers/[id]/route.js#L8)
-- **Why it matters**: Next.js 15 requires React 19. Running React 18 causes peer dependency conflicts and hydration anomalies. In Next.js 15, route parameters are promises; reading `params.id` without `await params` triggers warnings and runtime errors.
-- **Recommended fix**: Upgrade React/React-DOM to 19 (or align Next.js to 14 LTS), and `await params` in all route handlers and dynamic pages.
-- **Dependencies**: UI library compatibility check with React 19.
-
-## Important
-
-### ~~5. Subject Array JSON Parsing Failure in Matching Logic~~ (Completed)
-- **Classification**: Confirmed bug
-- **Evidence**: [app/(home)/(teacher)/teacher-application/page.js](file:///f:/teachothersonline/app/(home)/(teacher)/teacher-application/page.js#L82), [app/(home)/api/teacher/teacher-form-submission/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/teacher-form-submission/route.js#L35-L46), [lib/teacher/teacher-info.js](file:///f:/teachothersonline/lib/teacher/teacher-info.js#L61-L64)
-- **Why it matters**: The application form appends JSON-stringified subjects to FormData. The API saves it as a nested string inside an array (`['["Math"]']`), and `teacher-info.js` splits `teacher.subjects[0]` directly without JSON parsing. Teacher-student subject matching fails, and empty arrays throw an unhandled TypeError.
-- **Recommended fix**: Parse `JSON.parse(formData.get("subjects"))` in the API route, store clean array elements, and add safety checks in `teacher-info.js`.
-- **Dependencies**: None.
-
-### ~~6. Premature `prisma.$disconnect()` Killing Serverless Connection Pool~~ (Completed)
-- **Classification**: Technical debt
-- **Evidence**: [lib/student-info.js](file:///f:/teachothersonline/lib/student-info.js#L41), [lib/teacher/teacher-info.js](file:///f:/teachothersonline/lib/teacher/teacher-info.js#L25), [lib/teacher/get-current-class.jsx](file:///f:/teachothersonline/components/teacher/get-current-class.jsx#L18), [app/(admin)/admin-dashboard/_components/all-user-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-user-card.jsx#L23)
-- **Why it matters**: Calling `$disconnect()` inside request functions closes database connections in serverless environments, causing latency spikes and connection failures under concurrent traffic.
-- **Recommended fix**: Remove all manual `$disconnect()` calls from query helpers and routes; rely on global Prisma client singleton.
-- **Dependencies**: None.
-
-### ~~7. Student Rating Modal Never Renders Due to Truthy Array Check~~ (Completed)
-- **Classification**: Confirmed bug
-- **Evidence**: [components/student/student-demo-class-card-completed.jsx](file:///f:/teachothersonline/components/student/student-demo-class-card-completed.jsx#L51)
-- **Why it matters**: `!demoClass.ClassReviewByStudent` evaluates to `false` because an empty array `[]` is truthy in JavaScript, permanently hiding the class rating dialog.
-- **Recommended fix**: Update condition to `demoClass.ClassReviewByStudent?.length === 0`.
-- **Dependencies**: None.
-
-### ~~8. Admin Stat Cards Render Unawaited Promises in JSX~~ (Completed)
-- **Classification**: Confirmed bug
-- **Evidence**: [app/(admin)/admin-dashboard/_components/all-user-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-user-card.jsx#L39), [all-student-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/all-student-card.jsx#L39), [teachers/all-applicant-card.jsx](file:///f:/teachothersonline/app/(admin)/admin-dashboard/_components/teachers/all-applicant-card.jsx#L43)
-- **Why it matters**: Async functions `countUsers()`, `countStudents()`, and `countTeacherApplicant()` are invoked inside JSX without `await`, rendering `[object Promise]` on screen.
-- **Recommended fix**: Await database counts before rendering JSX elements.
-- **Dependencies**: None.
-
-### 9. Teacher Resume Upload Field Hardcoded to Empty String
-- **Classification**: Missing feature
-- **Evidence**: [app/(home)/(teacher)/teacher-application/page.js](file:///f:/teachothersonline/app/(home)/(teacher)/teacher-application/page.js#L69-L81), [app/(home)/api/teacher/teacher-form-submission/route.js](file:///f:/teachothersonline/app/(home)/api/teacher/teacher-form-submission/route.js#L32-L43)
-- **Why it matters**: The client collects resume files, but the server handler ignores the file and hardcodes `resume: ""`. Admin table cannot view resumes.
-- **Recommended fix**: Integrate cloud storage (e.g., Vercel Blob or AWS S3) to upload resumes and store the generated URL in Prisma.
-- **Dependencies**: Storage service setup.
-
-## Nice to have
-
-### ~~10. Conflicting Next.js Config Files and Deprecated Image Config~~ (Completed)
-- **Classification**: Technical debt
-- **Evidence**: [next.config.js](file:///f:/teachothersonline/next.config.js), [next.config.mjs](file:///f:/teachothersonline/next.config.mjs)
-- **Why it matters**: Having both `.js` and `.mjs` causes Next.js configuration collision warnings. `images.domains` is deprecated.
-- **Recommended fix**: Delete `next.config.mjs` and migrate `images.domains` in `next.config.js` to `images.remotePatterns`.
-- **Dependencies**: None.
-
-### 11. README Feature & Environment Variable Discrepancies
-- **Classification**: Documentation mismatch
-- **Evidence**: [README.md](file:///f:/teachothersonline/README.md#L17-L73)
-- **Why it matters**: README claims real-time notifications and signup role choice (neither exists), lists wrong Stream env vars (`STREAM_API_KEY` vs `NEXT_PUBLIC_STREAM_VIDEO_API_KEY`), and omits `AUTH_SECRET` and `NEXT_PUBLIC_BASE_URL`.
-- **Recommended fix**: Synchronize README features and environment variable prerequisites with actual codebase implementation.
-- **Dependencies**: None.
-
-### ~~12. Dead Dependencies and Broken Navigation Links~~ (Completed)
-- **Classification**: Technical debt
-- **Evidence**: [package.json](file:///f:/teachothersonline/package.json#L13-L67), [components/ui/sidebar.jsx](file:///f:/teachothersonline/components/ui/sidebar.jsx#L34), [components/auth/user-avatar.jsx](file:///f:/teachothersonline/components/auth/user-avatar.jsx#L39), [app/(home)/(teacher)/teacher-dashboard/page.jsx](file:///f:/teachothersonline/app/(home)/(teacher)/teacher-dashboard/page.jsx)
-- **Why it matters**: Unused packages (`"-"`, `"save"`, `"i"`, `"npm"`, `"socket.io"`, `"googleapis"`, `@editorjs/*`) bloat node_modules. Sidebar and avatar link to non-existent `/admin-dashboard/teachers` and `/profile` routes (404), while `/teacher-dashboard` is an empty text stub.
-- **Recommended fix**: Prune dead packages, implement or remove broken navigation links, and move `@prisma/client` from devDependencies to dependencies.
-- **Dependencies**: None.
-
-### ~~13. Microphone Unmute Bug in Meeting Setup~~ (Completed)
-- **Classification**: Confirmed bug
-- **Evidence**: [app/(home)/meetings/[id]/MeetingPage.jsx](file:///f:/teachothersonline/app/(home)/meetings/[id]/MeetingPage.jsx#L105-L107)
-- **Why it matters**: Toggling audio/video calls `currrentCall.camera.enable()` twice; microphone is never unmuted.
-- **Recommended fix**: Change line 106 to `currrentCall.microphone.enable()`.
-- **Dependencies**: None.
-
-## Recommended implementation order
-1. ~~**Fix Critical API & Auth Crashes**: Replace invalid `NextResponse.unauthorized()` calls and handle async `params` to stabilize HTTP responses.~~ (Completed)
-2. ~~**Restore Edge Route Protection**: Rename `middlewaree.js` to `middleware.js` and add matcher rules for admin and teacher routes.~~ (Completed via proxy.js)
-3. ~~**Resolve Database Connection & Query Bugs**: Eliminate `$disconnect()` calls in serverless handlers, fix unawaited count promises in admin cards, and fix the `ClassReviewByStudent` array length check.~~ (Completed)
-4. ~~**Fix Core Subject Matching & Application Flow**: Normalize subject parsing between `teacher-application` and `teacher-info.js`, and verify teacher authorization on class updates.~~ (Completed)
-5. ~~**Align Dependencies & Configuration**: Resolve the React 18 / Next.js 15 peer dependency mismatch, delete `next.config.mjs`, and move `@prisma/client` to production dependencies.~~ (React/Next mismatch, config files, & prisma client completed)
-6. **Implement Missing Storage & Polish UI**: Integrate cloud resume file uploads, fix the meeting microphone enable bug, and correct dead links and README documentation.
-7. **Apply Foundational UI Redesign**: Implement the Sikhao design system by updating global CSS variables, switching to Geist font, and restyling core Shadcn UI components.
-
-## Foundational UI Redesign (Sikhao Design System)
-14. **Global Styling & Theme**
-- **Classification**: Missing feature
-- **Details**: Update `app/globals.css` with CSS variable tokens based on the new design system (Primary: #3525cd, Background: #faf8ff, etc.).
-- **Dependencies**: None.
-
-15. **Typography Update**
-- **Classification**: Missing feature
-- **Details**: Replace `Inter` with `Geist` font across `app/(home)/layout.js` and `app/(admin)/layout.js`.
-- **Dependencies**: None.
-
-16. **Restyle Core Components**
-- **Classification**: UI refinement
-- **Details**: Update `components/ui/*` (Button, Card, Badge) to match the new rounded geometries (`rounded-lg`/`rounded-xl`) and spacing.
-- **Dependencies**: Global styling update.
-
-17. **Update Navigation Layouts**
-- **Classification**: UI refinement
-- **Details**: Ensure `Navbar` and `Sidebar` use new CSS tokens and `Geist` font for brand consistency across student, teacher, and admin roles.
-- **Dependencies**: Core component restyling.
+## ⚪ Priority 5: Technical Debt & Cleanup
+- [ ] **Delete Empty/Dead Files:** Remove `components/New.js` (0 bytes), `app/(home)/api/admin-dashboard/route.js` (0 bytes).
+- [ ] **Remove Dead Feature Stubs:** Remove or fully implement the orphaned EditorJS page at `app/(home)/(teacher)/new-post/page.jsx`.
+- [ ] **Sync README.md:** Update documentation to reflect actual environment variables (`NEXT_PUBLIC_STREAM_VIDEO_API_KEY` vs `STREAM_API_KEY`), dependencies, and implemented capabilities.
