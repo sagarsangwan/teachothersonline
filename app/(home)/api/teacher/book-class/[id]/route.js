@@ -20,7 +20,7 @@ export async function PUT(req, { params }) {
         }
     })
     if (!current_teacher) {
-        return NextResponse.json({ message: "Teacher not found", status: 404 })
+        return NextResponse.json({ message: "Teacher not found" }, { status: 404 })
     }
     const oneToOneClass = await prisma.oneToOneClass.findUnique({
         where: {
@@ -31,10 +31,10 @@ export async function PUT(req, { params }) {
         }
     })
     if (!oneToOneClass) {
-        return NextResponse.json({ message: "Class not found", data: classId, status: 404 })
+        return NextResponse.json({ message: "Class not found", data: classId }, { status: 404 })
     }
     if (oneToOneClass.status !== "REQUESTED" && oneToOneClass.teacherId && oneToOneClass.teacherId !== current_teacher.id) {
-        return NextResponse.json({ message: "Class already booked by another teacher", status: 403 })
+        return NextResponse.json({ message: "Class already booked by another teacher" }, { status: 403 })
     }
 
     try {

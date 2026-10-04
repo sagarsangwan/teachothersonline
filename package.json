@@ -54,6 +54,7 @@
     "react-tailwindcss-select": "^1.8.5",
     "react-toastify": "^10.0.5",
     "shadcn-ui": "^0.2.3",
+    "sonner": "^2.0.8",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "validator": "^13.12.0",

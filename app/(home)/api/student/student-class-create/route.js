@@ -26,7 +26,7 @@ export async function POST(req, res) {
     }
 
     if (existingClass && existingStudent) {
-        return NextResponse.json({ message: "You have already submitted a demo class", status: 400 }, { data: existingClass })
+        return NextResponse.json({ message: "You have already submitted a demo class", data: existingClass }, { status: 400 })
     }
     if (existingStudent && !existingClass) {
         const body = await req.json();
@@ -48,10 +48,10 @@ export async function POST(req, res) {
 
                 }
             })
-            return NextResponse.json({ message: "Class submitted successfully", data: class_, status: 200 })
+            return NextResponse.json({ message: "Class submitted successfully", data: class_ }, { status: 200 })
         } catch (error) {
             console.error(error)
-            return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
+            return NextResponse.json({ message: "Error submitting form. Try again later." }, { status: 400 })
         }
     }
     const body = await req.json();
@@ -94,9 +94,9 @@ export async function POST(req, res) {
 
             }
         })
-        return NextResponse.json({ message: "Class submitted successfully", data: class_, status: 200 })
+        return NextResponse.json({ message: "Class submitted successfully", data: class_ }, { status: 200 })
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
+        return NextResponse.json({ message: "Error submitting form. Try again later." }, { status: 400 })
     }
 }

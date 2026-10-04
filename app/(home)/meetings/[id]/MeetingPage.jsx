@@ -20,8 +20,8 @@ import MyCallUI from './MyCallUI';
 function MeetingPage({ id, currentClass }) {
     const { data: session, status } = useSession()
     const { call, callLoading } = useLoadCall(id)
-    const currentClassId = currentClass.id
-    const notAllowedToJoin = (call?.state.members.find((member) => member.user.id === session.user?.id))
+    const currentClassId = currentClass?.id
+    const isAllowedToJoin = (call?.state.members.find((member) => member.user.id === session.user?.id))
     // console.log(call.state.members)
 
 
@@ -29,7 +29,7 @@ function MeetingPage({ id, currentClass }) {
     if (callLoading || status === "loading") {
         return (<Loader />)
     }
-    if (!notAllowedToJoin) {
+    if (!isAllowedToJoin) {
         return (
             <div className=' h-screen flex  flex-col justify-center items-center my-auto'>
 
@@ -93,7 +93,7 @@ function SetupUi({ setIsSetupComplete }) {
     const [isMicOn, setIsMicOn] = useState(false)
 
     const callDescription = currrentCall.state.custom?.description
-    const words = callDescription.split(' ');
+    const words = callDescription ? callDescription.split(' ') : [];
 
     // Extract words from index 1 to 7 (inclusive)
     const selectedWords = words.slice(0, 7).join(' ')

@@ -16,14 +16,14 @@ export async function POST(req, res) {
         where: { userId: session.user.id }
     })
     if (!current_student) {
-        return NextResponse.json({ message: "Student not found", status: 404 })
+        return NextResponse.json({ message: "Student not found" }, { status: 404 })
     }
 
     const oneToOneClass = await prisma.oneToOneClass.findUnique({
         where: { id: classId }
     })
     if (!oneToOneClass || oneToOneClass.studentId !== current_student.id) {
-        return NextResponse.json({ message: "Unauthorized or class not found", status: 403 })
+        return NextResponse.json({ message: "Unauthorized or class not found" }, { status: 403 })
     }
 
     const targetTeacherId = oneToOneClass.teacherId || teacherId;
@@ -64,9 +64,9 @@ export async function POST(req, res) {
 
             }
         })
-        return NextResponse.json({ message: "your review submitted successfully", data: { reviewByStudent, reviewByStudentForTeacher }, status: 200 })
+        return NextResponse.json({ message: "your review submitted successfully", data: { reviewByStudent, reviewByStudentForTeacher } }, { status: 200 })
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ message: "Error submitting form. Try again later.", status: 400 })
+        return NextResponse.json({ message: "Error submitting form. Try again later." }, { status: 400 })
     }
 }

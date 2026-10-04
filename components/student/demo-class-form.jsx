@@ -15,7 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   Form,
@@ -116,19 +117,21 @@ export default function DemoClassStudent() {
     resolver: zodResolver(formSchema),
 
     defaultValues: {
-      // add default values from local storage if value is present in local storage
-      // else set default values to empty string
-      // contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
-
-      contact: JSON.parse(localStorage.getItem("formValue"))?.contact || "",
-      subjects: JSON.parse(localStorage.getItem("formValue"))?.subjects || "",
-      // get the date from local storage and convert it to date object if it is present in local storage else set it to next day date
-      datetime: JSON.parse(localStorage.getItem("formValue"))?.datetime
-        ? new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime)
-        : null,
-      // datetime: new Date(JSON.parse(localStorage.getItem("formValue"))?.datetime) || new Date(),
+      contact: "",
+      subjects: "",
+      datetime: null,
     },
   });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("formValue");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.contact) form.setValue("contact", parsed.contact);
+      if (parsed.subjects) form.setValue("subjects", parsed.subjects);
+      if (parsed.datetime) form.setValue("datetime", new Date(parsed.datetime));
+    }
+  }, [form]);
 
   return (
     <Form {...form}>
@@ -195,8 +198,8 @@ export default function DemoClassStudent() {
             </FormItem>
           )}
         />
-        {/* {status === "authenticated" ? */}
         <Button disabled={loading} type="submit">
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           submit{" "}
         </Button>
         {/* {loading ?

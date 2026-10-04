@@ -1,13 +1,13 @@
 # TeachOthersOnline — Audit Findings & Action Items
 
 ## 🔴 Priority 1: Critical Runtime Bugs & Crashes (Do First)
-- [ ] **Fix Fatal Crash on Teacher Booked Classes Route:** Update `teacher-booked-classes/page.js` to correctly fetch and pass `completed_classes` (instead of the misnamed `expired_classes` prop) to `<AllBookedClasses />` to prevent a `TypeError` when reading `.length`.
-- [ ] **Fix Teacher Application Premature Redirect & Status Check:** Remove the immediate `router.push("/")` during session load state in `teacher-application/page.js`. Fix the inverted HTTP 201 check so successful applications don't throw an error toast.
-- [ ] **Fix SSR Hydration Crash in Student Demo Form:** Remove synchronous `localStorage.getItem("formValue")` from the `defaultValues` in `demo-class-form.jsx` which causes SSR/hydration mismatches. Move this to a `useEffect`.
-- [ ] **Fix Unsafe Object Access in MeetingPage.jsx:** Add null checks before accessing `currentClass.id` and `currentCall.state.custom?.description.split(' ')` to prevent fatal exceptions when a class is invalid or description is missing. Also rename the inverted `notAllowedToJoin` variable.
-- [ ] **Fix HTTP Status Anti-Pattern in API Routes:** Update `NextResponse.json({ status: 400 })` to `NextResponse.json({...}, { status: 400 })` across `book-class`, `end-class`, `student-class-create`, and `class-review` routes to send correct HTTP headers instead of HTTP 200 OK for errors.
-- [ ] **Restore Edge Route Protection:** Rename `proxy.js` to `middleware.js` and use standard Next.js App Router matchers to properly secure `/admin-dashboard` and `/teacher-*` routes at the network edge.
-- [ ] **Fix Admin Dashboard Array Return:** Prevent `app/(admin)/admin-dashboard/page.js` from returning an array on database failures, which breaks Next.js App Router rendering.
+- [x] **Fix Fatal Crash on Teacher Booked Classes Route:** Update `teacher-booked-classes/page.js` to correctly fetch and pass `completed_classes` (instead of the misnamed `expired_classes` prop) to `<AllBookedClasses />` to prevent a `TypeError` when reading `.length`.
+- [x] **Fix Teacher Application Premature Redirect & Status Check:** Remove the immediate `router.push("/")` during session load state in `teacher-application/page.js`. Fix the inverted HTTP 201 check so successful applications don't throw an error toast.
+- [x] **Fix SSR Hydration Crash in Student Demo Form:** Remove synchronous `localStorage.getItem("formValue")` from the `defaultValues` in `demo-class-form.jsx` which causes SSR/hydration mismatches. Move this to a `useEffect`.
+- [x] **Fix Unsafe Object Access in MeetingPage.jsx:** Add null checks before accessing `currentClass.id` and `currentCall.state.custom?.description.split(' ')` to prevent fatal exceptions when a class is invalid or description is missing. Also rename the inverted `notAllowedToJoin` variable.
+- [x] **Fix HTTP Status Anti-Pattern in API Routes:** Update `NextResponse.json({ status: 400 })` to `NextResponse.json({...}, { status: 400 })` across `book-class`, `end-class`, `student-class-create`, and `class-review` routes to send correct HTTP headers instead of HTTP 200 OK for errors.
+- [x] **Restore Edge Route Protection:** Rename `proxy.js` to `middleware.js` and use standard Next.js App Router matchers to properly secure `/admin-dashboard` and `/teacher-*` routes at the network edge.
+- [x] **Fix Admin Dashboard Array Return:** Prevent `app/(admin)/admin-dashboard/page.js` from returning an array on database failures, which breaks Next.js App Router rendering.
 
 ## 🟠 Priority 2: Architectural & Database Schema Flaws
 - [x] **Refactor Prisma Schema (Naming & Normalization):** Fix `subittedAt` typo, standardize model casing, and remove duplicated student `name`/`email` fields that already exist in the `User` model.
@@ -22,7 +22,7 @@
 - [ ] **Update Tailwind & Global Styling Tokens:** Add the missing CSS variables (`bg-surface-container-*`, `px-space-*`, `text-on-surface`) to `tailwind.config.js` and `globals.css` so the landing page components render with their intended styles.
 - [ ] **Fix Navigation Menus & Broken URLs:** Fix the 404 `/admin-dashboard/teachers` sidebar link, populate the empty `menus = []` array in `Navbar.jsx`, and add Student dashboard links to the `UserAvatar` dropdown menu.
 - [ ] **Convert Components to Idiomatic JSX:** Stop invoking React functional components as raw javascript functions (e.g., `{studentClassStatusCardCompleted(demoClass)}`) and remove invalid `"use server"` directives from client presentation files.
-- [ ] **Consolidate Toast Libraries:** Remove duplicate toast packages (`react-hot-toast`, `react-toastify`) and adopt standard shadcn/ui `sonner`.
+- [x] **Consolidate Toast Libraries:** Remove duplicate toast packages (`react-hot-toast`, `react-toastify`) and adopt standard shadcn/ui `sonner`.
 - [ ] **Fix Unconditional "no classes found" Text:** Wrap the empty state footer in `all-booked-classes.jsx` with a proper `classes.length === 0` conditional so it doesn't always render at the bottom.
 
 ## 🟢 Priority 4: Missing & Requested Features (Roadmap)

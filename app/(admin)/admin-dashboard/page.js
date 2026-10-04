@@ -26,8 +26,8 @@ async function page() {
                 },
             }
         )
-    } catch {
-        return applicants
+    } catch (e) {
+        console.error("Failed to load applicants", e)
     }
 
     return (

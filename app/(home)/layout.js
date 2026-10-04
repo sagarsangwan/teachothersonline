@@ -6,6 +6,8 @@ import { SessionProvider } from "next-auth/react";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import ClientProvider from "@/components/providers/ClientProvider";
+import NextTopLoader from 'nextjs-toploader';
+import { Toaster } from 'sonner';
 
 
 
@@ -21,6 +23,8 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <head></head>
       <body className={inter.className}>
+        <NextTopLoader color="#2299DD" showSpinner={false} />
+        <Toaster position="bottom-right" />
         <SessionProvider>
           <Providers>
             <ClientProvider>

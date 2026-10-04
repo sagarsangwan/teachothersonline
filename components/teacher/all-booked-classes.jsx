@@ -29,9 +29,9 @@ import returnClassDate from "../return-class-date";
 import Link from "next/link";
 
 function AllBookedClasses({
-  booked_classes,
-  completed_classes,
-  expired_not_completed_classes,
+  booked_classes = [],
+  completed_classes = [],
+  expired_not_completed_classes = [],
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -218,7 +218,9 @@ function AllBookedClasses({
         </div>
       )}
 
-      <div>no classes found</div>
+      {booked_classes.length === 0 && completed_classes.length === 0 && expired_not_completed_classes.length === 0 && (
+        <div>no classes found</div>
+      )}
     </div>
   );
 }

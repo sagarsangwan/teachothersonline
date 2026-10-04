@@ -4,6 +4,8 @@ import "../globals.css";
 const inter = Inter({ subsets: ["latin"] });
 import { SessionProvider } from "next-auth/react";
 import Providers from "@/components/providers";
+import NextTopLoader from 'nextjs-toploader';
+import { Toaster } from 'sonner';
 
 
 
@@ -16,6 +18,8 @@ export default function DashboardLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <NextTopLoader color="#2299DD" showSpinner={false} />
+        <Toaster position="bottom-right" />
         <SessionProvider>
           {/* <AdminNavbar /> */}
           <Providers>

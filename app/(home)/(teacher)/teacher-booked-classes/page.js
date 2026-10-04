@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 
 async function fetchUnbookedClasses() {
   let booked_classes = [];
-  let expired_classes = [];
+  let completed_classes = [];
+  let expired_not_completed_classes = [];
   const session = await auth();
   if (!session) {
     return redirect("/api/auth/signin");
@@ -31,10 +32,17 @@ async function fetchUnbookedClasses() {
       },
       include: { student: true },
     });
-    expired_classes = await prisma.OneToOneClass.findMany({
+    completed_classes = await prisma.OneToOneClass.findMany({
       where: {
         teacherId: teacher.id,
-        classlink: null,
+        status: "COMPLETED"
+      },
+      include: { student: true },
+    });
+    expired_not_completed_classes = await prisma.OneToOneClass.findMany({
+      where: {
+        teacherId: teacher.id,
+        status: { in: ["REQUESTED", "CONFIRMED"] },
         endTime: {
           lte: new Date(),
         },
@@ -43,13 +51,13 @@ async function fetchUnbookedClasses() {
     });
   } catch (error) {
     console.error("Error fetching unbooked classes:", error);
-    return [[], []];
+    return [[], [], []];
   }
-  return [booked_classes, expired_classes];
+  return [booked_classes, completed_classes, expired_not_completed_classes];
 }
 
 async function page() {
-  const [booked_classes, expired_classes] = await fetchUnbookedClasses();
+  const [booked_classes, completed_classes, expired_not_completed_classes] = await fetchUnbookedClasses();
 
   // if (!booked_classes && !expired_classes) {
   //     return <div>..........loading</div>
@@ -58,7 +66,8 @@ async function page() {
     <div>
       <AllBookedClasses
         booked_classes={booked_classes}
-        expired_classes={expired_classes}
+        completed_classes={completed_classes}
+        expired_not_completed_classes={expired_not_completed_classes}
       />
     </div>
   );

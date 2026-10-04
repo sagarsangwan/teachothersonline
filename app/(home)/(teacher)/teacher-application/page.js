@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import validator from "validator";
 import { z } from "zod";
 
@@ -88,7 +90,7 @@ const TeacherApplication = () => {
 
       const result = await response.json();
 
-      if (result.status === 201) {
+      if (response.status === 201 || result.status === 201) {
         toast.success(result.message || "Application submitted successfully");
         form.reset();
         router.push("/");
@@ -107,8 +109,13 @@ const TeacherApplication = () => {
     }
   };
 
-  if (session?.user?.role !== "user") {
-    router.push("/");
+  useEffect(() => {
+    if (session && session?.user?.role !== "user") {
+      router.push("/");
+    }
+  }, [session, router]);
+
+  if (!session || session?.user?.role !== "user") {
     return null;
   }
 
@@ -241,6 +248,7 @@ const TeacherApplication = () => {
 
           {/* Submit Button */}
           <Button type="submit" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>

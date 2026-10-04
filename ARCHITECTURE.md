@@ -8,7 +8,7 @@ TeachOthersOnline is an online tutoring platform connecting students for 1-on-1 
 - **Database & ORM**: PostgreSQL via Prisma 6.5.0 (`@prisma/client` currently placed in devDependencies)
 - **Authentication**: Auth.js / NextAuth 5.0.0-beta.25 with `@auth/prisma-adapter` 2.7.4
 - **Live Video**: `@stream-io/video-react-sdk` 1.2.9 and `@stream-io/node-sdk` 0.2.6
-- **Styling & UI**: Tailwind CSS 3.4.1, Radix UI primitives, Lucide / React Icons
+- **Styling & UI**: Tailwind CSS 3.4.1, Radix UI primitives, Lucide / React Icons, Sonner (Toasts), Next.js TopLoader
 - **Analytics**: Microsoft Clarity integration
 
 ## 2. Top-Level Folder Structure
@@ -80,7 +80,6 @@ TeachOthersOnline is an online tutoring platform connecting students for 1-on-1 
   - Vercel (Deployment target)
 
 ## 8. Major Architectural Risks
-1. **Disabled Edge Middleware**: `middlewaree.js` has a naming typo, leaving private routes without edge-level protection.
-2. **React 18 / Next.js 15 Compatibility Mismatch**: Next.js 15 requires React 19. Running React 18 leads to peer dependency warnings and Turbopack issues.
-3. **Database Connection Pool Exhaustion**: Handlers repeatedly call `await prisma.$disconnect()`, tearing down serverless connection pools on every request.
-4. **Missing API Authorization**: Several API routes accept arbitrary updates without confirming if the authenticated caller owns the target class or teacher record.
+1. **React 18 / Next.js 15 Compatibility Mismatch**: Next.js 15 requires React 19. Running React 18 leads to peer dependency warnings and Turbopack issues.
+2. **Database Connection Pool Exhaustion**: Handlers repeatedly call `await prisma.$disconnect()`, tearing down serverless connection pools on every request.
+3. **Missing API Authorization**: Several API routes accept arbitrary updates without confirming if the authenticated caller owns the target class or teacher record.
